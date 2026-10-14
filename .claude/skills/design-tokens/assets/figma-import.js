@@ -1,11 +1,13 @@
 // Run with Figma MCP `use_figma` (Plugin API). Load the /figma-use skill first.
 // Creates or updates variable collections + text styles from tokens.seed.json (same shape as figma-export.js output).
-// Paste the seed JSON into SEED. Large file? Run once per collection, in order:
-// Primitives → Brand → Theme → Component, then TEXT_STYLES = true. Aliases resolve by name against what already exists.
+// Paste the seed JSON into SEED. One run per collection, in order:
+// Primitives → Brand → Theme → Component, then a separate fifth run with ONLY = [] and TEXT_STYLES = true.
+// Text styles must be last: they bind to font/size/weight variables from Primitives and Brand.
+// Aliases resolve by name against what already exists in the file.
 
 const SEED = /* PASTE tokens.seed.json HERE */ null;
-const ONLY = ["Primitives", "Brand", "Theme", "Component"]; // narrow to one collection per run if needed
-const TEXT_STYLES = true;
+const ONLY = ["Primitives"]; // one collection per run; [] for the text-styles-only run
+const TEXT_STYLES = false;   // true only in the last run
 
 const PREFIX = SEED.prefix || "ds";
 const cssName = (n) => `--${PREFIX}-${n.replace(/\/default$/, "").replace(/\//g, "-")}`;
@@ -38,8 +40,9 @@ const existingCollections = await figma.variables.getLocalVariableCollectionsAsy
 const allVars = await figma.variables.getLocalVariablesAsync();
 const byName = new Map(allVars.map((v) => [v.name, v]));
 const log = [];
+const problems = [];
 
-for (const c of SEED.collections.filter((c) => ONLY.includes(c.name))) {
+for (const c of (SEED.collections || []).filter((c) => ONLY.includes(c.name))) {
   let col = existingCollections.find((x) => x.name === c.name) || figma.variables.createVariableCollection(c.name);
   // modes: rename the first, add the rest
   const modeIds = {};
@@ -58,7 +61,7 @@ for (const c of SEED.collections.filter((c) => ONLY.includes(c.name))) {
       let value;
       if (raw && typeof raw === "object" && "alias" in raw) {
         const target = byName.get(raw.alias);
-        if (!target) { log.push(`MISSING alias ${raw.alias} for ${t.name}`); continue; }
+        if (!target) { problems.push(`MISSING alias ${raw.alias} for ${t.name}`); continue; }
         value = figma.variables.createVariableAlias(target);
       } else value = t.type === "COLOR" ? hexToRgba(raw) : raw;
       v.setValueForMode(modeIds[mode], value);
@@ -70,27 +73,67 @@ for (const c of SEED.collections.filter((c) => ONLY.includes(c.name))) {
     if (t.description) v.description = t.description;
     v.setVariableCodeSyntax("WEB", `var(${cssName(t.name)})`);
   }
-  log.push(`${c.name}: ${c.variables.length} variables, modes ${c.modes.join("/")}`);
+  log.push(`${c.name}: ${c.variables.length} variables, modes ${col.modes.map((m) => m.name).join("/")}`);
 }
 
 if (TEXT_STYLES && SEED.textStyles) {
+  const cols = await figma.variables.getLocalVariableCollectionsAsync();
+  const colById = new Map(cols.map((c) => [c.id, c]));
+  const freshVars = await figma.variables.getLocalVariablesAsync();
+  const varByName = new Map(freshVars.map((v) => [v.name, v]));
+  const varById = new Map(freshVars.map((v) => [v.id, v]));
+  // every lookup throws by name: a silently missing variable would bind nothing
+  const need = (n) => { const v = varByName.get(n); if (!v) throw new Error(`missing variable ${n} — run the Primitives/Brand collections first`); return v; };
+  // value in the collection's default mode, aliases followed to the bottom layer
+  const defaultValue = (name) => {
+    let v = need(name);
+    let val = v.valuesByMode[colById.get(v.variableCollectionId).defaultModeId];
+    for (let i = 0; i < 10 && val && typeof val === "object" && val.type === "VARIABLE_ALIAS"; i++) {
+      v = varById.get(val.id);
+      val = v.valuesByMode[colById.get(v.variableCollectionId).defaultModeId];
+    }
+    return val;
+  };
+  // every mode's value: binding fontFamily requires the fonts of ALL modes to be loaded (Main + Demo)
+  const everyModeValue = (name) => {
+    const v = need(name);
+    return colById.get(v.variableCollectionId).modes.map((m) => v.valuesByMode[m.modeId]).filter((x) => typeof x === "string");
+  };
+
+  // real style names per family: Inter has "Semi Bold" (with a space), IBM Plex has "SemiBold", JetBrains Mono has neither
+  const stylesByFamily = {};
+  for (const f of await figma.listAvailableFontsAsync()) {
+    (stylesByFamily[f.fontName.family] = stylesByFamily[f.fontName.family] || []).push(f.fontName.style);
+  }
+  const WEIGHT_STYLES = { 100: ["Thin"], 200: ["Extra Light", "ExtraLight"], 300: ["Light"], 400: ["Regular"], 500: ["Medium"], 600: ["Semi Bold", "SemiBold", "Semibold"], 700: ["Bold"], 800: ["Extra Bold", "ExtraBold"], 900: ["Black"] };
+  const styleFor = (family, weight) => {
+    const avail = stylesByFamily[family] || [];
+    const hit = (WEIGHT_STYLES[weight] || []).find((s) => avail.includes(s));
+    // never fall back to Regular: a heading that quietly loses its weight is worse than a failed run
+    if (!hit) throw new Error(`no ${weight} style for "${family}" — available: ${avail.join(", ") || "font not installed"}`);
+    return hit;
+  };
+
+  const needed = new Set();
+  for (const s of SEED.textStyles) {
+    const weight = defaultValue(s.fontWeight);
+    for (const fam of everyModeValue(s.fontFamily)) needed.add(JSON.stringify({ family: fam, style: styleFor(fam, weight) }));
+  }
+  await Promise.all([...needed].map((f) => figma.loadFontAsync(JSON.parse(f))));
+
   const styles = await figma.getLocalTextStylesAsync();
-  const firstModeValue = (name) => { const v = byName.get(name); const m = Object.keys(v.valuesByMode)[0]; return v.valuesByMode[m]; };
   for (const s of SEED.textStyles) {
     const style = styles.find((x) => x.name === s.name) || figma.createTextStyle();
     style.name = s.name;
-    const weight = firstModeValue(s.fontWeight);
-    const styleName = { 400: "Regular", 500: "Medium", 600: "SemiBold", 700: "Bold" }[weight] || "Regular";
-    const fam = byName.get(s.fontFamily);
-    const famValue = typeof firstModeValue(s.fontFamily) === "string" ? firstModeValue(s.fontFamily) : "Inter";
-    try { await figma.loadFontAsync({ family: famValue, style: styleName }); style.fontName = { family: famValue, style: styleName }; }
-    catch (e) { await figma.loadFontAsync({ family: "Inter", style: "Regular" }); style.fontName = { family: "Inter", style: "Regular" }; log.push(`font ${famValue} ${styleName} not available — used Inter Regular for ${s.name}`); }
-    style.setBoundVariable("fontFamily", fam);
-    style.setBoundVariable("fontSize", byName.get(s.fontSize));
-    style.setBoundVariable("lineHeight", byName.get(s.lineHeight));
-    style.setBoundVariable("fontWeight", byName.get(s.fontWeight));
+    const family = defaultValue(s.fontFamily);
+    style.fontName = { family, style: styleFor(family, defaultValue(s.fontWeight)) };
+    style.setBoundVariable("fontFamily", need(s.fontFamily));
+    style.setBoundVariable("fontSize", need(s.fontSize));
+    style.setBoundVariable("lineHeight", need(s.lineHeight));
+    style.setBoundVariable("fontWeight", need(s.fontWeight));
     style.letterSpacing = { unit: "PERCENT", value: (s.letterSpacingEm || 0) * 100 };
   }
-  log.push(`text styles: ${SEED.textStyles.length}`);
+  log.push(`text styles: ${SEED.textStyles.length}, fonts loaded: ${[...needed].map((f) => { const x = JSON.parse(f); return `${x.family} ${x.style}`; }).join(", ")}`);
 }
-return log.join("\n");
+
+return { log, problems };
