@@ -84,7 +84,11 @@ for (const v of theme.variables) if (v.type === "COLOR") tw.push(`  --color-${tw
 if (comp) for (const v of comp.variables) if (v.type === "COLOR") tw.push(`  --color-${twColor(v.name)}: var(${cssVar(v.name)});`);
 for (const v of [...brand.variables, ...prim.variables]) {
   if (v.type === "STRING" && v.name.startsWith("font/")) tw.push(`  --font-${v.name.split("/")[1]}: var(${cssVar(v.name)});`);
-  if (v.type === "FLOAT" && v.collection === "Brand" && v.name.startsWith("radius/")) tw.push(`  --radius-${v.name.split("/")[1]}: var(${cssVar(v.name)});`);
+}
+// Brand radii override Tailwind's --radius-* scale, so rounded-lg follows the brand.
+// Iterate Brand separately: raw collection variables carry no .collection field (only the byName copies do).
+for (const v of brand.variables) {
+  if (v.type === "FLOAT" && v.name.startsWith("radius/")) tw.push(`  --radius-${v.name.split("/")[1]}: var(${cssVar(v.name)});`);
 }
 tw.push("}\n");
 

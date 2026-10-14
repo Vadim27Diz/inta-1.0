@@ -26,3 +26,5 @@ storybook-static
 
 # ds-kit: содержимое распаковано в репозиторий, архив не храним
 ds-kit.zip
+
+*storybook.log
