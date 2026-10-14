@@ -1,6 +1,6 @@
 # Token catalog (generated)
 
-Generated from `tokens.seed.json` by `scripts/build-tokens.mjs`. Primitives are not listed: components must never use them.
+Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not listed: components must never use them.
 
 ## Theme (modes: Light, Dark)
 
@@ -123,3 +123,9 @@ Generated from `tokens.seed.json` by `scripts/build-tokens.mjs`. Primitives are 
 | `label/sm` | `typo-label-sm` | `font/sans` | 12/16px | 500 |
 | `caption` | `typo-caption` | `font/sans` | 12/16px | 400 |
 | `code` | `typo-code` | `font/mono` | 14/20px | 400 |
+| `body/xs` | `typo-body-xs` | `font/sans` | 12/16px | 400 |
+| `caption-2xs` | `typo-caption-2xs` | `font/sans` | 10/14px | 400 |
+| `numeric/md` | `typo-numeric-md` | `font/mono` | 16/24px | 400 |
+| `numeric/sm` | `typo-numeric-sm` | `font/mono` | 14/20px | 400 |
+| `numeric/xs` | `typo-numeric-xs` | `font/mono` | 12/16px | 400 |
+| `numeric/2xs` | `typo-numeric-2xs` | `font/mono` | 10/14px | 400 |
