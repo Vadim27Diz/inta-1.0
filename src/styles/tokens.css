@@ -162,6 +162,8 @@
   --ds-radius-none: 0;
   --ds-radius-full: 9999px;
   --ds-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ds-text-2xs-size: 0.625rem;
+  --ds-text-2xs-line-height: 0.875rem;
 }
 
 /* Layer 2 — Brand (white-label). Set data-brand on <html> or any wrapper. */
@@ -506,6 +508,48 @@
   font-family: var(--ds-font-mono);
   font-size: 0.875rem;
   line-height: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-body-xs {
+  font-family: var(--ds-font-sans);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-caption-2xs {
+  font-family: var(--ds-font-sans);
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-numeric-md {
+  font-family: var(--ds-font-mono);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-numeric-sm {
+  font-family: var(--ds-font-mono);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-numeric-xs {
+  font-family: var(--ds-font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-numeric-2xs {
+  font-family: var(--ds-font-mono);
+  font-size: 0.625rem;
+  line-height: 0.875rem;
   font-weight: 400;
   letter-spacing: 0em;
 }
