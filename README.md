@@ -38,6 +38,19 @@ CLAUDE.md                              ← правила проекта (Claude
 - `check-tokens.mjs` находит 13 ошибок в «сырой» shadcn-кнопке и пропускает эталонную.
 - Компиляция Tailwind v4 здесь не запускалась (нет доступа к npm). Первым делом в проекте сделайте smoke-тест из `references/code.md`.
 
+## Шрифты
+
+Подключены self-hosted через `@fontsource` (импорты в начале `src/styles/globals.css`, веса 400/500/600/700):
+
+| Пакет | Семейство | Где используется |
+|---|---|---|
+| `@fontsource/inter` | Inter | `font/sans` и `font/heading` бренда Main |
+| `@fontsource/ibm-plex-sans` | IBM Plex Sans | `font/sans` бренда Demo |
+| `@fontsource/ibm-plex-serif` | IBM Plex Serif | `font/heading` бренда Demo |
+| `@fontsource/jetbrains-mono` | JetBrains Mono | `font/mono` (общий для брендов) |
+
+Имена семейств в пакетах совпадают со значениями токенов из Figma, поэтому `@font-face` ничего не переопределяет — достаточно импорта. Каждый вес приходит с подмножествами latin, latin-ext, cyrillic, greek, vietnamese и `unicode-range`: браузер качает только то, что встретилось на странице. Теперь переключение бренда main ↔ demo меняет и гарнитуру, а не только цвета и радиусы.
+
 ## Бэклог
 
-- Подключить вебшрифты: Inter (`--ds-font-sans` бренда Main), IBM Plex Sans и IBM Plex Serif (`--ds-font-sans` и `--ds-font-heading` бренда Demo), JetBrains Mono (`--ds-font-mono`). Пока их нет, переключение бренда main ↔ demo меняет цвета и радиусы, но не гарнитуру — токены шрифтов падают на системные фолбэки.
+- Пусто.
