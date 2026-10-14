@@ -1,0 +1,80 @@
+# Figma: переменные, стили, компоненты
+
+Инструменты: официальный Figma MCP. Перед любым `use_figma` загрузи скилл `/figma-use` (у MCP он обязательный). Для чтения дизайна в код — `/figma-design-to-code` + `get_design_context`.
+
+## Структура файла
+
+| Страница | Что там |
+|---|---|
+| `Cover` | название, версия, дата экспорта токенов |
+| `Foundations` | образцы цветов (по слоям Theme), типографика, отступы, радиусы, тени. Каждый образец привязан к переменной |
+| `Components` | по секции на компонент, в порядке из `shadcn-mapping.md` |
+| `Playground` | 4 рамки бренд × тема для визуальной проверки |
+
+## Коллекции и режимы
+
+| Коллекция | Режимы | Значения | Scopes |
+|---|---|---|---|
+| `Primitives` | `Value` | сырые: палитра Tailwind (hex), `spacing/*`, `text/*/size`, `text/*/line-height`, `font-weight/*`, `radius/none`, `radius/full`, `font/mono` | цвета — **пусто** (не видны в пикерах); числовые шкалы — свои поля (GAP, FONT_SIZE…) |
+| `Brand` | `Main`, `Demo` | `brand/primary/50…950`, `brand/secondary/50…950` (алиасы на Primitives), `brand/*/on`, `font/sans`, `font/heading`, `radius/sm…xl` | рампы — пусто; шрифты — FONT_FAMILY; радиусы — CORNER_RADIUS |
+| `Theme` | `Light`, `Dark` | семантические цвета, **только алиасы** на Brand и Primitives | заливки — FRAME_FILL, SHAPE_FILL; `on-*`/`link` — TEXT_FILL, SHAPE_FILL, STROKE_COLOR; `border/*`, `focus-ring` — STROKE_COLOR |
+| `Component` | `Value` | `<component>/<token>` — алиасы на Theme | как у Theme |
+
+- Лимит режимов зависит от тарифа Figma: на бесплатном плане нескольких режимов может не быть. Если `addMode` падает — остановись и скажи человеку.
+- У каждой переменной code syntax **WEB** = `var(--ds-…)` (по правилам перевода из SKILL.md). Это то, что разработчик видит в Dev Mode.
+- Значения в `Theme` и `Component` — **только алиасы**. Hex в этих слоях — ошибка (экспорт её покажет в `_problems`).
+
+## Первичная настройка (пустой файл)
+
+1. `use_figma` с кодом `assets/figma-import.js`, в `SEED` вставь содержимое `assets/tokens.seed.json`. Если ответ слишком большой — по одной коллекции за запуск, порядок: Primitives → Brand → Theme → Component → text styles.
+2. Создай эффект-стили теней `shadow/xs, sm, md, lg, xl` со значениями Tailwind (`shadow-xs … shadow-xl`), цвет тени — `color/black` с альфой как в Tailwind.
+3. Сделай страницу `Foundations` с образцами, привязанными к переменным.
+4. Экспорт (ниже) → `npm run tokens:build` → сверка: значения в `tokens.css` совпадают с Figma.
+
+## Экспорт Figma → код
+
+1. `use_figma` с кодом `assets/figma-export.js` → результат сохрани в `tokens/tokens.json`.
+2. Если в результате непустой `_problems` — сначала исправь в Figma, потом продолжай.
+3. `npm run tokens:build` и, если менялся состав токенов, `npm run tokens:catalog`.
+4. Коммит: `tokens: <что поменялось>`.
+
+## Компоненты в Figma
+
+Один компонент = один **component set**. Свойства совпадают с пропсами кода.
+
+| Свойство Figma | Значения | В коде |
+|---|---|---|
+| `Variant` | как в cva: `primary`, `secondary`, `neutral`, `outline`, `ghost`, `danger`, `link` | проп `variant` |
+| `Size` | `sm`, `md`, `lg`, `icon` | проп `size` |
+| `State` | `default`, `hover`, `pressed`, `focus`, `disabled` | **не проп**: CSS-состояния `hover:`, `active:`, `focus-visible:`, `disabled:` |
+| boolean `Icon left`/`Icon right`, text `Label` | — | `children`, слоты |
+
+Правила сборки:
+- **Auto layout везде.** Padding и gap привязаны к `spacing/*` (числа = шкала Tailwind: `spacing/4` = 16 = `p-4`).
+- **Каждая** заливка, обводка и цвет текста привязаны к переменной Theme/Component. Ни одного hex.
+- Радиус привязан к `radius/*` из Brand — тогда он меняется вместе с брендом.
+- Текст — только текстовые стили (`label/md` для кнопки), не ручные размеры.
+- Состояние `focus` = копия `default` + обводка `color/focus-ring` 2px снаружи (как `ring-2` в коде). Фон в focus не меняется.
+- Состояние `disabled` у всех вариантов одинаковое: `color/disabled` + `color/on-disabled`.
+- Слои названы как части кода: `root`, `icon-left`, `label`, `icon-right` (уровни element из статьи).
+- Иконки — компоненты-инстансы с цветом от `on-*` токена родителя.
+
+## Проверка бренда и темы
+
+На странице `Playground` четыре рамки. Каждой задай режимы явно (в UI: панель Appearance → иконка переменных; в Plugin API: `frame.setExplicitVariableModeForCollection(collection, modeId)`):
+
+| Рамка | Brand | Theme |
+|---|---|---|
+| Main / Light | Main | Light |
+| Main / Dark | Main | Dark |
+| Demo / Light | Demo | Light |
+| Demo / Dark | Demo | Dark |
+
+Положи в каждую экземпляры компонента. Если что-то не перекрасилось — значит, там не переменная.
+
+## Figma → код для одного компонента
+
+1. `get_design_context` по ноде component set (после `/figma-design-to-code`). Результат — ориентир, не готовый код.
+2. Сопоставь каждую переменную из `get_variable_defs` с классом по таблице из SKILL.md.
+3. Код берётся из shadcn (`shadcn-mapping.md`), а Figma задаёт варианты, размеры и токены. Расхождения Figma vs shadcn — по Figma; вопросы — человеку.
+4. Сравни `get_screenshot` с историей Storybook в той же комбинации бренд × тема.
