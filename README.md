@@ -37,3 +37,7 @@ CLAUDE.md                              ← правила проекта (Claude
 - `build-tokens.mjs` собирает CSS из `tokens.seed.json` (195 CSS-переменных, 11 текстовых стилей).
 - `check-tokens.mjs` находит 13 ошибок в «сырой» shadcn-кнопке и пропускает эталонную.
 - Компиляция Tailwind v4 здесь не запускалась (нет доступа к npm). Первым делом в проекте сделайте smoke-тест из `references/code.md`.
+
+## Бэклог
+
+- Подключить вебшрифты: Inter (`--ds-font-sans` бренда Main), IBM Plex Sans и IBM Plex Serif (`--ds-font-sans` и `--ds-font-heading` бренда Demo), JetBrains Mono (`--ds-font-mono`). Пока их нет, переключение бренда main ↔ demo меняет цвета и радиусы, но не гарнитуру — токены шрифтов падают на системные фолбэки.
