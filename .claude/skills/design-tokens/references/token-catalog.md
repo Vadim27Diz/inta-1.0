@@ -71,6 +71,7 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/primary/subtle-hover` | `--ds-color-primary-subtle-hover` | `bg-primary-subtle-hover` | `brand/primary/200` | `brand/primary/900` |  |
 | `color/primary/subtle-pressed` | `--ds-color-primary-subtle-pressed` | `bg-primary-subtle-pressed` | `brand/primary/300` | `brand/primary/950` |  |
 | `color/on-primary-subtle` | `--ds-color-on-primary-subtle` | `text-on-primary-subtle` | `brand/primary/900` | `brand/primary/100` |  |
+| `color/on-surface-danger` | `--ds-color-on-surface-danger` | `text-on-surface-danger` | `color/link-danger/default` | `color/link-danger/default` | Red text and icons on any surface: required marker, field error text |
 
 ## Component
 

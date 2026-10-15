@@ -100,6 +100,8 @@ function surfacesFor(onToken) {
   }
   // flat surfaces: color/surface, color/surface-hover, color/disabled …
   if (!out.length && has(`color/${base}`)) out.push({ state: "default", surface: `color/${base}` });
+  // content token without a surface of its own (color/on-surface-danger): it is text on the page
+  if (!out.length && /^surface-/.test(base)) out.push({ state: "default", surface: "color/surface" });
   return out;
 }
 
