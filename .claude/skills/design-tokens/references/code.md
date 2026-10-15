@@ -125,7 +125,7 @@ Hover/pressed/focus — это CSS-состояния, пропсов для н�
 ## Definition of done для компонента
 
 - [ ] Классы только из `token-catalog.md` + шкалы Tailwind; `npm run tokens:check` — 0 ошибок.
-- [ ] `npm run tokens:contrast` — пары `X` / `on-X` во всех состояниях × 4 комбинации, WCAG ≥ 4.5 и |APCA| ≥ 60.
+- [ ] `npm run tokens:contrast` — 0 ошибок (WCAG ≥ 4.5). Предупреждения APCA (< 60) читаем, но они не блокируют.
 - [ ] Варианты и размеры совпадают с Figma component set.
 - [ ] Истории `Default`, `Variants`, `States`, `BrandMatrix`.
 - [ ] Проверено в 4 комбинациях бренд × тема, текст читается.

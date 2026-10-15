@@ -29,7 +29,8 @@
 - `hover:bg-primary/90` и любые `/NN` на токенах → токены состояний;
 - `disabled:opacity-50` → `disabled:bg-disabled disabled:text-on-disabled` (для контролов без заливки, например ghost/link, — `disabled:text-on-disabled`);
 - `aria-invalid:border-destructive aria-invalid:ring-destructive/20` → `aria-invalid:border-danger aria-invalid:ring-danger-subtle`;
-- `focus-visible:ring-[3px] ring-ring/50` → `focus-visible:ring-2 focus-visible:ring-focus-ring` (без произвольных значений).
+- `focus-visible:ring-[3px] ring-ring/50` → `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring`
+  (зазор у `outline` прозрачный, в отличие от `ring`, которому нужен крашеный `ring-offset-*`).
 
 Произвольные значения с переменными Radix/Base UI (`h-(--radix-select-trigger-height)`, `w-[var(--anchor-width)]`) разрешены — это не дизайн-решения.
 
@@ -38,9 +39,9 @@
 | shadcn `variant` | ds `variant` | Классы |
 |---|---|---|
 | `default` | `primary` | `bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed` |
-| — | `secondary` (новый, бренд) | `bg-secondary text-on-secondary hover:bg-secondary-hover active:bg-secondary-pressed` |
+| — | `secondary` (тональная primary) | `bg-primary-subtle text-on-primary-subtle hover:bg-primary-subtle-hover active:bg-primary-subtle-pressed` |
 | `secondary` | `neutral` | `bg-neutral text-on-neutral hover:bg-neutral-hover active:bg-neutral-pressed` |
-| `outline` | `outline` | `border border-border bg-surface hover:bg-surface-hover hover:text-on-surface-hover` |
+| `outline` | `outline` | `border border-border hover:bg-surface-hover hover:text-on-surface-hover` — без заливки, иначе на карточке появится заплатка цвета страницы |
 | `ghost` | `ghost` | `hover:bg-surface-hover hover:text-on-surface-hover` |
 | `destructive` | `danger` | `bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed` |
 | — | `danger-subtle` (мягкая destructive) | `bg-danger-subtle text-on-danger-subtle hover:bg-danger-subtle-hover active:bg-danger-subtle-pressed` |

@@ -13,6 +13,7 @@
 - Пары поверхность/контент: `bg-X` + `text-on-X`.
 - `src/styles/tokens.css` генерируется: правим Figma → экспорт → `npm run tokens:build`.
 - Новый глобальный токен или новый бренд — только после согласования с человеком.
+- Объекты в Figma, созданные не агентом, не удаляем и не переписываем без вопроса — даже если они мешают пересборке и выглядят как черновик. Перед любой чисткой страницы сверяем её состав и спрашиваем про чужое.
 
 ## Команды
 
@@ -35,7 +36,7 @@ Demo нужен, чтобы проверять white-label: если компо�
 
 ## Порядок работы над компонентом
 
-Figma component set → код (shadcn + токены) → истории (`Default`, `Variants`, `States`, `BrandMatrix`) → `npm run tokens:check` → сверка скриншота Figma со Storybook. Подробно — в скилле.
+Figma component set → код (shadcn + токены) → истории (`Default`, `Variants`, `States`, `BrandMatrix`) → `npm run tokens:check` и `npm run tokens:contrast` (оба по нулю ошибок) → сверка скриншота Figma со Storybook. Подробно — в скилле.
 
 ## Стиль отчёта
 

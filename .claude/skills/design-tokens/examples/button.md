@@ -11,7 +11,7 @@
 | Слой | Свойство | Переменная / стиль |
 |---|---|---|
 | `root` (auto layout) | fill | `color/primary/default` → в `State=hover`: `color/primary/hover`, `pressed`: `color/primary/pressed`, `disabled`: `color/disabled` |
-| `root` | эффекты (только `State=focus`) | две тени без размытия: spread 4 → `color/focus-ring`, spread 2 → `color/surface`. Обводки нет |
+| `focus-ring` (только `State=focus`) | слой-прямоугольник | на 4px больше кнопки, absolute + constraints STRETCH, обводка 2px `color/focus-ring` снаружи, без заливки, радиус `radius/lg` |
 | `root` | padding H / V, gap | `spacing/4` / `spacing/2`, gap `spacing/2` |
 | `root` | height | `spacing/9` (36px) |
 | `root` | corner radius | `radius/md` (Brand) |
@@ -38,7 +38,10 @@ const buttonVariants = cva(
   [
     "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md",
     "transition-colors outline-none",
-    "focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
+    // Кольцо фокуса — outline, а не ring: зазор прозрачный и показывает подложку,
+    // поэтому кнопка одинаково выглядит на surface и на surface-raised.
+    // outline-solid обязателен: outline-none в этой же базе ставит --tw-outline-style: none.
+    "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
     "disabled:pointer-events-none disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   ],
@@ -46,9 +49,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed",
-        secondary: "bg-secondary text-on-secondary hover:bg-secondary-hover active:bg-secondary-pressed",
+        secondary:
+          "bg-primary-subtle text-on-primary-subtle hover:bg-primary-subtle-hover active:bg-primary-subtle-pressed",
         neutral: "bg-neutral text-on-neutral hover:bg-neutral-hover active:bg-neutral-pressed",
-        outline: "border border-border bg-surface text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
+        outline: "border border-border text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         ghost: "text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         danger: "bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed",
         "danger-subtle":
@@ -81,7 +85,9 @@ export { Button, buttonVariants };
 ```
 
 Обрати внимание: `[&_svg]:size-4` — это селектор-вариант со шкалой Tailwind, не произвольное значение; линтер его пропускает.
-`ring-offset-surface` — токен, чтобы кольцо фокуса не сливалось с фоном.
+Фокус — `outline`, а не `ring`. У `ring` зазор приходится красить (`ring-offset-surface`), и на карточке
+`surface-raised` кнопка выкладывает вокруг себя заплатку цвета страницы. У `outline` зазор прозрачный —
+кнопка одинаково выглядит на любой подложке. По той же причине у `outline` и `ghost` нет заливки.
 У `link` и `link-danger` подчёркивания нет ни в одном состоянии: при hover меняется только цвет (почему — «Ловушки Figma», п. 5).
 
 ## 3. Какой вариант когда: danger / danger-subtle / link-danger
@@ -98,6 +104,10 @@ export { Button, buttonVariants };
 
 `inverse` — для подложек противоположной яркости: тост на тёмном фоне в светлой теме, кнопка поверх фотографии.
 Это единственный вариант, который в тёмной теме становится светлым.
+
+`secondary` — тональная primary (`primary/subtle`), а не второй цвет бренда: вторая по важности кнопка должна
+читаться как «тот же primary, но тише». Рампа `brand/secondary` остаётся для акцентов и графиков,
+кнопкой не используется.
 
 ## 4. История: `src/components/ui/button.stories.tsx`
 
