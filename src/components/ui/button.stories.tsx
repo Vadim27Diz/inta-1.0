@@ -1,7 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "./button";
 
-const variants = ["primary", "secondary", "neutral", "outline", "ghost", "danger", "link"] as const;
+const variants = [
+  "primary",
+  "secondary",
+  "neutral",
+  "outline",
+  "ghost",
+  "danger",
+  "danger-subtle",
+  "inverse",
+  "link",
+  "link-danger",
+] as const;
 const sizes = ["sm", "md", "lg", "icon"] as const;
 
 const meta = {

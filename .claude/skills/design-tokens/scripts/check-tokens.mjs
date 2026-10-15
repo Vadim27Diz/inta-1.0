@@ -56,7 +56,12 @@ const report = (lvl, f, n, cls, msg) => {
 };
 
 for (const f of files) {
-  const lines = fs.readFileSync(f, "utf8").split("\n");
+  const src = fs.readFileSync(f, "utf8");
+  // The "is this shadcn's grey secondary?" hint only makes sense while the file still carries
+  // shadcn's own token next to it. In a file already on our tokens, our secondary IS the brand's
+  // second colour and the warning is pure noise.
+  const hasShadcnSecondary = /-secondary-foreground\b/.test(src);
+  const lines = src.split("\n");
   lines.forEach((line, i) => {
     const n = i + 1;
     if (/^\s*(\/\/|\*|\/\*)/.test(line) || /^\s*import /.test(line)) return;
@@ -72,7 +77,7 @@ for (const f of files) {
       if (paletteRe.test(util)) report("error", f, n, cls, "raw Tailwind palette; use a semantic token (token-catalog.md)");
       const m = util.match(shadcnRe);
       if (m) report("error", f, n, cls, `shadcn token; use ${m[1]}-${SHADCN[m[2]]}`);
-      if (/^(bg|text|border)-secondary(-|$)/.test(util) && /shadcn|ui\//.test(f))
+      if (/^(bg|text|border)-secondary(-|$)/.test(util) && hasShadcnSecondary)
         report("warn", f, n, cls, "check: shadcn 'secondary' (grey) is our 'neutral'; our 'secondary' is the brand's 2nd color");
       const arb = util.match(/^-?[\w-]+-\[(.+)\]$/) || util.match(/^\[(.+)\]$/);
       if (arb && !/^(var\(--|calc\(.*var\(--|--)/.test(arb[1]))

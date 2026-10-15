@@ -5,7 +5,7 @@ import { Slot } from "radix-ui"
 
 const buttonVariants = cva(
   [
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md typo-label-md",
+    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md",
     "transition-colors outline-none",
     "focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
     "disabled:pointer-events-none disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent",
@@ -20,13 +20,19 @@ const buttonVariants = cva(
         outline: "border border-border bg-surface text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         ghost: "text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         danger: "bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed",
-        link: "text-link hover:text-link-hover underline-offset-4 hover:underline disabled:bg-transparent",
+        "danger-subtle":
+          "bg-danger-subtle text-on-danger-subtle hover:bg-danger-subtle-hover active:bg-danger-subtle-pressed",
+        inverse: "bg-inverse text-on-inverse hover:bg-inverse-hover active:bg-inverse-pressed",
+        link: "text-link hover:text-link-hover disabled:bg-transparent",
+        "link-danger": "text-link-danger hover:text-link-danger-hover disabled:bg-transparent",
       },
+      // one typo-* per size, never on the base: custom utilities have equal specificity,
+      // so two of them on one element would be decided by CSS order, not by class order
       size: {
-        sm: "h-8 px-3",
-        md: "h-9 px-4 py-2",
-        lg: "h-10 px-6",
-        icon: "size-9",
+        sm: "h-8 px-3 typo-label-sm",
+        md: "h-9 px-4 py-2 typo-label-md",
+        lg: "h-10 px-6 typo-label-lg",
+        icon: "size-9 typo-label-md",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
