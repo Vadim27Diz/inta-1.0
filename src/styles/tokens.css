@@ -230,6 +230,14 @@
   --ds-color-dataviz-3: var(--ds-color-green-500);
   --ds-color-dataviz-4: var(--ds-color-amber-500);
   --ds-color-dataviz-5: var(--ds-color-sky-500);
+  --ds-color-link-danger: var(--ds-color-red-700);
+  --ds-color-link-danger-hover: var(--ds-color-red-800);
+  --ds-color-inverse: var(--ds-color-zinc-950);
+  --ds-color-inverse-hover: var(--ds-color-zinc-800);
+  --ds-color-inverse-pressed: var(--ds-color-zinc-700);
+  --ds-color-on-inverse: var(--ds-color-white);
+  --ds-color-danger-subtle-hover: var(--ds-color-red-100);
+  --ds-color-danger-subtle-pressed: var(--ds-color-red-200);
 }
 
 .dark, .dark [data-brand], [data-brand].dark {
@@ -286,6 +294,14 @@
   --ds-color-dataviz-3: var(--ds-color-green-400);
   --ds-color-dataviz-4: var(--ds-color-amber-400);
   --ds-color-dataviz-5: var(--ds-color-sky-400);
+  --ds-color-link-danger: var(--ds-color-red-400);
+  --ds-color-link-danger-hover: var(--ds-color-red-300);
+  --ds-color-inverse: var(--ds-color-white);
+  --ds-color-inverse-hover: var(--ds-color-zinc-200);
+  --ds-color-inverse-pressed: var(--ds-color-zinc-300);
+  --ds-color-on-inverse: var(--ds-color-zinc-950);
+  --ds-color-danger-subtle-hover: var(--ds-color-red-900);
+  --ds-color-danger-subtle-pressed: var(--ds-color-red-800);
 }
 
 /* Layer 4 — Component (object-level, aliases into Theme) */
@@ -360,6 +376,14 @@
   --color-dataviz-3: var(--ds-color-dataviz-3);
   --color-dataviz-4: var(--ds-color-dataviz-4);
   --color-dataviz-5: var(--ds-color-dataviz-5);
+  --color-link-danger: var(--ds-color-link-danger);
+  --color-link-danger-hover: var(--ds-color-link-danger-hover);
+  --color-inverse: var(--ds-color-inverse);
+  --color-inverse-hover: var(--ds-color-inverse-hover);
+  --color-inverse-pressed: var(--ds-color-inverse-pressed);
+  --color-on-inverse: var(--ds-color-on-inverse);
+  --color-danger-subtle-hover: var(--ds-color-danger-subtle-hover);
+  --color-danger-subtle-pressed: var(--ds-color-danger-subtle-pressed);
   --color-sidebar-surface: var(--ds-sidebar-surface);
   --color-sidebar-on-surface: var(--ds-sidebar-on-surface);
   --color-sidebar-primary: var(--ds-sidebar-primary);
@@ -494,5 +518,12 @@
   font-size: 0.625rem;
   line-height: 0.875rem;
   font-weight: 400;
+  letter-spacing: 0em;
+}
+@utility typo-label-lg {
+  font-family: var(--ds-font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
   letter-spacing: 0em;
 }

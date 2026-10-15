@@ -59,6 +59,14 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/dataviz/3` | `--ds-color-dataviz-3` | `bg-dataviz-3` | `color/green/500` | `color/green/400` |  |
 | `color/dataviz/4` | `--ds-color-dataviz-4` | `bg-dataviz-4` | `color/amber/500` | `color/amber/400` |  |
 | `color/dataviz/5` | `--ds-color-dataviz-5` | `bg-dataviz-5` | `color/sky/500` | `color/sky/400` |  |
+| `color/link-danger/default` | `--ds-color-link-danger` | `text-link-danger` | `color/red/700` | `color/red/400` |  |
+| `color/link-danger/hover` | `--ds-color-link-danger-hover` | `text-link-danger-hover` | `color/red/800` | `color/red/300` |  |
+| `color/inverse/default` | `--ds-color-inverse` | `bg-inverse` | `color/zinc/950` | `color/white` |  |
+| `color/inverse/hover` | `--ds-color-inverse-hover` | `bg-inverse-hover` | `color/zinc/800` | `color/zinc/200` |  |
+| `color/inverse/pressed` | `--ds-color-inverse-pressed` | `bg-inverse-pressed` | `color/zinc/700` | `color/zinc/300` |  |
+| `color/on-inverse` | `--ds-color-on-inverse` | `text-on-inverse` | `color/white` | `color/zinc/950` |  |
+| `color/danger/subtle-hover` | `--ds-color-danger-subtle-hover` | `bg-danger-subtle-hover` | `color/red/100` | `color/red/900` |  |
+| `color/danger/subtle-pressed` | `--ds-color-danger-subtle-pressed` | `bg-danger-subtle-pressed` | `color/red/200` | `color/red/800` |  |
 
 ## Component
 
@@ -129,3 +137,4 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `numeric/sm` | `typo-numeric-sm` | `font/mono` | 14/20px | 400 |
 | `numeric/xs` | `typo-numeric-xs` | `font/mono` | 12/16px | 400 |
 | `numeric/2xs` | `typo-numeric-2xs` | `font/mono` | 10/14px | 400 |
+| `label/lg` | `typo-label-lg` | `font/sans` | 16/24px | 500 |
