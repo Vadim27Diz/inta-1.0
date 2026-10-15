@@ -30,7 +30,9 @@ src/components/ui/<name>.stories.tsx
     "tokens:catalog": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css .claude/skills/design-tokens/references/token-catalog.md",
     "tokens:check": "node .claude/skills/design-tokens/scripts/check-tokens.mjs src/components",
     "tokens:contrast": "node .claude/skills/design-tokens/scripts/check-contrast.mjs tokens/tokens.json",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "visual": "node scripts/visual.mjs",
+    "icons:stroke": "node scripts/icon-stroke-check.mjs"
   }
 }
 ```
@@ -122,6 +124,25 @@ export const BrandMatrix: Story = {
 
 Hover/pressed/focus — это CSS-состояния, пропсов для них нет и добавлять их ради историй нельзя. Чтобы показать их статично, поставь аддон `storybook-addon-pseudo-states` и в истории `States` задай `parameters: { pseudo: { hover: [...], active: [...], focusVisible: [...] } }`. Без аддона история `States` показывает только `disabled`, а остальное проверяется мышью и клавишей Tab.
 
+## Проверка в браузере
+
+Storybook смотрят глазами, но три вещи проверяются числами — через Chromium (playwright,
+devDependency; ревизия берётся из кеша `~/Library/Caches/ms-playwright`, поэтому версию
+playwright менять без нужды не стоит — другая версия потянет новую сборку Chromium).
+
+| Команда | Что делает |
+|---|---|
+| `npm run visual` | снимает перечисленные в `scripts/visual.mjs` истории в 4 комбинациях бренд × тема, 1x, в `visual.local/`. Бренд и тема передаются глобалами Storybook (`?globals=brand:demo;theme:dark`) — то же, что делает тулбар. Флаги: `--no-build` (по готовому `storybook-static/`), `--dev` (по запущенному dev-серверу), `--story <id>` |
+| `npm run icons:stroke` | толщина линии `lucide-react` в настоящем Chrome: `isPointInStroke` + интеграл чернил по столбцу на скриншоте. Должна совпасть с `2 × size / 24` и с высотой слоя `Vector` у `li:minus` в Figma |
+| `node scripts/figma-code-diff.mjs` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
+
+Две ловушки снимков:
+
+- `storybook-addon-pseudo-states` навешивает классы `pseudo-*` **после** первого кадра. Снимок
+  сразу после `waitForSelector` ловит историю `States` без hover и фокуса — нужна пауза.
+- id истории в URL — это kebab-case заголовка: `Components/Input` + `States` → `components-input--states`,
+  через дефис, а не через слэш.
+
 ## Definition of done для компонента
 
 - [ ] Классы только из `token-catalog.md` + шкалы Tailwind; `npm run tokens:check` — 0 ошибок.
@@ -129,4 +150,6 @@ Hover/pressed/focus — это CSS-состояния, пропсов для н�
 - [ ] Варианты и размеры совпадают с Figma component set.
 - [ ] Истории `Default`, `Variants`, `States`, `BrandMatrix`.
 - [ ] Проверено в 4 комбинациях бренд × тема, текст читается.
-- [ ] Фокус с клавиатуры виден (`ring-focus-ring`).
+- [ ] Фокус с клавиатуры виден: `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring`.
+- [ ] `npm run visual` — истории сняты в 4 комбинациях, неудобный контент не ломает раскладку.
+- [ ] `node scripts/figma-code-diff.mjs` — 0 расхождений с Figma.

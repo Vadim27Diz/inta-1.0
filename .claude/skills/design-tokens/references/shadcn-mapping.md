@@ -54,6 +54,20 @@
 
 Размеры: `default` → `md`; `sm`, `lg`, `icon`, `icon-sm`, `icon-lg` без изменений. Те же имена вариантов используются в Badge, Toggle, Alert и т.д., где они есть.
 
+## Поля ввода: Label, Input, Textarea
+
+| Что | Решение | Почему |
+|---|---|---|
+| Фон поля | `bg-transparent` | `bg-surface` на карточке `surface-raised` выложил бы заплатку цвета страницы — та же причина, что у `outline`/`ghost` кнопки |
+| Обводка | `border border-border-input`, hover нет | токена `border/input-hover` в системе нет, а выдумывать значение нельзя |
+| Фокус | `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring` | как у Button |
+| Ошибка | `aria-invalid:border-danger` | красная только обводка; кольцо фокуса остаётся обычным `focus-ring`, иначе в состоянии «ошибка + фокус» два красных кольца спорят друг с другом |
+| Disabled | `disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent disabled:placeholder:text-on-disabled` | не `opacity-50` |
+| Placeholder | `placeholder:text-on-surface-muted` | |
+| Размеры Input | `sm h-8 px-3 typo-body-sm`, `md h-9 px-4 typo-body-sm`, `lg h-10 px-4 typo-body-md` | высоты как у Button; кегль по шкале body, а не label — в поле лежит контент, а не подпись |
+| Textarea | `min-h-16 px-3 py-2 typo-body-sm field-sizing-content` | растёт по содержимому |
+| Label | `typo-label-md text-on-surface`, `required` → `<span aria-hidden>*</span>` с `text-on-surface-danger` | disabled приходит от контрола: `peer-disabled:` (поле-сосед) и `group-data-[disabled=true]:`; вариант `*:` красит и звёздочку, у неё свой цвет |
+
 ## Все компоненты shadcn и порядок переноса
 
 Порядок важен: каждый следующий слой собирается из предыдущего. Сверяй список с https://ui.shadcn.com/docs/components — там могут появиться новые.

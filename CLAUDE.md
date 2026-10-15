@@ -24,6 +24,9 @@
 | `npm run tokens:check` | линтер компонентов на «не-токены», должен давать 0 ошибок |
 | `npm run tokens:contrast` | WCAG и APCA для пар `X` / `on-X` во всех состояниях × 4 комбинации |
 | `npm run storybook` | Storybook на :6006, тулбар Brand (main/demo) × Theme (light/dark) |
+| `npm run visual` | снимки историй в 4 комбинациях бренд × тема → `visual.local/` |
+| `npm run icons:stroke` | толщина линии иконок lucide-react в настоящем Chrome |
+| `node scripts/figma-code-diff.mjs` | цифровая сверка Figma ↔ `getComputedStyle` в 4 комбинациях |
 
 ## Бренды
 
