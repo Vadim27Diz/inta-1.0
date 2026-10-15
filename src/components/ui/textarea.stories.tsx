@@ -28,8 +28,6 @@ export const States: Story = {
     <div className="grid grid-cols-[repeat(2,max-content)] items-start gap-4">
       <span className="typo-caption text-on-surface-muted">default</span>
       <Textarea {...args} className="w-80" defaultValue="Значение" />
-      <span className="typo-caption text-on-surface-muted">hover</span>
-      <Textarea {...args} id="ta-hover" className="w-80" defaultValue="Значение" />
       <span className="typo-caption text-on-surface-muted">focus</span>
       <Textarea {...args} id="ta-focus" className="w-80" defaultValue="Значение" />
       <span className="typo-caption text-on-surface-muted">invalid</span>
@@ -42,9 +40,8 @@ export const States: Story = {
       <Textarea {...args} disabled className="w-80" />
     </div>
   ),
-  parameters: {
-    pseudo: { hover: ["#ta-hover"], focusVisible: ["#ta-focus", "#ta-invalid-focus"] },
-  },
+  // hover у поля нет — см. input.stories.tsx
+  parameters: { pseudo: { focusVisible: ["#ta-focus", "#ta-invalid-focus"] } },
 };
 
 // неудобный контент: длинный текст, слово без пробелов, пустое значение, ошибка

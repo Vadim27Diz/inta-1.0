@@ -29,16 +29,16 @@ const EXPECT = [
   ] },
   { story: "components-input--states", title: "Input states", probes: [
     { sel: "input", at: 0, name: "default",       height: 36, padX: 16, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface" },
-    { sel: "input", at: 2, name: "focus",         height: 36, border: "--ds-color-border-input", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
-    { sel: "input", at: 3, name: "invalid",       height: 36, border: "--ds-color-danger" },
-    { sel: "input", at: 4, name: "invalid+focus", height: 36, border: "--ds-color-danger", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
-    { sel: "input", at: 5, name: "disabled",      height: 36, bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+    { sel: "input", at: 1, name: "focus",         height: 36, border: "--ds-color-border-input", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "input", at: 2, name: "invalid",       height: 36, border: "--ds-color-danger" },
+    { sel: "input", at: 3, name: "invalid+focus", height: 36, border: "--ds-color-danger", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "input", at: 4, name: "disabled",      height: 36, bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
   ] },
   { story: "components-textarea--states", title: "Textarea", probes: [
     { sel: "textarea", at: 0, name: "default",       minHeight: 64, padX: 12, padY: 8, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [14, 20, 400] },
-    { sel: "textarea", at: 2, name: "focus",         outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
-    { sel: "textarea", at: 3, name: "invalid",       border: "--ds-color-danger" },
-    { sel: "textarea", at: 5, name: "disabled",      bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+    { sel: "textarea", at: 1, name: "focus",         outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "textarea", at: 2, name: "invalid",       border: "--ds-color-danger" },
+    { sel: "textarea", at: 4, name: "disabled",      bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
   ] },
   { story: "components-label--variants", title: "Label", probes: [
     { sel: "label", at: 0, name: "default",  height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4 },

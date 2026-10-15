@@ -134,7 +134,9 @@ playwright менять без нужды не стоит — другая ве�
 |---|---|
 | `npm run visual` | снимает перечисленные в `scripts/visual.mjs` истории в 4 комбинациях бренд × тема, 1x, в `visual.local/`. Бренд и тема передаются глобалами Storybook (`?globals=brand:demo;theme:dark`) — то же, что делает тулбар. Флаги: `--no-build` (по готовому `storybook-static/`), `--dev` (по запущенному dev-серверу), `--story <id>` |
 | `npm run icons:stroke` | толщина линии `lucide-react` в настоящем Chrome: `isPointInStroke` + интеграл чернил по столбцу на скриншоте. Должна совпасть с `2 × size / 24` и с высотой слоя `Vector` у `li:minus` в Figma |
-| `node scripts/figma-code-diff.mjs` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
+| `npm run verify` | `tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`. `visual` сюда не входит: снимки — для глаз, не для CI |
+| `npm run figma:layout` | правило раскладки страницы Components по снимку `figma/layout.json` (см. figma.md → «Раскладка страницы Components») |
+| `npm run figma:diff` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
 
 Две ловушки снимков:
 

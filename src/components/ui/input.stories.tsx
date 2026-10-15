@@ -38,8 +38,6 @@ export const States: Story = {
     <div className="grid grid-cols-[repeat(2,max-content)] items-center gap-4">
       <span className="typo-caption text-on-surface-muted">default</span>
       <Input {...args} className="w-64" defaultValue="Значение" />
-      <span className="typo-caption text-on-surface-muted">hover</span>
-      <Input {...args} id="in-hover" className="w-64" defaultValue="Значение" />
       <span className="typo-caption text-on-surface-muted">focus</span>
       <Input {...args} id="in-focus" className="w-64" defaultValue="Значение" />
       <span className="typo-caption text-on-surface-muted">invalid</span>
@@ -52,9 +50,8 @@ export const States: Story = {
       <Input {...args} disabled className="w-64" />
     </div>
   ),
-  parameters: {
-    pseudo: { hover: ["#in-hover"], focusVisible: ["#in-focus", "#in-invalid-focus"] },
-  },
+  // hover у поля нет: токена border/input-hover в системе нет, и обводка в hover не меняется
+  parameters: { pseudo: { focusVisible: ["#in-focus", "#in-invalid-focus"] } },
 };
 
 // неудобный контент: длинный текст, длинное слово, пустое значение, placeholder, ошибка
