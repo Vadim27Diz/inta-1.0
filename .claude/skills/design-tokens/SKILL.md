@@ -50,6 +50,7 @@ description: Используй при любой работе с дизайн-�
 1. **Токены в Figma.** Пустой файл → создай коллекции из `assets/tokens.seed.json` скриптом `assets/figma-import.js`. Подробно: `references/figma.md`.
 2. **Экспорт.** `assets/figma-export.js` через Figma MCP → сохрани результат в `tokens/tokens.json`.
 3. **Сборка.** `npm run tokens:build` → `src/styles/tokens.css` (+ `references/token-catalog.md`, если нужно обновить каталог).
+   Токены менялись — **пересобери страницу `Foundations`** генератором `assets/figma-foundations.js`: её подписи (hex, контраст, числа) статичны и иначе врут. Как — в `references/figma.md` → «Страница Foundations».
 4. **Компонент в Figma.** Component set с теми же свойствами, что у кода (`variant`, `size`, `state`), все заливки/обводки/отступы/радиусы/текст привязаны к переменным и стилям. Подробно: `references/figma.md` → «Компоненты».
 5. **Компонент в коде.** `npx shadcn@latest add <name>` → перепиши классы по `references/shadcn-mapping.md` → правила выше.
 6. **История в Storybook.** Все варианты × состояния; проверка в 4 комбинациях бренд × тема через тулбар. Подробно: `references/code.md`.
@@ -63,7 +64,7 @@ description: Используй при любой работе с дизайн-�
 1. Реши уровень по статье: нужен одному компоненту → `Component` (`<component>/<name>`); 3+ компонентам → `Theme` (`color/<concept>/<variant>`). Не глобализируй преждевременно.
 2. Собери имя по формуле `[object/] category / concept / [variant] / [state]` (`references/naming.md`). Проверь, что такого смысла ещё нет под другим именем.
 3. Добавь переменную в Figma (значения во **всех** режимах, только алиасы на нижний слой, scope и code syntax).
-4. Экспорт → сборка → используй класс. Упомяни новый токен в отчёте.
+4. Экспорт → сборка → пересборка `Foundations` → используй класс. Упомяни новый токен в отчёте.
 
 ## Когда спрашивать человека
 
@@ -75,7 +76,7 @@ description: Используй при любой работе с дизайн-�
 
 - `references/naming.md` — уровни имени по статье, наши решения и отступления от неё.
 - `references/token-catalog.md` — все семантические токены, значения по режимам (генерируется).
-- `references/figma.md` — коллекции, режимы, scopes, code syntax, текстовые стили, импорт/экспорт, правила сборки компонентов, «Ловушки Figma».
+- `references/figma.md` — коллекции, режимы, scopes, code syntax, текстовые стили, импорт/экспорт, страница `Foundations` и её пересборка, правила сборки компонентов, «Ловушки Figma».
 - `references/code.md` — структура проекта, Tailwind v4, Storybook (бренд/тема в тулбаре), npm-скрипты.
 - `references/shadcn-mapping.md` — замена токенов shadcn на наши, варианты кнопок, список всех компонентов и порядок переноса.
 - `examples/button.md` — эталон: Figma → код → история.
