@@ -303,6 +303,7 @@
 /* Tailwind v4 mapping */
 @theme {
   --color-*: initial; /* removes the raw palette: bg-blue-500 no longer exists, only semantic colors */
+  --radius-*: initial; /* removes Tailwind's own radii: only radius/sm…xl from Brand survive, so every rounded-* follows the brand (rounded-none and rounded-full are static utilities in v4 and stay) */
 }
 
 @theme inline {

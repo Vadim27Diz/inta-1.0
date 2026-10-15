@@ -64,7 +64,8 @@ for (const f of files) {
       report("error", f, n, line.trim().slice(0, 60), "raw color value; use a semantic color token");
     if (/style=\{\{/.test(line)) report("warn", f, n, "style={{…}}", "inline style; prefer token classes, or var(--ds-…) only");
     for (const cls of line.split(/[\s"'`]+/)) {
-      if (!/^[!\w:\-[\]/.%=#()&>*~+@,]+$/.test(cls) || !cls.includes("-")) continue;
+      // "rounded" is the one dash-free class worth checking: since --radius-*: initial it compiles to nothing.
+      if (!/^[!\w:\-[\]/.%=#()&>*~+@,]+$/.test(cls) || (!cls.includes("-") && !/(^|:)rounded$/.test(cls))) continue;
       const { variants, util } = utility(cls);
       if (/(^|:)dark:/.test(cls) || variants.startsWith("dark:"))
         report("error", f, n, cls, "no dark: in components — tokens switch light/dark automatically");
@@ -78,6 +79,12 @@ for (const f of files) {
         report("error", f, n, cls, "arbitrary value; use the Tailwind scale or a token (var(--ds-…) only if no class exists)");
       if (/^(bg|text|border|ring)-[a-z-]+\/\d+$/.test(util) && !paletteRe.test(util) && !shadcnRe.test(util))
         report("warn", f, n, cls, "opacity on a token (e.g. bg-primary/90); states have their own tokens: -hover, -pressed");
+      // Brand defines radius/sm…xl only; --radius-*: initial removes the rest, so these classes compile to nothing.
+      const SIDE = "(t|r|b|l|s|e|tl|tr|br|bl|ss|se|ee|es)";
+      if (new RegExp(`^rounded(-${SIDE})?-(xs|2xl|3xl|4xl)$`).test(util))
+        report("error", f, n, cls, "radius outside the brand scale; use rounded-sm|md|lg|xl (radius/* from Brand). Need a bigger one — agree radius/2xl in Brand first");
+      if (new RegExp(`^rounded(-${SIDE})?$`).test(util))
+        report("error", f, n, cls, "bare rounded has no value since --radius-*: initial; name the step: rounded-sm|md|lg|xl");
       if (/^opacity-50$/.test(util) && /disabled/.test(variants))
         report("warn", f, n, cls, "disabled via opacity; use bg-disabled / text-on-disabled");
     }

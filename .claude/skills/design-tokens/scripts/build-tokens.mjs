@@ -83,14 +83,18 @@ if (comp) {
 
 // Tailwind v4 mapping
 const tw = [];
-tw.push("@theme {\n  --color-*: initial; /* removes the raw palette: bg-blue-500 no longer exists, only semantic colors */\n}\n");
+tw.push(`@theme {
+  --color-*: initial; /* removes the raw palette: bg-blue-500 no longer exists, only semantic colors */
+  --radius-*: initial; /* removes Tailwind's own radii: only radius/sm…xl from Brand survive, so every rounded-* follows the brand (rounded-none and rounded-full are static utilities in v4 and stay) */
+}
+`);
 tw.push("@theme inline {");
 for (const v of theme.variables) if (v.type === "COLOR") tw.push(`  --color-${twColor(v.name)}: var(${cssVar(v.name)});`);
 if (comp) for (const v of comp.variables) if (v.type === "COLOR") tw.push(`  --color-${twColor(v.name)}: var(${cssVar(v.name)});`);
 for (const v of [...brand.variables, ...prim.variables]) {
   if (v.type === "STRING" && v.name.startsWith("font/")) tw.push(`  --font-${v.name.split("/")[1]}: var(${cssVar(v.name)});`);
 }
-// Brand radii override Tailwind's --radius-* scale, so rounded-lg follows the brand.
+// Brand radii are the whole --radius-* scale (Tailwind's own is reset above), so every rounded-* follows the brand.
 // Iterate Brand separately: these are the brand-scoped radii, not Primitives radius/none|full.
 for (const v of brand.variables) {
   if (v.type === "FLOAT" && v.name.startsWith("radius/")) tw.push(`  --radius-${v.name.split("/")[1]}: var(${cssVar(v.name)});`);
