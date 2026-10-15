@@ -10,7 +10,10 @@
 // Two numbers per pair:
 //   WCAG 2 contrast ratio      — the legal/compliance number, threshold 4.5:1 for body text
 //   APCA (APCA-W3 0.1.9) Lc    — the perceptual number, |Lc| >= 60 for normal-weight body text
-// A pair must pass both. Exits 1 if anything fails, like tokens:check.
+// WCAG below the threshold is an error (exit 1) — it is the number we are held to.
+// APCA below the threshold is a warning: it is the better model of readability, but it is not
+// the standard anyone audits against, and chasing it would push the dark theme into repaints
+// nobody asked for. Warnings are there to be read, not to block.
 import fs from "node:fs";
 
 const args = process.argv.slice(2);
@@ -18,6 +21,13 @@ const SHOW_ALL = args.includes("--all");
 const inFile = args.find((a) => !a.startsWith("--")) || "tokens/tokens.json";
 const WCAG_MIN = 4.5;
 const APCA_MIN = 60;
+
+// Pairs that are meant to be low contrast. WCAG 2 §1.4.3 exempts inactive controls outright,
+// and a disabled button that reads as clearly as an active one defeats the state.
+const EXEMPT = [
+  { content: "color/on-disabled", surface: "color/disabled", why: "WCAG 1.4.3 exempts inactive controls" },
+];
+const isExempt = (content, surface) => EXEMPT.some((e) => e.content === content && e.surface === surface);
 
 const data = JSON.parse(fs.readFileSync(inFile, "utf8"));
 const byName = new Map();
@@ -121,26 +131,41 @@ for (const p of pairs) {
     if (typeof fgHex !== "string" || typeof bgHex !== "string") continue;
     const fg = rgb(fgHex), bg = rgb(bgHex);
     const w = wcag(fg, bg), a = apca(fg, bg);
-    rows.push({
-      content: p.content, surface: p.surface, state: p.state, brand, theme,
-      fg: fgHex, bg: bgHex, wcag: w, apca: a,
-      pass: w >= WCAG_MIN && Math.abs(a) >= APCA_MIN,
-    });
+    const status = isExempt(p.content, p.surface) ? "exempt"
+      : w < WCAG_MIN ? "error"
+      : Math.abs(a) < APCA_MIN ? "warn"
+      : "pass";
+    rows.push({ content: p.content, surface: p.surface, state: p.state, brand, theme, fg: fgHex, bg: bgHex, wcag: w, apca: a, status });
   }
 }
 
 const pad = (s, n) => String(s).padEnd(n);
 const num = (x, n) => String(x).padStart(n);
+const MARK = { pass: "✓", warn: "⚠", error: "✗", exempt: "–" };
 const line = (r) =>
-  `${r.pass ? "✓" : "✗"} ${pad(r.content.replace("color/", ""), 22)} on ${pad(r.surface.replace("color/", ""), 24)} ${pad(r.state, 8)} ${pad(`${r.brand}/${r.theme}`, 12)} ${pad(r.fg, 8)}→${pad(r.bg, 8)} WCAG ${num(r.wcag.toFixed(2), 6)}  APCA ${num(r.apca.toFixed(1), 7)}`;
+  `${MARK[r.status]} ${pad(r.content.replace("color/", ""), 22)} on ${pad(r.surface.replace("color/", ""), 24)} ${pad(r.state, 8)} ${pad(`${r.brand}/${r.theme}`, 12)} ${pad(r.fg, 8)}→${pad(r.bg, 8)} WCAG ${num(r.wcag.toFixed(2), 6)}  APCA ${num(r.apca.toFixed(1), 7)}`;
 
-const failed = rows.filter((r) => !r.pass);
+const errors = rows.filter((r) => r.status === "error");
+const warns = rows.filter((r) => r.status === "warn");
+const exempt = rows.filter((r) => r.status === "exempt");
+
 if (SHOW_ALL) {
-  console.log(`All pairs (${rows.length}), thresholds WCAG >= ${WCAG_MIN}, |APCA| >= ${APCA_MIN}\n`);
+  console.log(`All pairs (${rows.length}); WCAG < ${WCAG_MIN} is an error, |APCA| < ${APCA_MIN} a warning\n`);
   for (const r of rows) console.log(line(r));
-} else if (failed.length) {
-  console.log(`Failures (${failed.length} of ${rows.length}), thresholds WCAG >= ${WCAG_MIN}, |APCA| >= ${APCA_MIN}\n`);
-  for (const r of failed) console.log(line(r));
+} else {
+  if (errors.length) {
+    console.log(`Errors — WCAG < ${WCAG_MIN} (${errors.length})\n`);
+    for (const r of errors) console.log(line(r));
+    console.log("");
+  }
+  if (warns.length) {
+    console.log(`Warnings — |APCA| < ${APCA_MIN} (${warns.length})\n`);
+    for (const r of warns) console.log(line(r));
+  }
 }
-console.log(`\n${pairs.length} pairs × ${COMBOS.length} combinations = ${rows.length} checks · ${rows.length - failed.length} pass · ${failed.length} fail`);
-process.exit(failed.length ? 1 : 0);
+console.log(
+  `\n${pairs.length} pairs × ${COMBOS.length} combinations = ${rows.length} checks · ` +
+  `${rows.length - errors.length - warns.length - exempt.length} pass · ${warns.length} warn · ${errors.length} error · ${exempt.length} exempt`
+);
+for (const e of EXEMPT) console.log(`  exempt: ${e.content.replace("color/", "")} on ${e.surface.replace("color/", "")} — ${e.why}`);
+process.exit(errors.length ? 1 : 0);

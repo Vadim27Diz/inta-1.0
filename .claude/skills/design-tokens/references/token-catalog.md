@@ -13,25 +13,25 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/surface-overlay` | `--ds-color-surface-overlay` | `bg-surface-overlay` | `color/white` | `color/zinc/900` | Popovers, menus, dialogs |
 | `color/on-surface-overlay` | `--ds-color-on-surface-overlay` | `text-on-surface-overlay` | `color/zinc/950` | `color/zinc/50` |  |
 | `color/surface-muted` | `--ds-color-surface-muted` | `bg-surface-muted` | `color/zinc/100` | `color/zinc/800` | Subtle fills: skeleton, code, tracks |
-| `color/on-surface-muted` | `--ds-color-on-surface-muted` | `text-on-surface-muted` | `color/zinc/500` | `color/zinc/400` | Secondary text, placeholders, helper text (on any surface) |
+| `color/on-surface-muted` | `--ds-color-on-surface-muted` | `text-on-surface-muted` | `color/zinc/600` | `color/zinc/400` | Secondary text, placeholders, helper text (on any surface) |
 | `color/surface-hover` | `--ds-color-surface-hover` | `bg-surface-hover` | `color/zinc/100` | `color/zinc/800` | Hovered/selected rows, menu items, ghost buttons |
 | `color/on-surface-hover` | `--ds-color-on-surface-hover` | `text-on-surface-hover` | `color/zinc/900` | `color/zinc/50` |  |
 | `color/scrim` | `--ds-color-scrim` | `bg-scrim` | `color/black-alpha/50` | `color/black-alpha/80` | Backdrop behind dialogs and sheets |
 | `color/primary/default` | `--ds-color-primary` | `bg-primary` | `brand/primary/600` | `brand/primary/600` |  |
-| `color/primary/hover` | `--ds-color-primary-hover` | `bg-primary-hover` | `brand/primary/700` | `brand/primary/500` |  |
-| `color/primary/pressed` | `--ds-color-primary-pressed` | `bg-primary-pressed` | `brand/primary/800` | `brand/primary/700` |  |
+| `color/primary/hover` | `--ds-color-primary-hover` | `bg-primary-hover` | `brand/primary/700` | `brand/primary/700` |  |
+| `color/primary/pressed` | `--ds-color-primary-pressed` | `bg-primary-pressed` | `brand/primary/800` | `brand/primary/800` |  |
 | `color/on-primary` | `--ds-color-on-primary` | `text-on-primary` | `brand/primary/on` | `brand/primary/on` |  |
 | `color/secondary/default` | `--ds-color-secondary` | `bg-secondary` | `brand/secondary/600` | `brand/secondary/600` |  |
-| `color/secondary/hover` | `--ds-color-secondary-hover` | `bg-secondary-hover` | `brand/secondary/700` | `brand/secondary/500` |  |
-| `color/secondary/pressed` | `--ds-color-secondary-pressed` | `bg-secondary-pressed` | `brand/secondary/800` | `brand/secondary/700` |  |
+| `color/secondary/hover` | `--ds-color-secondary-hover` | `bg-secondary-hover` | `brand/secondary/700` | `brand/secondary/700` |  |
+| `color/secondary/pressed` | `--ds-color-secondary-pressed` | `bg-secondary-pressed` | `brand/secondary/800` | `brand/secondary/800` |  |
 | `color/on-secondary` | `--ds-color-on-secondary` | `text-on-secondary` | `brand/secondary/on` | `brand/secondary/on` |  |
 | `color/neutral/default` | `--ds-color-neutral` | `bg-neutral` | `color/zinc/100` | `color/zinc/800` |  |
 | `color/neutral/hover` | `--ds-color-neutral-hover` | `bg-neutral-hover` | `color/zinc/200` | `color/zinc/700` |  |
 | `color/neutral/pressed` | `--ds-color-neutral-pressed` | `bg-neutral-pressed` | `color/zinc/300` | `color/zinc/600` |  |
 | `color/on-neutral` | `--ds-color-on-neutral` | `text-on-neutral` | `color/zinc/900` | `color/zinc/50` |  |
 | `color/danger/default` | `--ds-color-danger` | `bg-danger` | `color/red/600` | `color/red/600` |  |
-| `color/danger/hover` | `--ds-color-danger-hover` | `bg-danger-hover` | `color/red/700` | `color/red/500` |  |
-| `color/danger/pressed` | `--ds-color-danger-pressed` | `bg-danger-pressed` | `color/red/800` | `color/red/700` |  |
+| `color/danger/hover` | `--ds-color-danger-hover` | `bg-danger-hover` | `color/red/700` | `color/red/700` |  |
+| `color/danger/pressed` | `--ds-color-danger-pressed` | `bg-danger-pressed` | `color/red/800` | `color/red/800` |  |
 | `color/on-danger` | `--ds-color-on-danger` | `text-on-danger` | `color/white` | `color/white` |  |
 | `color/link/default` | `--ds-color-link` | `text-link` | `brand/primary/700` | `brand/primary/400` |  |
 | `color/link/hover` | `--ds-color-link-hover` | `text-link-hover` | `brand/primary/800` | `brand/primary/300` |  |
@@ -40,7 +40,7 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/focus-ring` | `--ds-color-focus-ring` | `ring-focus-ring` | `brand/primary/500` | `brand/primary/400` | Focus ring for every focusable control |
 | `color/border/default` | `--ds-color-border` | `border-border` | `color/zinc/200` | `color/zinc/800` |  |
 | `color/border/input` | `--ds-color-border-input` | `border-border-input` | `color/zinc/300` | `color/zinc/700` |  |
-| `color/success/default` | `--ds-color-success` | `bg-success` | `color/green/600` | `color/green/600` |  |
+| `color/success/default` | `--ds-color-success` | `bg-success` | `color/green/700` | `color/green/700` |  |
 | `color/on-success` | `--ds-color-on-success` | `text-on-success` | `color/white` | `color/white` |  |
 | `color/success/subtle` | `--ds-color-success-subtle` | `bg-success-subtle` | `color/green/50` | `color/green/950` |  |
 | `color/on-success-subtle` | `--ds-color-on-success-subtle` | `text-on-success-subtle` | `color/green/800` | `color/green/200` |  |
@@ -48,7 +48,7 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/on-warning` | `--ds-color-on-warning` | `text-on-warning` | `color/zinc/950` | `color/zinc/950` |  |
 | `color/warning/subtle` | `--ds-color-warning-subtle` | `bg-warning-subtle` | `color/amber/50` | `color/amber/950` |  |
 | `color/on-warning-subtle` | `--ds-color-on-warning-subtle` | `text-on-warning-subtle` | `color/amber/900` | `color/amber/200` |  |
-| `color/info/default` | `--ds-color-info` | `bg-info` | `color/sky/600` | `color/sky/600` |  |
+| `color/info/default` | `--ds-color-info` | `bg-info` | `color/sky/700` | `color/sky/700` |  |
 | `color/on-info` | `--ds-color-on-info` | `text-on-info` | `color/white` | `color/white` |  |
 | `color/info/subtle` | `--ds-color-info-subtle` | `bg-info-subtle` | `color/sky/50` | `color/sky/950` |  |
 | `color/on-info-subtle` | `--ds-color-on-info-subtle` | `text-on-info-subtle` | `color/sky/800` | `color/sky/200` |  |
@@ -67,6 +67,10 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `color/on-inverse` | `--ds-color-on-inverse` | `text-on-inverse` | `color/white` | `color/zinc/950` |  |
 | `color/danger/subtle-hover` | `--ds-color-danger-subtle-hover` | `bg-danger-subtle-hover` | `color/red/100` | `color/red/900` |  |
 | `color/danger/subtle-pressed` | `--ds-color-danger-subtle-pressed` | `bg-danger-subtle-pressed` | `color/red/200` | `color/red/800` |  |
+| `color/primary/subtle` | `--ds-color-primary-subtle` | `bg-primary-subtle` | `brand/primary/100` | `brand/primary/800` |  |
+| `color/primary/subtle-hover` | `--ds-color-primary-subtle-hover` | `bg-primary-subtle-hover` | `brand/primary/200` | `brand/primary/900` |  |
+| `color/primary/subtle-pressed` | `--ds-color-primary-subtle-pressed` | `bg-primary-subtle-pressed` | `brand/primary/300` | `brand/primary/950` |  |
+| `color/on-primary-subtle` | `--ds-color-on-primary-subtle` | `text-on-primary-subtle` | `brand/primary/900` | `brand/primary/100` |  |
 
 ## Component
 
@@ -96,19 +100,19 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `brand/primary/800` | `--ds-brand-primary-800` | `color/blue/800` | `color/teal/900` |
 | `brand/primary/900` | `--ds-brand-primary-900` | `color/blue/900` | `color/teal/950` |
 | `brand/primary/950` | `--ds-brand-primary-950` | `color/blue/950` | `color/teal/950` |
-| `brand/secondary/50` | `--ds-brand-secondary-50` | `color/violet/50` | `color/orange/50` |
-| `brand/secondary/100` | `--ds-brand-secondary-100` | `color/violet/100` | `color/orange/100` |
-| `brand/secondary/200` | `--ds-brand-secondary-200` | `color/violet/200` | `color/orange/200` |
-| `brand/secondary/300` | `--ds-brand-secondary-300` | `color/violet/300` | `color/orange/300` |
-| `brand/secondary/400` | `--ds-brand-secondary-400` | `color/violet/400` | `color/orange/400` |
-| `brand/secondary/500` | `--ds-brand-secondary-500` | `color/violet/500` | `color/orange/500` |
-| `brand/secondary/600` | `--ds-brand-secondary-600` | `color/violet/600` | `color/orange/600` |
-| `brand/secondary/700` | `--ds-brand-secondary-700` | `color/violet/700` | `color/orange/700` |
-| `brand/secondary/800` | `--ds-brand-secondary-800` | `color/violet/800` | `color/orange/800` |
-| `brand/secondary/900` | `--ds-brand-secondary-900` | `color/violet/900` | `color/orange/900` |
+| `brand/secondary/50` | `--ds-brand-secondary-50` | `color/violet/50` | `color/orange/100` |
+| `brand/secondary/100` | `--ds-brand-secondary-100` | `color/violet/100` | `color/orange/200` |
+| `brand/secondary/200` | `--ds-brand-secondary-200` | `color/violet/200` | `color/orange/300` |
+| `brand/secondary/300` | `--ds-brand-secondary-300` | `color/violet/300` | `color/orange/400` |
+| `brand/secondary/400` | `--ds-brand-secondary-400` | `color/violet/400` | `color/orange/500` |
+| `brand/secondary/500` | `--ds-brand-secondary-500` | `color/violet/500` | `color/orange/600` |
+| `brand/secondary/600` | `--ds-brand-secondary-600` | `color/violet/600` | `color/orange/700` |
+| `brand/secondary/700` | `--ds-brand-secondary-700` | `color/violet/700` | `color/orange/800` |
+| `brand/secondary/800` | `--ds-brand-secondary-800` | `color/violet/800` | `color/orange/900` |
+| `brand/secondary/900` | `--ds-brand-secondary-900` | `color/violet/900` | `color/orange/950` |
 | `brand/secondary/950` | `--ds-brand-secondary-950` | `color/violet/950` | `color/orange/950` |
 | `brand/primary/on` | `--ds-brand-primary-on` | `color/white` | `color/white` |
-| `brand/secondary/on` | `--ds-brand-secondary-on` | `color/white` | `color/zinc/950` |
+| `brand/secondary/on` | `--ds-brand-secondary-on` | `color/white` | `color/white` |
 | `font/sans` | `--ds-font-sans` | `Inter` | `IBM Plex Sans` |
 | `font/heading` | `--ds-font-heading` | `Inter` | `IBM Plex Serif` |
 | `radius/sm` | `--ds-radius-sm` | `4` | `2` |
