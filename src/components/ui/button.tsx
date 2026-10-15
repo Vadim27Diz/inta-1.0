@@ -7,7 +7,9 @@ const buttonVariants = cva(
   [
     "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md",
     "transition-colors outline-none",
-    "focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
+    // Кольцо фокуса — outline, а не ring: зазор прозрачный и показывает подложку,
+    // поэтому кнопка одинаково выглядит на surface и на surface-raised.
+    "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
     "disabled:pointer-events-none disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   ],
@@ -15,9 +17,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed",
-        secondary: "bg-secondary text-on-secondary hover:bg-secondary-hover active:bg-secondary-pressed",
+        secondary:
+          "bg-primary-subtle text-on-primary-subtle hover:bg-primary-subtle-hover active:bg-primary-subtle-pressed",
         neutral: "bg-neutral text-on-neutral hover:bg-neutral-hover active:bg-neutral-pressed",
-        outline: "border border-border bg-surface text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
+        outline: "border border-border text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         ghost: "text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         danger: "bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed",
         "danger-subtle":
