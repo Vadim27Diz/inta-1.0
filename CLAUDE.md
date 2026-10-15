@@ -21,6 +21,7 @@
 | `npm run tokens:build` | `tokens/tokens.json` → `src/styles/tokens.css` |
 | `npm run tokens:catalog` | то же + обновляет каталог токенов в скилле |
 | `npm run tokens:check` | линтер компонентов на «не-токены», должен давать 0 ошибок |
+| `npm run tokens:contrast` | WCAG и APCA для пар `X` / `on-X` во всех состояниях × 4 комбинации |
 | `npm run storybook` | Storybook на :6006, тулбар Brand (main/demo) × Theme (light/dark) |
 
 ## Бренды

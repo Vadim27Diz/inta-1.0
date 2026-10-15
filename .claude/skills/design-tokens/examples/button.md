@@ -2,33 +2,41 @@
 
 ## 1. Figma: component set `Button`
 
-Свойства: `Variant` (primary, secondary, neutral, outline, ghost, danger, link) × `Size` (sm, md, lg, icon) × `State` (default, hover, pressed, focus, disabled); boolean `Icon left`, `Icon right`; text `Label`.
+Свойства: `Variant` (primary, secondary, neutral, outline, ghost, danger, danger-subtle, inverse, link, link-danger)
+× `Size` (sm, md, lg, icon) × `State` (default, hover, pressed, focus, disabled) = 200 вариантов.
+Плюс свойства компонента: boolean `Icon left`, `Icon right`, text `Label`. Осями вариантов они не делаются — иначе 800 ячеек.
 
 Привязки для `Variant=primary, Size=md`:
 
 | Слой | Свойство | Переменная / стиль |
 |---|---|---|
 | `root` (auto layout) | fill | `color/primary/default` → в `State=hover`: `color/primary/hover`, `pressed`: `color/primary/pressed`, `disabled`: `color/disabled` |
-| `root` | stroke (только `State=focus`) | `color/focus-ring`, 2px, outside |
+| `root` | эффекты (только `State=focus`) | две тени без размытия: spread 4 → `color/focus-ring`, spread 2 → `color/surface`. Обводки нет |
 | `root` | padding H / V, gap | `spacing/4` / `spacing/2`, gap `spacing/2` |
 | `root` | height | `spacing/9` (36px) |
 | `root` | corner radius | `radius/md` (Brand) |
 | `label` | text style / fill | `label/md` / `color/on-primary` (disabled: `color/on-disabled`) |
 | `icon-left`, `icon-right` | fill | `color/on-primary` (disabled: `color/on-disabled`), 16×16 |
 
-Остальные варианты — по таблице «Кнопка: варианты» в `shadcn-mapping.md`. Размеры: `sm` — h `spacing/8`, px `spacing/3`; `lg` — h `spacing/10`, px `spacing/6`; `icon` — `spacing/9` квадрат.
+Остальные варианты — по таблице «Кнопка: варианты» в `shadcn-mapping.md`.
+Размеры: `sm` — h `spacing/8`, px `spacing/3`, стиль `label/sm`; `md` — h `spacing/9`, px `spacing/4`, py `spacing/2`, `label/md`;
+`lg` — h `spacing/10`, px `spacing/6`, `label/lg`; `icon` — `spacing/9` квадрат, без подписи.
+Вертикальный паддинг есть только у `md`: у `sm` 8+8 не помещаются в высоту 32.
+
+Подпись однострочная: `textTruncation = ENDING`, `maxLines = 1`, `textAlignHorizontal = CENTER`.
+Все ловушки сборки — в `references/figma.md` → «Ловушки Figma»; без них тени не рисуются, а правки растекаются по вариантам.
 
 ## 2. Код: `src/components/ui/button.tsx`
 
 ```tsx
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot"; // как сгенерировал shadcn CLI в вашем проекте
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";              // как сгенерировал shadcn CLI в вашем проекте
+import { Slot } from "radix-ui";
 
 const buttonVariants = cva(
   [
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md typo-label-md",
+    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md",
     "transition-colors outline-none",
     "focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
     "disabled:pointer-events-none disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent",
@@ -43,13 +51,19 @@ const buttonVariants = cva(
         outline: "border border-border bg-surface text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         ghost: "text-on-surface hover:bg-surface-hover hover:text-on-surface-hover",
         danger: "bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed",
-        link: "text-link hover:text-link-hover underline-offset-4 hover:underline disabled:bg-transparent",
+        "danger-subtle":
+          "bg-danger-subtle text-on-danger-subtle hover:bg-danger-subtle-hover active:bg-danger-subtle-pressed",
+        inverse: "bg-inverse text-on-inverse hover:bg-inverse-hover active:bg-inverse-pressed",
+        link: "text-link hover:text-link-hover disabled:bg-transparent",
+        "link-danger": "text-link-danger hover:text-link-danger-hover disabled:bg-transparent",
       },
+      // один typo-* на размер и ни одного в базе: у кастомных утилит одинаковая специфичность,
+      // два класса разрешались бы порядком в CSS, а не порядком в списке классов
       size: {
-        sm: "h-8 px-3",
-        md: "h-9 px-4 py-2",
-        lg: "h-10 px-6",
-        icon: "size-9",
+        sm: "h-8 px-3 typo-label-sm",
+        md: "h-9 px-4 py-2 typo-label-md",
+        lg: "h-10 px-6 typo-label-lg",
+        icon: "size-9 typo-label-md",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
@@ -59,22 +73,40 @@ const buttonVariants = cva(
 function Button({
   className, variant, size, asChild = false, ...props
 }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "button";
+  const Comp = asChild ? Slot.Root : "button";
   return <Comp data-slot="button" className={cn(buttonVariants({ variant, size }), className)} {...props} />;
 }
 
 export { Button, buttonVariants };
 ```
 
-Обрати внимание: `[&_svg]:size-4` — это селектор-вариант с шкалой Tailwind, не произвольное значение; линтер его пропускает. `ring-offset-surface` — токен, чтобы кольцо фокуса не сливалось с фоном.
+Обрати внимание: `[&_svg]:size-4` — это селектор-вариант со шкалой Tailwind, не произвольное значение; линтер его пропускает.
+`ring-offset-surface` — токен, чтобы кольцо фокуса не сливалось с фоном.
+У `link` и `link-danger` подчёркивания нет ни в одном состоянии: при hover меняется только цвет (почему — «Ловушки Figma», п. 5).
 
-## 3. История: `src/components/ui/button.stories.tsx`
+## 3. Какой вариант когда: danger / danger-subtle / link-danger
+
+| Вариант | Когда | Вес на экране | Пример |
+|---|---|---|---|
+| `danger` | Подтверждение необратимого действия — основная кнопка в диалоге, одна на экран | Максимальный: сплошная заливка `color/danger` | «Удалить аккаунт» в модалке подтверждения |
+| `danger-subtle` | Опасное действие в ряду обычных: в карточке, строке таблицы, панели инструментов — когда красная заливка перетянула бы на себя весь экран | Средний: `color/danger/subtle` + `color/on-danger-subtle` | «Удалить» рядом с «Дублировать» в меню элемента |
+| `link-danger` | Опасное действие внутри текста или как третьестепенная ссылка, без собственной коробки | Минимальный: только цвет текста | «Отозвать доступ» под списком участников |
+
+Правила: `danger` — не больше одной на экран; `danger-subtle` не ставим как основную кнопку в диалоге подтверждения;
+`link-danger` не используем там, где нужна область клика ≥ 32px. Для неопасных действий тех же трёх весов —
+`primary` / `neutral` / `link`.
+
+`inverse` — для подложек противоположной яркости: тост на тёмном фоне в светлой теме, кнопка поверх фотографии.
+Это единственный вариант, который в тёмной теме становится светлым.
+
+## 4. История: `src/components/ui/button.stories.tsx`
 
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "./button";
 
-const variants = ["primary", "secondary", "neutral", "outline", "ghost", "danger", "link"] as const;
+const variants = ["primary", "secondary", "neutral", "outline", "ghost",
+                  "danger", "danger-subtle", "inverse", "link", "link-danger"] as const;
 
 const meta = {
   title: "Components/Button",
@@ -92,7 +124,7 @@ export const Default: Story = {};
 
 export const Variants: Story = {
   render: (args) => (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap items-center gap-3">
       {variants.map((v) => <Button key={v} {...args} variant={v}>{v}</Button>)}
     </div>
   ),
@@ -129,7 +161,7 @@ export const BrandMatrix: Story = {
     <div className="grid grid-cols-2 gap-4">
       {combos.map((c) => (
         <div key={c.brand + c.dark} data-brand={c.brand}
-             className={(c.dark ? "dark " : "") + "flex flex-wrap gap-3 rounded-lg border border-border bg-surface p-6 text-on-surface"}>
+             className={(c.dark ? "dark " : "") + "flex flex-wrap items-center gap-3 rounded-lg border border-border bg-surface p-6 text-on-surface"}>
           <p className="typo-caption w-full text-on-surface-muted">{c.brand} / {c.dark ? "dark" : "light"}</p>
           {variants.map((v) => <Button key={v} {...args} variant={v}>{v}</Button>)}
         </div>
@@ -141,8 +173,9 @@ export const BrandMatrix: Story = {
 
 `grid-cols-[repeat(4,max-content)]` — единственное произвольное значение-раскладка, и оно в истории (истории линтер не проверяет). В компонентах так нельзя.
 
-## 4. Проверка
+## 5. Проверка
 
 1. `npm run tokens:check` → `0 errors`.
-2. Storybook: тулбар Brand × Theme — 4 комбинации; `BrandMatrix` показывает их сразу.
-3. Figma `get_screenshot` component set ↔ история `Variants`: цвета, радиусы, отступы совпадают.
+2. `npm run tokens:contrast` → пары `X` / `on-X` во всех состояниях × 4 комбинации бренд × тема, WCAG ≥ 4.5 и |APCA| ≥ 60.
+3. Storybook: тулбар Brand × Theme — 4 комбинации; `BrandMatrix` показывает их сразу.
+4. Figma `get_screenshot` component set ↔ история `Variants`: цвета, радиусы, отступы совпадают.

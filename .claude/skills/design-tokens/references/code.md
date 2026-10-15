@@ -29,6 +29,7 @@ src/components/ui/<name>.stories.tsx
     "tokens:build": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css",
     "tokens:catalog": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css .claude/skills/design-tokens/references/token-catalog.md",
     "tokens:check": "node .claude/skills/design-tokens/scripts/check-tokens.mjs src/components",
+    "tokens:contrast": "node .claude/skills/design-tokens/scripts/check-contrast.mjs tokens/tokens.json",
     "storybook": "storybook dev -p 6006"
   }
 }
@@ -124,6 +125,7 @@ Hover/pressed/focus — это CSS-состояния, пропсов для н�
 ## Definition of done для компонента
 
 - [ ] Классы только из `token-catalog.md` + шкалы Tailwind; `npm run tokens:check` — 0 ошибок.
+- [ ] `npm run tokens:contrast` — пары `X` / `on-X` во всех состояниях × 4 комбинации, WCAG ≥ 4.5 и |APCA| ≥ 60.
 - [ ] Варианты и размеры совпадают с Figma component set.
 - [ ] Истории `Default`, `Variants`, `States`, `BrandMatrix`.
 - [ ] Проверено в 4 комбинациях бренд × тема, текст читается.

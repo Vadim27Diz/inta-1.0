@@ -43,7 +43,13 @@
 | `outline` | `outline` | `border border-border bg-surface hover:bg-surface-hover hover:text-on-surface-hover` |
 | `ghost` | `ghost` | `hover:bg-surface-hover hover:text-on-surface-hover` |
 | `destructive` | `danger` | `bg-danger text-on-danger hover:bg-danger-hover active:bg-danger-pressed` |
-| `link` | `link` | `text-link hover:text-link-hover underline-offset-4 hover:underline` |
+| — | `danger-subtle` (мягкая destructive) | `bg-danger-subtle text-on-danger-subtle hover:bg-danger-subtle-hover active:bg-danger-subtle-pressed` |
+| — | `inverse` | `bg-inverse text-on-inverse hover:bg-inverse-hover active:bg-inverse-pressed` |
+| `link` | `link` | `text-link hover:text-link-hover` |
+| — | `link-danger` | `text-link-danger hover:text-link-danger-hover` |
+
+Подчёркивания у `link` нет ни в одном состоянии — почему, в `figma.md` → «Ловушки Figma», п. 5.
+Когда брать `danger`, `danger-subtle` или `link-danger` — таблица в `examples/button.md`.
 
 Размеры: `default` → `md`; `sm`, `lg`, `icon`, `icon-sm`, `icon-lg` без изменений. Те же имена вариантов используются в Badge, Toggle, Alert и т.д., где они есть.
 

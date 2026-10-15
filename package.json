@@ -11,6 +11,7 @@
     "tokens:build": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css",
     "tokens:catalog": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css .claude/skills/design-tokens/references/token-catalog.md",
     "tokens:check": "node .claude/skills/design-tokens/scripts/check-tokens.mjs src/components",
+    "tokens:contrast": "node .claude/skills/design-tokens/scripts/check-contrast.mjs tokens/tokens.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
