@@ -40,7 +40,7 @@
 - `focus-visible:ring-[3px] ring-ring/50` → `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring`
   (зазор у `outline` прозрачный, в отличие от `ring`, которому нужен крашеный `ring-offset-*`).
 
-Произвольные значения с переменными Radix/Base UI (`h-(--radix-select-trigger-height)`, `w-[var(--anchor-width)]`) разрешены — это не дизайн-решения.
+Произвольные значения с переменными Radix/Base UI (`h-(--radix-select-trigger-height)`, `w-[var(--anchor-width)]`) разрешены — это не дизайн-решения. `npm run tokens:check` явно пропускает `--radix-*`/`--anchor-*`, а любую другую `var(--x)`/`util-(--x)` сверяет с `tokens.css` — опечатка в имени токена (например, `--ds-color-primry`) теперь ловится линтером, а не глазами на скриншоте.
 
 ## Кнопка: варианты
 
