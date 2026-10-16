@@ -31,7 +31,7 @@
 852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (19 секций, **54 компонента**
 на странице Components).
 
-## Новый чат — хвосты + Toggle + Toggle Group
+## Новый чат — хвосты + Toggle + Toggle Group + Button Group
 
 | Коммит | Что |
 |---|---|
@@ -41,10 +41,17 @@
 | `81bc706` | Toggle: component set в Figma (36 вариантов) + `src/components/ui/toggle.tsx` + истории + `ORDER`/`STORIES` в скриптах пополнены |
 | `7fc25ab` | docs: handoff — Toggle сдан |
 | `37777e8` | Toggle Group: component set в Figma (6 вариантов, инстансы Toggle) + `src/components/ui/toggle-group.tsx` (React Context variant/size) + истории |
+| `3b073ef` | Button Group: component set в Figma (2 варианта, инстансы Button) + `src/components/ui/button-group.tsx` (без Radix, role=group) + `ButtonGroupText`/`ButtonGroupSeparator` + истории |
 
-`npm run verify`: 19 файлов/0 ошибок `tokens:check` · 353 класса/0 ошибок `tailwind:check` ·
+`npm run verify`: 20 файлов/0 ошибок `tokens:check` · 364 класса/0 ошибок `tailwind:check` ·
 152 проверки/139 pass/9 warn/0 error `tokens:contrast` (те же 9 давних предупреждений) ·
-852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**21 секция, 56 компонентов**).
+852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**22 секции, 57 компонентов**).
+
+Button Group — техника сборки шва между соседями (пригодится, если такой ряд понадобится ещё
+где-то): в Figma — у инстансов не первого элемента `strokeLeftWeight = 0` (для vertical —
+`strokeTopWeight = 0`), срез `cornerRadius` только на внешних углах; в коде — тот же эффект через
+`[&>*:not(:first-child)]:border-l-0` и `[&>*:not(:first-child)]:rounded-l-none` на обёртке
+(Tailwind-селектор к прямым детям, не классы на самих кнопках).
 
 Toggle — решения, которые пригодятся для Toggle Group/Button Group/Slider:
 - Кольцо фокуса собрано ровно по шаблону Button: слой `focus-ring`, обводка 2px
@@ -177,6 +184,7 @@ Ring-clipping на странице Playground — 0.
 
 ## Дальше
 
-Toggle (`81bc706`) и Toggle Group (`37777e8`) сделаны. Дальше без паузы: Button Group, Slider,
-Progress — с коммитами по смыслу, как и договаривались. Slider и Progress: дорожка — токен
-`border-input` (тот же, что у выключенного Switch), залитая часть — `bg-primary`.
+Toggle (`81bc706`), Toggle Group (`37777e8`) и Button Group (`3b073ef`) сделаны. Дальше без
+паузы: Slider, Progress — с коммитами по смыслу. Дорожка у обоих — токен `border-input` (тот же,
+что у выключенного Switch), залитая часть — `bg-primary`. После Progress — ревью всей группы 2
+целиком (10 компонентов), без merge.
