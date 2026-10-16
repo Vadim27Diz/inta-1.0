@@ -27,13 +27,14 @@
 | `npm run tokens:build` | `tokens/tokens.json` → `src/styles/tokens.css` |
 | `npm run tokens:catalog` | то же + обновляет каталог токенов в скилле |
 | `npm run tokens:check` | линтер компонентов на «не-токены», должен давать 0 ошибок |
+| `npm run tailwind:check` | каждый Tailwind-класс из `src/components` реально есть в собранном CSS, должен давать 0 ошибок |
 | `npm run tokens:contrast` | WCAG и APCA для пар `X` / `on-X` во всех состояниях × 4 комбинации |
 | `npm run storybook` | Storybook на :6006, тулбар Brand (main/demo) × Theme (light/dark) |
 | `npm run visual` | снимки историй в 4 комбинациях бренд × тема → `visual.local/` |
 | `npm run icons:stroke` | толщина линии иконок lucide-react в настоящем Chrome |
 | `npm run figma:diff` | цифровая сверка Figma ↔ `getComputedStyle` в 4 комбинациях |
 | `npm run figma:layout` | раскладка страницы Components по снимку `figma/layout.json` |
-| `npm run verify` | tokens:check + tokens:contrast + figma:diff + figma:layout |
+| `npm run verify` | tokens:check + tokens:contrast + tailwind:check + figma:diff + figma:layout |
 
 ## Бренды
 
