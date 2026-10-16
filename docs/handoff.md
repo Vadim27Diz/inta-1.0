@@ -31,18 +31,20 @@
 852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (19 секций, **54 компонента**
 на странице Components).
 
-## Новый чат — хвосты + первый компонент основной части (Toggle)
+## Новый чат — хвосты + Toggle + Toggle Group
 
 | Коммит | Что |
 |---|---|
 | `835fddd` | `tailwind:check`: каждый Tailwind-класс из `src/components` реально есть в собранном CSS (через `@tailwindcss/node`, новая зависимость MIT) — в `npm run verify` |
-| `8c29b2c` | `docs/handoff.md`: раздел «Отложено» (публикация на GitHub) + «Следующие правки» (фокус-ринг Native Select/Input OTP, временное правило кольца для новых компонентов) |
+| `ae33dce` | `docs/handoff.md`: раздел «Отложено» (публикация на GitHub) + «Следующие правки» (фокус-ринг Native Select/Input OTP, временное правило кольца для новых компонентов) |
 | — | `SKILL.md` → Definition of done, пункт 9: перед слиянием ветки переснять `figma/layout.json` и прогнать `verify` (в составе того же коммита, что и `tailwind:check`) |
 | `81bc706` | Toggle: component set в Figma (36 вариантов) + `src/components/ui/toggle.tsx` + истории + `ORDER`/`STORIES` в скриптах пополнены |
+| `7fc25ab` | docs: handoff — Toggle сдан |
+| `37777e8` | Toggle Group: component set в Figma (6 вариантов, инстансы Toggle) + `src/components/ui/toggle-group.tsx` (React Context variant/size) + истории |
 
-`npm run verify`: 18 файлов/0 ошибок `tokens:check` · 349 классов/0 ошибок `tailwind:check` ·
+`npm run verify`: 19 файлов/0 ошибок `tokens:check` · 353 класса/0 ошибок `tailwind:check` ·
 152 проверки/139 pass/9 warn/0 error `tokens:contrast` (те же 9 давних предупреждений) ·
-852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**20 секций, 55 компонентов**).
+852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**21 секция, 56 компонентов**).
 
 Toggle — решения, которые пригодятся для Toggle Group/Button Group/Slider:
 - Кольцо фокуса собрано ровно по шаблону Button: слой `focus-ring`, обводка 2px
@@ -175,7 +177,6 @@ Ring-clipping на странице Playground — 0.
 
 ## Дальше
 
-Toggle сделан (`81bc706`). Дальше без паузы: Toggle Group, Button Group, Slider, Progress — с
-коммитами по смыслу, как и договаривались. Toggle Group переиспользует `toggleVariants` из
-`toggle.tsx`. Slider и Progress: дорожка — токен `border-input` (тот же, что у выключенного
-Switch), залитая часть — `bg-primary`.
+Toggle (`81bc706`) и Toggle Group (`37777e8`) сделаны. Дальше без паузы: Button Group, Slider,
+Progress — с коммитами по смыслу, как и договаривались. Slider и Progress: дорожка — токен
+`border-input` (тот же, что у выключенного Switch), залитая часть — `bg-primary`.
