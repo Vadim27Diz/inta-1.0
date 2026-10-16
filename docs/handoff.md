@@ -44,10 +44,12 @@
 | `3b073ef` | Button Group: component set в Figma (2 варианта, инстансы Button) + `src/components/ui/button-group.tsx` (без Radix, role=group) + `ButtonGroupText`/`ButtonGroupSeparator` + истории |
 | `28525a1` | docs: handoff — Button Group сдан |
 | `177ca65` | Slider: component set в Figma (3 состояния) + `src/components/ui/slider.tsx` (track=`border-input`, range/обводка бегунка=`primary`, disabled через `data-disabled`) + истории |
+| `28525a1`-`75e481c` | (docs handoff между компонентами, см. git log) |
+| `75e481c` | Progress: component set в Figma (Value=0/40/100%) + `src/components/ui/progress.tsx` (track=`border-input`, indicator=`primary`, не интерактивен) + истории — последний компонент группы 2 |
 
-`npm run verify`: 21 файл/0 ошибок `tokens:check` · 379 классов/0 ошибок `tailwind:check` ·
+`npm run verify`: 22 файла/0 ошибок `tokens:check` · 381 класс/0 ошибок `tailwind:check` ·
 152 проверки/139 pass/9 warn/0 error `tokens:contrast` (те же 9 давних предупреждений) ·
-852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**23 секции, 58 компонентов**).
+852 проверки/0 расхождений `figma:diff` · раскладка 0 нарушений (**24 секции, 59 компонентов**).
 
 Slider — находка на сборке (поймал сам, до ревью человеком): первая версия держала `track`/
 `thumb` через `layoutPositioning=ABSOLUTE` внутри auto-layout Root — `npm run figma:layout`
@@ -192,10 +194,40 @@ Ring-clipping на странице Playground — 0.
   `Utility / Focus ring`, когда он появится, должна быть механической (только подмена слоя,
   без пересчёта геометрии).
 
-## Дальше
+## Ревью группы 2 целиком (10 компонентов), без merge
 
-Toggle (`81bc706`), Toggle Group (`37777e8`), Button Group (`3b073ef`) и Slider (`177ca65`)
-сделаны. Остался последний компонент группы — Progress: та же пара токенов, что у Slider
-(дорожка `border-input`, заливка `bg-primary`), но без Radix-состояний disabled/focus (это не
-интерактивный контрол — только `data-state` indeterminate/loading/complete). После него — ревью
-всей группы 2 целиком (10 компонентов), без merge.
+Группа 2 закрыта: Field, Input Group, Input OTP, Native Select, Select, Toggle (`81bc706`),
+Toggle Group (`37777e8`), Button Group (`3b073ef`), Slider (`177ca65`), Progress (`75e481c`).
+Ветка `feat/group-2` чистая, **не сливал и не пушил** — только собрал и проверил.
+
+Что проверено в ревью:
+
+- [x] `npm run verify` на финальном состоянии всех 10: `tokens:check` 22 файла/0 ошибок,
+      `tailwind:check` 381 класс/0 ошибок, `tokens:contrast` 152 проверки/139 pass/9 warn (те же
+      давние)/0 error, `figma:diff` 852 проверки/0 расхождений, `figma:layout` 0 нарушений
+      (24 секции, 59 компонентов). `npx tsc -b` — 0 ошибок.
+- [x] Согласованность кода между всеми 10: `data-slot` везде по схеме `<component>[-<part>]`;
+      нигде нет `opacity`/`disabled:opacity-*` вместо токена состояния (grep по всем 10 — пусто);
+      `focus-visible:outline-solid outline-2 outline-offset-2 outline-focus-ring` — на каждом
+      фокусируемом листовом элементе (Toggle, Toggle Group Item, Button внутри Button Group,
+      Slider Thumb); композиционные обёртки без своего фокуса (Toggle Group, Button Group,
+      Progress) — ожидаемо, фокус у них на обёрнутых листовых компонентах.
+- [x] Тёмная тема — точечно пересмотрел Slider/States и Progress/Variants в dark: дорожка и
+      заливка читаются, кольцо фокуса видно, disabled не проваливается в фон.
+
+Две находки — не чиню сам, решение за человеком:
+
+1. **Описание Figma-компонента есть не у всех 10.** У Button, Switch и у всех 5 новых в этом
+   чате (Toggle…Progress) — `description` с привязками токенов. У Field, Input Group, Input OTP,
+   Native Select, Select (сделаны в прошлом чате) — описание пустое. Расхождение в дисциплине
+   документирования, не баг раскладки. Если нужно — дозаполню по тому же формату, что у Toggle.
+2. **Playground ещё не знает про новые 5.** Секция «Forms» на всех 4 рамках бренд×тема содержит
+   только первые 5 (Field…Select) — её собирали отдельным коммитом после них, а не как часть DoD
+   каждого компонента. Toggle, Toggle Group, Button Group, Slider, Progress в Playground не
+   добавлены. Не делал без спроса — это отдельная, не маленькая правка (нужно расставить
+   инстансы на всех 4 рамках, пересчитать `surface`/`surface-raised` варианты).
+
+Старые открытые пункты (без изменений, не относятся к этому чату): `Select / Item` и
+`Input OTP / Slot` остаются локальными — решение отложено до группы 4; дыра в проверке дрейфа
+живой Figma остаётся ручной (см. выше); фокус-ринг с прямыми углами у Native Select/Input OTP —
+в «Следующих правках» для нового чата.
