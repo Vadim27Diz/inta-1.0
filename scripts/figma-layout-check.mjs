@@ -4,9 +4,11 @@
 //   node scripts/figma-layout-check.mjs [figma/layout.json]
 //
 // Снимок снимается из Figma скриптом .claude/skills/design-tokens/assets/figma-layout-export.js
-// через `use_figma`. Тот же скрипт печатает djb2-хеш — он должен совпасть с хешем сохранённого
-// файла (`node scripts/figma-layout-check.mjs --hash`), иначе снимок устарел и проверка
-// валидирует прошлое. Правило раскладки — references/figma.md → «Раскладка страницы Components».
+// через `use_figma`, сохраняется через scripts/figma-layout-save.mjs (не руками — он же проставляет
+// exporterHash, см. ниже). Тот же use_figma-вызов печатает djb2-хеш данных — он должен совпасть с
+// хешем сохранённого файла (`node scripts/figma-layout-check.mjs --hash`), иначе снимок устарел
+// относительно Figma и проверка валидирует прошлое — это сверяется руками (CI не ходит в Figma).
+// Правило раскладки — references/figma.md → «Раскладка страницы Components».
 import fs from "node:fs";
 
 const args = process.argv.slice(2);
@@ -17,7 +19,31 @@ if (!fs.existsSync(file)) {
 }
 const data = JSON.parse(fs.readFileSync(file, "utf8"));
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
-if (args.includes("--hash")) { console.log(djb2(JSON.stringify(data))); process.exit(0); }
+// exporterHash не часть «данных» для целей сверки с use_figma (тот хеш печатается ДО сохранения,
+// exporterHash добавляется только при сохранении — см. figma-layout-save.mjs) — исключаем явно,
+// иначе --hash никогда не совпадёт с тем, что вернул use_figma.
+const { exporterHash, ...dataWithoutExporterHash } = data;
+if (args.includes("--hash")) { console.log(djb2(JSON.stringify(dataWithoutExporterHash))); process.exit(0); }
+
+// Снимок устаревает не только относительно Figma (это не автоматизировать без живого похода в
+// Figma из CI — сверяется руками, см. комментарий выше), но и относительно ЛОГИКИ экспортёра: если
+// figma-layout-export.js поправили (например, как ownerName() ловушка 8 в SKILL.md), а снимок не
+// пересняли, старые данные это молча не ловят. exporterHash — хеш файла экспортёра на момент
+// сохранения (проставляет figma-layout-save.mjs) — здесь сверяется с текущим файлом на диске.
+const EXPORTER_PATH = ".claude/skills/design-tokens/assets/figma-layout-export.js";
+if (fs.existsSync(EXPORTER_PATH)) {
+  const currentExporterHash = djb2(fs.readFileSync(EXPORTER_PATH, "utf8"));
+  if (data.exporterHash !== currentExporterHash) {
+    console.error(
+      data.exporterHash
+        ? `снимок устарел: exporterHash снимка ${data.exporterHash} ≠ текущий ${currentExporterHash} — ` +
+          `figma-layout-export.js менялся после последнего снимка. Пересними через use_figma и сохрани ` +
+          `через scripts/figma-layout-save.mjs.`
+        : `в снимке нет exporterHash (сохранён не через scripts/figma-layout-save.mjs) — пересними и сохрани через него.`
+    );
+    process.exit(2);
+  }
+}
 
 const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select"];
 const PAD = 64, GAP = 160, PITCH = 64;
@@ -135,7 +161,7 @@ for (const [root, variant, container, layer, count] of data.repeatedLayers || []
   fail(`${root} / ${variant}: «${layer}» повторяется ${count}× в «${container}» как нарисованный слой, а не экземпляр компонента`);
 }
 
-console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(data))}`);
+console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
 console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои\n");
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
