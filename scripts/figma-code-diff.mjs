@@ -40,6 +40,33 @@ const EXPECT = [
     { sel: "textarea", at: 2, name: "invalid",       border: "--ds-color-danger" },
     { sel: "textarea", at: 4, name: "disabled",      bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
   ] },
+  { story: "components-checkbox--states", title: "Checkbox", probes: [
+    { sel: "[data-slot=checkbox]", at: 0, name: "unchecked",      height: 16, width: 16, radius: "--ds-radius-sm", border: "--ds-color-border-input" },
+    { sel: "[data-slot=checkbox]", at: 4, name: "checked",        height: 16, width: 16, radius: "--ds-radius-sm", border: "--ds-color-primary", bg: "--ds-color-primary", color: "--ds-color-on-primary" },
+    { sel: "[data-slot=checkbox]", at: 5, name: "checked focus",  outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "[data-slot=checkbox]", at: 2, name: "invalid",        border: "--ds-color-danger" },
+    { sel: "[data-slot=checkbox]", at: 6, name: "checked invalid", border: "--ds-color-primary" },
+    { sel: "[data-slot=checkbox]", at: 7, name: "disabled",       bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+    { sel: "[data-slot=checkbox] svg", at: 0, name: "галка 12",   height: 12, width: 12 },
+  ] },
+  { story: "components-radiogroup--states", title: "Radio Group", probes: [
+    { sel: "[data-slot=radio-group-item]", at: 0, name: "checked",        height: 16, width: 16, radiusFull: true, border: "--ds-color-primary" },
+    { sel: "[data-slot=radio-group-item]", at: 1, name: "unchecked",      height: 16, width: 16, radiusFull: true, border: "--ds-color-border-input" },
+    { sel: "[data-slot=radio-group-item]", at: 2, name: "focus",          outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "[data-slot=radio-group-item]", at: 4, name: "checked invalid", border: "--ds-color-primary" },
+    { sel: "[data-slot=radio-group-item]", at: 5, name: "invalid",        border: "--ds-color-danger" },
+    { sel: "[data-slot=radio-group-item]", at: 6, name: "disabled",       bg: "--ds-color-disabled", borderTransparent: true },
+    { sel: "[data-slot=radio-group-indicator] span", at: 0, name: "точка 8", height: 8, width: 8, radiusFull: true, bg: "--ds-color-primary" },
+  ] },
+  { story: "components-switch--states", title: "Switch", probes: [
+    { sel: "[data-slot=switch]", at: 0, name: "off",          height: 20, width: 36, radiusFull: true, bg: "--ds-color-border-input", padX: 2 },
+    { sel: "[data-slot=switch]", at: 1, name: "off focus",    outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "[data-slot=switch]", at: 2, name: "off disabled", bg: "--ds-color-disabled" },
+    { sel: "[data-slot=switch]", at: 3, name: "on",           height: 20, width: 36, bg: "--ds-color-primary" },
+    { sel: "[data-slot=switch]", at: 5, name: "on disabled",  bg: "--ds-color-disabled" },
+    { sel: "[data-slot=switch-thumb]", at: 0, name: "бегунок", height: 16, width: 16, radiusFull: true, bg: "--ds-color-on-primary" },
+    { sel: "[data-slot=switch-thumb]", at: 5, name: "бегунок disabled", bg: "--ds-color-on-disabled" },
+  ] },
   { story: "components-label--variants", title: "Label", probes: [
     { sel: "label", at: 0, name: "default",  height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4 },
     { sel: "label", at: 1, name: "required", height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4, markColor: "--ds-color-on-surface-danger" },
@@ -87,6 +114,7 @@ for (const group of EXPECT) {
         const mark = el.querySelector("span[aria-hidden]");
         return {
           height: el.getBoundingClientRect().height,
+          width: el.getBoundingClientRect().width,
           minHeight: toPx(s.minHeight),
           padLeft: toPx(s.paddingLeft), padRight: toPx(s.paddingRight),
           padTop: toPx(s.paddingTop), padBottom: toPx(s.paddingBottom),
@@ -109,6 +137,8 @@ for (const group of EXPECT) {
       const near = (label, got, want) => checks.push({ label, got, want, ok: Math.abs(got - want) < 0.51 });
       if (m.missing) { rows.push({ group: group.title, combo: `${c.brand}/${c.theme}`, probe: p.name, checks: [{ label: "элемент", got: "нет", want: p.sel, ok: false }] }); return; }
       if (p.height != null) near("height", m.height, p.height);
+      if (p.width != null) near("width", m.width, p.width);
+      if (p.radiusFull) checks.push({ label: "radius", got: m.radius >= 999 ? "круг" : m.radius, want: "круг", ok: m.radius >= 999 });
       if (p.minHeight != null) near("min-height", m.minHeight, p.minHeight);
       if (p.padX != null) { near("padding-x", m.padLeft, p.padX); near("padding-x", m.padRight, p.padX); }
       if (p.padY != null) { near("padding-y", m.padTop, p.padY); near("padding-y", m.padBottom, p.padY); }

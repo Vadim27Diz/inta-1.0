@@ -33,6 +33,14 @@ const STORIES = [
   "components-textarea--variants",
   "components-textarea--states",
   "components-textarea--content",
+  "components-checkbox--variants",
+  "components-checkbox--states",
+  "components-checkbox--content",
+  "components-radiogroup--states",
+  "components-radiogroup--content",
+  "components-switch--variants",
+  "components-switch--states",
+  "components-switch--content",
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },

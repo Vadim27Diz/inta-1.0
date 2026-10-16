@@ -68,6 +68,22 @@
 | Textarea | `min-h-16 px-3 py-2 typo-body-sm field-sizing-content` | растёт по содержимому |
 | Label | `typo-label-md text-on-surface`, `required` → `<span aria-hidden>*</span>` с `text-on-surface-danger` | disabled приходит от контрола: `peer-disabled:` (поле-сосед) и `group-data-[disabled=true]:`; вариант `*:` красит и звёздочку, у неё свой цвет |
 
+## Выборные контролы: Checkbox, Radio Group, Switch
+
+| Что | Решение | Почему |
+|---|---|---|
+| Выбранное состояние | `enabled:data-[state=checked]:bg-primary` (и `border-primary`, `text-on-primary`) | без `enabled:` выбранное перебивает `disabled:`: у утилит Tailwind одинаковая специфичность, спор решает порядок в CSS, а не порядок в списке классов |
+| Ошибка | `data-[state=unchecked]:aria-invalid:border-danger` | у выбранного контрола рамка остаётся `primary` — красная рамка вокруг уже выбранного пункта читается как «выбор неверен», хотя ошибка у группы. Так же собран и набор в Figma |
+| Disabled | `disabled:bg-disabled disabled:border-transparent disabled:text-on-disabled`, точка радио — `group-disabled/radio:bg-on-disabled` | не `opacity-50` |
+| Фокус | `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring` | как у всех контролов |
+| Область нажатия | `after:absolute after:-inset-x-2 after:-inset-y-2` | рамка остаётся 16×16, а палец попадает: это псевдоэлемент, а не увеличенный контрол |
+| Checkbox | `size-4 rounded-sm`, галка и минус — `lucide-react` `size-3` (в Figma — `Icon Size=12`) | в наборе Icon нет 14, поэтому 12 и в коде, и в Figma |
+| Radio | `size-4 rounded-full`, точка `size-2 bg-primary` | |
+| Switch | дорожка `h-5 w-9 px-0.5 rounded-full`, бегунок `size-4 bg-on-primary`, ход `translate-x-0 → translate-x-4` | 36 − 4 (отступы) − 16 (бегунок) = 16, всё по шкале, без `translate-x-[calc(100%-2px)]` |
+| Дорожка off | `bg-border-input` | `bg-surface-muted` неразличим на `surface`; `border-input` — единственный серый, который виден в обеих темах |
+
+Размера `sm` у Switch нет: shadcn-овские `h-[18.4px]`/`w-[32px]` — произвольные значения, в шкалу не ложатся.
+
 ## Все компоненты shadcn и порядок переноса
 
 Порядок важен: каждый следующий слой собирается из предыдущего. Сверяй список с https://ui.shadcn.com/docs/components — там могут появиться новые.
