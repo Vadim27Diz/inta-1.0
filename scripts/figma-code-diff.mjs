@@ -64,12 +64,40 @@ const EXPECT = [
     { sel: "[data-slot=switch]", at: 2, name: "off disabled", bg: "--ds-color-disabled" },
     { sel: "[data-slot=switch]", at: 3, name: "on",           height: 20, width: 36, bg: "--ds-color-primary" },
     { sel: "[data-slot=switch]", at: 5, name: "on disabled",  bg: "--ds-color-disabled" },
-    { sel: "[data-slot=switch-thumb]", at: 0, name: "бегунок", height: 16, width: 16, radiusFull: true, bg: "--ds-color-on-primary" },
+    { sel: "[data-slot=switch-thumb]", at: 0, name: "бегунок", height: 16, width: 16, radiusFull: true, bg: "--ds-switch-thumb" },
     { sel: "[data-slot=switch-thumb]", at: 5, name: "бегунок disabled", bg: "--ds-color-on-disabled" },
   ] },
   { story: "components-label--variants", title: "Label", probes: [
     { sel: "label", at: 0, name: "default",  height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4 },
     { sel: "label", at: 1, name: "required", height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4, markColor: "--ds-color-on-surface-danger" },
+  ] },
+  { story: "components-badge--variants", title: "Badge", probes: [
+    { sel: "[data-slot=badge]", at: 0, name: "primary",       height: 20, radiusFull: true, padX: 10, padY: 2, font: [12, 16, 500], bg: "--ds-color-primary", color: "--ds-color-on-primary" },
+    { sel: "[data-slot=badge]", at: 1, name: "secondary",     bg: "--ds-color-primary-subtle", color: "--ds-color-on-primary-subtle" },
+    { sel: "[data-slot=badge]", at: 2, name: "neutral",       bg: "--ds-color-neutral", color: "--ds-color-on-neutral" },
+    { sel: "[data-slot=badge]", at: 3, name: "outline",       border: "--ds-color-border", color: "--ds-color-on-surface" },
+    { sel: "[data-slot=badge]", at: 4, name: "danger",        bg: "--ds-color-danger", color: "--ds-color-on-danger" },
+    { sel: "[data-slot=badge]", at: 5, name: "danger-subtle", bg: "--ds-color-danger-subtle", color: "--ds-color-on-danger-subtle" },
+    { sel: "[data-slot=badge]", at: 6, name: "success",       bg: "--ds-color-success-subtle", color: "--ds-color-on-success-subtle" },
+    { sel: "[data-slot=badge]", at: 7, name: "warning",       bg: "--ds-color-warning-subtle", color: "--ds-color-on-warning-subtle" },
+    { sel: "[data-slot=badge]", at: 8, name: "info",          bg: "--ds-color-info-subtle", color: "--ds-color-on-info-subtle" },
+  ] },
+  { story: "components-separator--variants", title: "Separator", probes: [
+    { sel: "[data-slot=separator]", at: 0, name: "horizontal", height: 1, width: 256, bg: "--ds-color-border" },
+    { sel: "[data-slot=separator]", at: 1, name: "vertical",   height: 48, width: 1, bg: "--ds-color-border" },
+  ] },
+  { story: "components-kbd--variants", title: "Kbd", probes: [
+    { sel: "[data-slot=kbd]", at: 0, name: "K", height: 20, radius: "--ds-radius-sm", border: "--ds-color-border-input", bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted", font: [14, 20, 400], fontFamily: "JetBrains Mono" },
+  ] },
+  { story: "components-spinner--variants", title: "Spinner", probes: [
+    { sel: "[data-slot=spinner]", at: 0, name: "size-3", height: 12, width: 12, color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=spinner]", at: 1, name: "size-4", height: 16, width: 16, color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=spinner]", at: 4, name: "size-8", height: 32, width: 32, color: "--ds-color-on-surface-muted" },
+  ] },
+  { story: "components-skeleton--variants", title: "Skeleton", probes: [
+    { sel: "[data-slot=skeleton]", at: 0, name: "avatar", height: 40, width: 40, radiusFull: true, bg: "--ds-color-surface-muted" },
+    { sel: "[data-slot=skeleton]", at: 1, name: "line 1",  height: 16, width: 192, radius: "--ds-radius-md", bg: "--ds-color-surface-muted" },
+    { sel: "[data-slot=skeleton]", at: 2, name: "line 2",  height: 12, width: 128, bg: "--ds-color-surface-muted" },
   ] },
 ];
 const COMBOS = [
@@ -92,7 +120,9 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(PORT, r));
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1 });
+// reducedMotion: "reduce" — иначе Spinner в середине motion-safe:animate-spin даёт повёрнутый
+// getBoundingClientRect() (ось-выровненный прямоугольник у повёрнутого квадрата больше исходного)
+const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1, reducedMotion: "reduce" });
 const rows = [];
 for (const group of EXPECT) {
   for (const c of COMBOS) {
@@ -125,7 +155,11 @@ for (const group of EXPECT) {
           fontSize: toPx(s.fontSize), lineHeight: toPx(s.lineHeight), fontWeight: Number(s.fontWeight), fontFamily: s.fontFamily.split(",")[0].replace(/["']/g, ""),
           gap: toPx(s.columnGap),
           markColor: mark ? getComputedStyle(mark).color : null,
-          vars: Object.fromEntries([...new Set(probes.flatMap((x) => [x.radius, x.border, x.color, x.bg, x.outline, x.markColor].filter(Boolean)))].map((n) => [n, n.includes("color") ? rgb(cssVar(n)) : String(px(cssVar(n)))])),
+          // тип переменной — по полю, в котором она объявлена в EXPECT (radius = размер, остальные = цвет),
+          // а не по имени: токены Component-слоя (switch/thumb, sidebar/*) не содержат "color" в названии
+          vars: Object.fromEntries([
+            ...new Set(probes.flatMap((x) => (x.radius ? [[x.radius, "size"]] : []).concat(["border", "color", "bg", "outline", "markColor"].map((k) => x[k] && [x[k], "color"]).filter(Boolean)).map((e) => JSON.stringify(e)))),
+          ].map((e) => JSON.parse(e)).map(([n, kind]) => [n, kind === "color" ? rgb(cssVar(n)) : String(px(cssVar(n)))])),
         };
       });
     }, group.probes);
@@ -149,7 +183,12 @@ for (const group of EXPECT) {
       if (p.color) eq("color", m.color, m.vars[p.color]);
       if (p.markColor) eq("звёздочка", m.markColor, m.vars[p.markColor]);
       if (p.outline) { eq("outline-color", m.outlineColor, m.vars[p.outline]); eq("outline-style", m.outlineStyle, "solid"); near("outline-width", m.outlineWidth, p.outlineWidth); near("outline-offset", m.outlineOffset, p.outlineOffset); }
-      if (p.font) { near("font-size", m.fontSize, p.font[0]); near("line-height", m.lineHeight, p.font[1]); near("font-weight", m.fontWeight, p.font[2]); checks.push({ label: "font-family", got: m.fontFamily, want: c.brand === "main" ? "Inter" : "IBM Plex Sans", ok: m.fontFamily === (c.brand === "main" ? "Inter" : "IBM Plex Sans") }); }
+      if (p.font) {
+        near("font-size", m.fontSize, p.font[0]); near("line-height", m.lineHeight, p.font[1]); near("font-weight", m.fontWeight, p.font[2]);
+        // мало токенов — typo-code/numeric-* висят на font/mono, а не на шрифте бренда
+        const wantFamily = p.fontFamily || (c.brand === "main" ? "Inter" : "IBM Plex Sans");
+        checks.push({ label: "font-family", got: m.fontFamily, want: wantFamily, ok: m.fontFamily === wantFamily });
+      }
       if (p.gap != null) near("gap", m.gap, p.gap);
       rows.push({ group: group.title, combo: `${c.brand}/${c.theme}`, probe: p.name, checks });
     });

@@ -2,6 +2,14 @@
 
 Компоненты ставим CLI (`npx shadcn@latest add <name>`), затем переписываем классы. Линтер `check-tokens.mjs` находит всё, что осталось от shadcn, и подсказывает замену.
 
+Версии, с которыми сверены `data-*`-атрибуты ниже: `shadcn` CLI **4.21.5**, `radix-ui` **1.8.1**
+(пакет-бандл, не отдельные `@radix-ui/react-*`). После `npx shadcn@latest add <name>` сверь
+фактическую версию `radix-ui` в `package.json` с этой — другая мажорная/минорная версия может
+поменять набор `data-*` (так и было: разметка CLI ожидала `data-checked`, а установленный Radix
+отдавал `data-state=checked|unchecked|indeterminate` — см. «Выборные контролы» ниже). Если версия
+разошлась — проверь атрибуты вручную (DevTools на смонтированном компоненте) прежде чем переносить
+классы на `data-[...]`.
+
 ## Замена токенов
 
 | shadcn | ds | Комментарий |
@@ -83,6 +91,29 @@
 | Дорожка off | `bg-border-input` | `bg-surface-muted` неразличим на `surface`; `border-input` — единственный серый, который виден в обеих темах |
 
 Размера `sm` у Switch нет: shadcn-овские `h-[18.4px]`/`w-[32px]` — произвольные значения, в шкалу не ложатся.
+
+## Badge, Separator, Kbd, Spinner, Skeleton
+
+Без состояний (не интерактивны) — истории `Default`/`Variants`/`Content`/`BrandMatrix`, без `States`.
+
+- **Badge.** `variant`: `primary`/`secondary`/`neutral`/`outline`/`danger` — по аналогии с Button; плюс
+  `danger-subtle`/`success`/`warning`/`info` — статусы на `*-subtle` токенах. У Button уже есть ровно
+  такая же пара `danger`/`danger-subtle` (сплошной и приглушённый), поэтому статус «danger» — это
+  variant `danger-subtle`, а не второй вариант с тем же именем `danger`. `success`/`warning`/`info`
+  всегда приглушённые — непри глушённых аналогов `bg-success`/`bg-warning`/`bg-info` в Badge нет (они
+  резервируются под Alert, группа 3). Форма — `rounded-full`, не токен.
+- **Separator.** Единственный цвет — `border-border` (не `border-border-input`: это декоративная линия,
+  а не обводка поля). Размер по `data-[orientation=…]` — `h-px w-full` / `h-full w-px`.
+- **Kbd.** Не из Radix — обычный `<kbd>`. Текст — `typo-code` (`font/mono` = JetBrains Mono, **не** шрифт
+  бренда Inter/IBM Plex Sans): при цифровой сверке (`figma-code-diff.mjs`) шрифт клавиши проверяется
+  отдельно от общего допущения «шрифт = бренд», иначе ложное расхождение на каждой комбинации.
+- **Spinner.** Обёртка над `lucide-react` `LoaderCircle`, не над кастомным Icon-компонентом (иконки в
+  проекте — всегда `lucide-react` напрямую). Вращение — `motion-safe:animate-spin`. Числовая проверка
+  геометрии идёт с `reducedMotion: "reduce"` в Playwright: без этого `getBoundingClientRect()` ловит
+  иконку в случайный момент вращения, и ось-выровненный прямоугольник повёрнутого квадрата оказывается
+  больше исходного — ложное расхождение по `height`/`width`, не связанное с токенами.
+- **Skeleton.** Прямоугольник `bg-surface-muted`, пульсация `motion-safe:animate-pulse`. В Figma оба —
+  статичный кадр; анимация и `prefers-reduced-motion` проверяются только в коде/браузере, не в макете.
 
 ## Все компоненты shadcn и порядок переноса
 

@@ -138,12 +138,18 @@ playwright менять без нужды не стоит — другая ве�
 | `npm run figma:layout` | правило раскладки страницы Components по снимку `figma/layout.json` (см. figma.md → «Раскладка страницы Components») |
 | `npm run figma:diff` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
 
-Две ловушки снимков:
+Три ловушки снимков:
 
 - `storybook-addon-pseudo-states` навешивает классы `pseudo-*` **после** первого кадра. Снимок
   сразу после `waitForSelector` ловит историю `States` без hover и фокуса — нужна пауза.
 - id истории в URL — это kebab-case заголовка: `Components/Input` + `States` → `components-input--states`,
   через дефис, а не через слэш.
+- `figma-code-diff.mjs` различал цвет и размер CSS-переменной по подстроке `"color"` в её имени —
+  работало, пока у каждого цветового токена в имени был слой `color/` (`--ds-color-on-primary`).
+  Токены слоя Component называются без типа (`--ds-switch-thumb`, `--ds-sidebar-*`), подстрока
+  не находится, значение пытались распарсить как `px` — результат «background rgb(255,255,255) ≠
+  1200». Починено: тип переменной определяется по полю EXPECT (`radius` → размер, `border`/`color`/
+  `bg`/`outline`/`markColor` → цвет), а не по имени.
 
 ## Definition of done для компонента
 

@@ -85,6 +85,7 @@ Generated from `tokens.json` by `scripts/build-tokens.mjs`. Primitives are not l
 | `sidebar/on-hover` | `--ds-sidebar-on-hover` | `text-sidebar-on-hover` | `color/on-surface-hover` |  |
 | `sidebar/border` | `--ds-sidebar-border` | `border-sidebar-border` | `color/border/default` |  |
 | `sidebar/focus-ring` | `--ds-sidebar-focus-ring` | `ring-sidebar-focus-ring` | `color/focus-ring` |  |
+| `switch/thumb` | `--ds-switch-thumb` | `bg-switch-thumb` | `color/on-primary` |  |
 
 ## Brand (modes: Main, Demo)
 

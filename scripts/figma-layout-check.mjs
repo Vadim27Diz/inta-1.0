@@ -19,7 +19,7 @@ const data = JSON.parse(fs.readFileSync(file, "utf8"));
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 if (args.includes("--hash")) { console.log(djb2(JSON.stringify(data))); process.exit(0); }
 
-const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch"];
+const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton"];
 const PAD = 64, GAP = 160, PITCH = 64;
 const box = (a) => ({ name: a[0], type: a[1], x: a[2], y: a[3], w: a[4], h: a[5] });
 
@@ -97,8 +97,13 @@ else {
   step(glyphs.map((g) => g.y), "Y");
 }
 
+// 8. в наборах компонентов нет абсолютно позиционированных слоёв, кроме focus-ring
+for (const [root, variant, layer, type] of data.absoluteLayers || []) {
+  fail(`${root} / ${variant}: слой «${layer}» [${type}] абсолютный — курсор и всё, что зависит от длины текста, должно быть в потоке auto layout`);
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(data))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring\n");
 for (const e of errors) console.log(`✗ ${e}`);
 console.log(errors.length ? `${errors.length} нарушений` : "✓ раскладка в порядке");
 process.exit(errors.length ? 1 : 0);

@@ -324,6 +324,7 @@
   --ds-sidebar-on-hover: var(--ds-color-on-surface-hover);
   --ds-sidebar-border: var(--ds-color-border);
   --ds-sidebar-focus-ring: var(--ds-color-focus-ring);
+  --ds-switch-thumb: var(--ds-color-on-primary);
 }
 
 /* Tailwind v4 mapping */
@@ -407,6 +408,7 @@
   --color-sidebar-on-hover: var(--ds-sidebar-on-hover);
   --color-sidebar-border: var(--ds-sidebar-border);
   --color-sidebar-focus-ring: var(--ds-sidebar-focus-ring);
+  --color-switch-thumb: var(--ds-switch-thumb);
   --font-sans: var(--ds-font-sans);
   --font-heading: var(--ds-font-heading);
   --font-mono: var(--ds-font-mono);

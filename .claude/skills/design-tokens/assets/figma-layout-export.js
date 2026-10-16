@@ -15,15 +15,26 @@ const node = (n) => [n.name, n.type, ...A(n)];
 
 const sections = page.children.filter((c) => c.type === "SECTION").map((s) => ({ s: node(s), c: s.children.map(node) }));
 const loose = page.children.filter((c) => c.type !== "SECTION").map(node);
-const components = page.findAllWithCriteria({ types: ["COMPONENT", "COMPONENT_SET"] })
-  .filter((n) => !(n.parent && n.parent.type === "COMPONENT_SET"))
-  .map((n) => [n.name, n.type, n.parent.name, n.parent.type]);
+const topLevel = page.findAllWithCriteria({ types: ["COMPONENT", "COMPONENT_SET"] })
+  .filter((n) => !(n.parent && n.parent.type === "COMPONENT_SET"));
+const components = topLevel.map((n) => [n.name, n.type, n.parent.name, n.parent.type]);
+
+// абсолютно позиционированные слои внутри наборов — разрешён только focus-ring
+const absoluteLayers = [];
+for (const root of topLevel) {
+  const variants = root.type === "COMPONENT_SET" ? root.children : [root];
+  for (const v of variants) {
+    if (!("findAll" in v)) continue;
+    const abs = v.findAll((n) => "layoutPositioning" in n && n.layoutPositioning === "ABSOLUTE" && n.name !== "focus-ring");
+    for (const a of abs) absoluteLayers.push([root.name, v.name, a.name, a.type]);
+  }
+}
 
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
-  sections, loose, components,
+  sections, loose, components, absoluteLayers,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };

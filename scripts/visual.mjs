@@ -41,6 +41,16 @@ const STORIES = [
   "components-switch--variants",
   "components-switch--states",
   "components-switch--content",
+  "components-badge--variants",
+  "components-badge--content",
+  "components-separator--variants",
+  "components-separator--content",
+  "components-kbd--variants",
+  "components-kbd--content",
+  "components-spinner--variants",
+  "components-spinner--content",
+  "components-skeleton--variants",
+  "components-skeleton--content",
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },

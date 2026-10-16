@@ -854,6 +854,186 @@
      80
     ]
    ]
+  },
+  {
+   "s": [
+    "Badge",
+    "SECTION",
+    -64,
+    8646,
+    688,
+    284
+   ],
+   "c": [
+    [
+     "title",
+     "TEXT",
+     0,
+     8710,
+     560,
+     24
+    ],
+    [
+     "description",
+     "TEXT",
+     0,
+     8746,
+     560,
+     34
+    ],
+    [
+     "Badge",
+     "COMPONENT_SET",
+     0,
+     8812,
+     560,
+     54
+    ]
+   ]
+  },
+  {
+   "s": [
+    "Separator",
+    "SECTION",
+    -64,
+    9090,
+    688,
+    294
+   ],
+   "c": [
+    [
+     "title",
+     "TEXT",
+     0,
+     9154,
+     560,
+     24
+    ],
+    [
+     "description",
+     "TEXT",
+     0,
+     9190,
+     560,
+     34
+    ],
+    [
+     "Separator",
+     "COMPONENT_SET",
+     0,
+     9256,
+     289,
+     64
+    ]
+   ]
+  },
+  {
+   "s": [
+    "Kbd",
+    "SECTION",
+    -64,
+    9544,
+    688,
+    250
+   ],
+   "c": [
+    [
+     "title",
+     "TEXT",
+     0,
+     9608,
+     560,
+     24
+    ],
+    [
+     "description",
+     "TEXT",
+     0,
+     9644,
+     560,
+     34
+    ],
+    [
+     "Kbd",
+     "COMPONENT",
+     0,
+     9710,
+     20,
+     20
+    ]
+   ]
+  },
+  {
+   "s": [
+    "Spinner",
+    "SECTION",
+    -64,
+    9954,
+    688,
+    246
+   ],
+   "c": [
+    [
+     "title",
+     "TEXT",
+     0,
+     10018,
+     560,
+     24
+    ],
+    [
+     "description",
+     "TEXT",
+     0,
+     10054,
+     560,
+     34
+    ],
+    [
+     "Spinner",
+     "COMPONENT",
+     0,
+     10120,
+     16,
+     16
+    ]
+   ]
+  },
+  {
+   "s": [
+    "Skeleton",
+    "SECTION",
+    -64,
+    10360,
+    688,
+    246
+   ],
+   "c": [
+    [
+     "title",
+     "TEXT",
+     0,
+     10424,
+     560,
+     24
+    ],
+    [
+     "description",
+     "TEXT",
+     0,
+     10460,
+     560,
+     34
+    ],
+    [
+     "Skeleton",
+     "COMPONENT",
+     0,
+     10526,
+     160,
+     16
+    ]
+   ]
   }
  ],
  "loose": [],
@@ -1109,6 +1289,37 @@
    "COMPONENT_SET",
    "Switch",
    "SECTION"
+  ],
+  [
+   "Badge",
+   "COMPONENT_SET",
+   "Badge",
+   "SECTION"
+  ],
+  [
+   "Separator",
+   "COMPONENT_SET",
+   "Separator",
+   "SECTION"
+  ],
+  [
+   "Kbd",
+   "COMPONENT",
+   "Kbd",
+   "SECTION"
+  ],
+  [
+   "Spinner",
+   "COMPONENT",
+   "Spinner",
+   "SECTION"
+  ],
+  [
+   "Skeleton",
+   "COMPONENT",
+   "Skeleton",
+   "SECTION"
   ]
- ]
+ ],
+ "absoluteLayers": []
 }
