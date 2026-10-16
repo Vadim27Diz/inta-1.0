@@ -13,9 +13,12 @@
 //      outline/ghost/link в focus (проверка «заплатки» на приподнятой поверхности),
 //      Label + Input (value), Input invalid, Input disabled, Textarea focus (с курсором).
 //   3. Selection — Checkbox, Radio Group, Switch: выкл / вкл / disabled.
-//   4. Display — Badge (все варианты одним рядом), разделитель на всю ширину, под ним
+//   4. Forms (группа 2, составные контролы) — Field default/invalid, Input Group
+//      addon=start/end, Input OTP default, Native Select md/default, Select open (панель —
+//      проверка Select/Item в контексте, отличном от его собственной секции Components).
+//   5. Display — Badge (все варианты одним рядом), разделитель на всю ширину, под ним
 //      Kbd, Spinner, Skeleton одним рядом.
-//   5. Icons — 5 глифов одним размером (Size=16).
+//   6. Icons — 5 глифов одним размером (Size=16).
 //
 // Вся раскладка — auto layout (через helper'ы newFrame/row/sectionFrame), без единой ручной
 // координаты внутри фрейма; сами 4 фрейма верхнего уровня расставлены по сетке 2×2 с отступом
@@ -49,6 +52,11 @@ const REF = {
   Spinner: await figma.getNodeByIdAsync("173:230"),
   Skeleton: await figma.getNodeByIdAsync("173:233"),
   IconSet: await figma.getNodeByIdAsync("115:32"),
+  Field: await figma.getNodeByIdAsync("207:213"),
+  InputGroup: await figma.getNodeByIdAsync("214:208"),
+  InputOTP: await figma.getNodeByIdAsync("217:238"),
+  NativeSelect: await figma.getNodeByIdAsync("220:289"),
+  Select: await figma.getNodeByIdAsync("223:268"),
 };
 // 5 глифов для секции Icons — id компонентов li:* из Icon / Glyphs
 const GLYPHS = {
@@ -191,7 +199,18 @@ function buildFrame(frame) {
   swRow.appendChild(inst(pick(REF.Switch, { State: "default", Checked: "on" })));
   swRow.appendChild(inst(pick(REF.Switch, { State: "disabled", Checked: "off" })));
 
-  // ---------- 4. Display ----------
+  // ---------- 4. Forms (группа 2, составные контролы) ----------
+  const forms = sectionFrame(frame, "Forms");
+  const formsRow = row(forms, { wrap: true });
+  formsRow.appendChild(inst(pick(REF.Field, { State: "default" })));
+  formsRow.appendChild(inst(pick(REF.Field, { State: "invalid" })));
+  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "start" })));
+  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "end" })));
+  formsRow.appendChild(inst(pick(REF.InputOTP, { State: "default" })));
+  formsRow.appendChild(inst(pick(REF.NativeSelect, { Size: "md", State: "default" })));
+  formsRow.appendChild(inst(pick(REF.Select, { State: "open" })));
+
+  // ---------- 5. Display ----------
   const display = sectionFrame(frame, "Display");
   const badgeRow = row(display, { wrap: true });
   for (const v of ["primary", "secondary", "neutral", "outline", "danger", "danger-subtle", "success", "warning", "info"]) {
@@ -207,7 +226,7 @@ function buildFrame(frame) {
   miscRow.appendChild(inst(REF.Spinner));
   miscRow.appendChild(inst(REF.Skeleton));
 
-  // ---------- 5. Icons ----------
+  // ---------- 6. Icons ----------
   const icons = sectionFrame(frame, "Icons");
   const iconsRow = row(icons);
   for (const key of Object.keys(GLYPHS)) {
