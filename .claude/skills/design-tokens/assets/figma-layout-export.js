@@ -67,13 +67,33 @@ function widthIsFixed(frame) {
 const EXEMPT_FIXED_WIDTH = {
   "Input|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
   "Textarea|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
+  "Native Select|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
+  "Input OTP|slot": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер",
 };
 
 // ---- правило: текст, который меняется при использовании (подпись/значение/клавиша),
 // подключён как TEXT property, а не «голый» текстовый слой. Исключения — явно, с причиной.
 const EXEMPT_NAKED_TEXT = {
   "Label|required": "декоративный маркер обязательности — всегда литеральная «*», не пользовательский контент",
+  "Input OTP|separator": "декоративный разделитель между группами слотов — всегда литеральное тире, не пользовательский контент",
 };
+
+// Composite-компоненты (Field…) вкладывают ГОТОВЫЕ инстансы Input/Label и т.п. — у вложенного
+// текста владелец исключения не корневой набор ("Field"), а компонент, которому физически
+// принадлежит слой ("Input"). Идём вверх до ближайшего INSTANCE и берём имя его mainComponent
+// (сета, если тот — вариант), а не root.name — иначе ключ исключения никогда не совпадёт.
+function ownerName(t, root) {
+  let n = t.parent;
+  while (n) {
+    if (n.type === "INSTANCE") {
+      const main = n.mainComponent;
+      if (main) return main.parent && main.parent.type === "COMPONENT_SET" ? main.parent.name : main.name;
+      break;
+    }
+    n = n.parent;
+  }
+  return root.name;
+}
 
 const textContainers = [];
 const nakedText = [];
@@ -82,16 +102,17 @@ for (const root of topLevel) {
   const v = variants[0]; // структура одинакова у всех вариантов набора
   for (const t of v.findAll((n) => n.type === "TEXT")) {
     if (/^caption /.test(t.name)) continue; // подписи под глифами — не контент компонента
+    const owner = ownerName(t, v);
     const hasProperty = !!(t.componentPropertyReferences && t.componentPropertyReferences.characters);
     const rootFixed = widthIsFixed(v);
     const parent = t.parent;
     const parentFixed = parent && parent !== v && "layoutMode" in parent ? widthIsFixed(parent) : null;
     if (rootFixed || parentFixed) {
-      const key = `${root.name}|${parent ? parent.name : v.name}`;
+      const key = `${owner}|${parent ? parent.name : v.name}`;
       textContainers.push([root.name, t.name, parent ? parent.name : v.name, rootFixed, !!parentFixed, EXEMPT_FIXED_WIDTH[key] || null]);
     }
     if (!hasProperty) {
-      const key = `${root.name}|${t.name}`;
+      const key = `${owner}|${t.name}`;
       nakedText.push([root.name, t.name, t.characters, EXEMPT_NAKED_TEXT[key] || null]);
     }
   }
