@@ -212,6 +212,18 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
     focusRingShape.push(["not-instance", parent.name, r.name, r.type, mainSetName]);
     continue;
   }
+  // Kind — посадка (из имени варианта: "Kind=control|field|seam, Scale=…, Position=…"):
+  //   control — отдельно стоящие контролы: зазор 2px, кольцо = родитель+4, скругление на шаг выше.
+  //   field   — поля ввода: вплотную (0 зазора), кольцо = родитель 1:1, скругление РАВНО родителю
+  //             (не на шаг выше — образец, см. описание компонента, Input на ui.shadcn.com).
+  //   seam    — элементы встык (Input OTP и т.п.): вплотную, скругление на шаг выше, Position
+  //             задаёт форму по стороне.
+  const kindMatch = main.name.match(/^Kind=(\w+)/);
+  const kind = kindMatch ? kindMatch[1] : null;
+  if (!kind) { focusRingShape.push(["no-kind", parent.name, r.name, main.name]); continue; }
+  const isFlush = kind === "field" || kind === "seam";
+  const stepRadius = kind !== "field"; // field: скругление равно родителю, не на шаг выше
+
   for (const corner of CORNERS) {
     // ELLIPSE (бегунок) не имеет per-corner радиуса — она круглая по природе, что эквивалентно
     // "full" на все 4 угла для целей этого сравнения.
@@ -223,6 +235,9 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
       if (ringVal < FULL_THRESHOLD) focusRingShape.push(["corner-full", parent.name, r.name, corner, "full", ringVal]);
     } else if (parentVal === 0) {
       if (ringVal !== 0) focusRingShape.push(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
+    } else if (!stepRadius) {
+      // field: кольцо повторяет ТУ ЖЕ переменную, что и родитель — не следующую ступень
+      if (ringVar !== parentVar) focusRingShape.push(["corner-equal", parent.name, r.name, corner, parentVar, ringVar || ringVal]);
     } else if (parentVar && SCALE_UP[parentVar]) {
       if (ringVar !== SCALE_UP[parentVar]) focusRingShape.push(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
     } else {
@@ -232,12 +247,19 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   // геометрия — через собственные width/height/x/y узлов (frame-относительные), НЕ
   // absoluteBoundingBox: у кольца strokeAlign=OUTSIDE, поэтому absoluteBoundingBox шире
   // фрейма на 2×strokeWeight с каждой стороны — сравнение по нему даёт ложное расхождение.
-  const okW = Math.abs(r.width - (parent.width + 4)) <= 0.5;
-  const okH = Math.abs(r.height - (parent.height + 4)) <= 0.5;
-  const okX = Math.abs((r.x - offsetBaseX) + 2) <= 0.5;
-  const okY = Math.abs((r.y - offsetBaseY) + 2) <= 0.5;
+  const wantDelta = isFlush ? 0 : 4;
+  const wantOffset = isFlush ? 0 : -2;
+  const okW = Math.abs(r.width - (parent.width + wantDelta)) <= 0.5;
+  const okH = Math.abs(r.height - (parent.height + wantDelta)) <= 0.5;
+  const okX = Math.abs((r.x - offsetBaseX) - wantOffset) <= 0.5;
+  const okY = Math.abs((r.y - offsetBaseY) - wantOffset) <= 0.5;
   if (!okW || !okH || !okX || !okY) {
-    focusRingShape.push(["geometry", parent.name, r.name, { w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + 4, wantH: parent.height + 4, wantDx: -2, wantDy: -2 }]);
+    focusRingShape.push(["geometry", parent.name, r.name, { kind, w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + wantDelta, wantH: parent.height + wantDelta, wantDx: wantOffset, wantDy: wantOffset }]);
+  }
+  // толщина обводки: control/seam — 2px, field — 3px (образец ui.shadcn.com)
+  const wantStroke = kind === "field" ? 3 : 2;
+  if (r.strokeWeight !== wantStroke) {
+    focusRingShape.push(["stroke-weight", parent.name, r.name, kind, wantStroke, r.strokeWeight]);
   }
 }
 

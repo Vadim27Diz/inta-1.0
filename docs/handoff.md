@@ -319,4 +319,55 @@ focus-состояниях всех компонентов»). Geometry выво
 давние warnings) · 381 класс/0 ошибок `tailwind:check` · 852/0 `figma:diff` · раскладка 0 нарушений
 (**25 секций, 60 компонентов** — было 24/59, плюс секция `Utility`).
 
+## Тот же чат — Kind у Utility / Focus ring (control/field/seam), новый стиль полей
+
+Уточнение от человека: у кольца фокуса не два режима (общий/встык), а три — добавлено свойство
+`Kind` в `Utility / Focus ring`:
+
+- **`control`** — отдельно стоящие контролы (Button, Checkbox, Radio, Switch, Toggle, Slider
+  thumb). Без изменений: зазор 2px, скругление на шаг выше родителя.
+- **`field`** — поля ввода (Input, Textarea, Native Select, Select триггер, Input Group). Новое:
+  вплотную (без зазора), обводка 3px, скругление РАВНО скруглению поля (не на шаг выше) — образец
+  взят с Input на ui.shadcn.com (`focus-visible:ring-3 focus-visible:ring-ring/50`, у нас без
+  прозрачности — токен `color/focus-ring`, правило 3 SKILL.md).
+- **`seam`** — элементы встык (слоты Input OTP, позже Button Group/Toggle Group). Было
+  реализовано с зазором по ошибке (как `control`) — поправлено на вплотную, скругление на шаг
+  выше, Position по стороне не изменился.
+
+Figma: 16 исходных вариантов не пересобирались с нуля — `Position=all` переименованы в
+`Kind=control` (геометрия не трогалась, те же узлы, те же 76 экземпляров), `Position=first/
+middle/last` переименованы в `Kind=seam` и их геометрия исправлена на вплотную (те же узлы, что
+использует активный слот Input OTP — почему у него подмена компонента не понадобилась). Добавлены
+8 новых вариантов: `Kind=seam, Position=all` ×4 (для симметрии, пока не используется) и
+`Kind=field` ×4. Итого **24 варианта** (было 16). Экземпляры в Input/Textarea/Native Select (19
+колец) переключены на `Kind=field`, геометрия пересчитана на вплотную.
+
+**Код — не только Figma, это меняет уже выпущенный в v0.1.0 Input и Textarea** (отмечено в README
+отдельной строкой, не тихо): `input.tsx`, `textarea.tsx`, `native-select.tsx`, `select.tsx`,
+`input-group.tsx` — `focus-visible:outline-2 outline-offset-2 outline-focus-ring` заменено на
+`focus-visible:ring-3 focus-visible:ring-focus-ring`. `ring-3` — именованный шаг шкалы Tailwind
+(`calc(3px + ...)`), не `ring-[3px]` (`tokens:check` справедливо не пропустил произвольное
+значение) — проверил компиляцией через `@tailwindcss/node` напрямую, что `ring-3` даёт ровно 3px.
+`Input Group`: обёртка плюс `InputGroupInput`/`InputGroupTextarea` — их `focus-visible:outline-none`
+переопределение дополнено `focus-visible:ring-0` (иначе сквозь него проступало бы кольцо
+вложенного Input, у которого теперь `ring`, а не `outline`).
+
+**Select-триггер и Input Group в Figma остаются без кольца фокуса вообще** — у этих двух состояние
+`focus` никогда не было смоделировано в Figma (нашёл ещё при первом проходе), а не что-то, что я
+сломал сейчас. Код уже красит оба в стиле `field` (одинаковый класс). Не строю новые состояния в
+Figma без вопроса — отдельная, не маленькая правка (Select — минимум новый вариант State=focus
+в наборе Select, Input Group — отдельный слой кольца на обёртке).
+
+**`figma:diff`** проверял только `outline-*` CSS-свойства — у Input/Textarea `outline-style` стал
+`none` (кольцо теперь `box-shadow`), проверка закономерно покраснела. Добавил параллельную ветку
+сверки `box-shadow` (`ring`/`ringWidth` в `EXPECT`, парсинг слоёв `box-shadow` — настоящее кольцо
+вычисляется как единственный слой с ненулевым spread, остальные 4 — заглушки `0 0 0 0` от
+inset-shadow/ring-offset-shadow/shadow). Итог: **864 проверки, 0 расхождений** (было 852 — плюс 12
+от новой ring-ветки на 2 пробы × 4 комбинации × полтора чека).
+
+`npm run verify`: без изменений по составу, повторно зелёный — 22 файла/0 ошибок `tokens:check`,
+152/139/9/0/4 `tokens:contrast`, 382 класса/0 ошибок `tailwind:check`, 864/0 `figma:diff`,
+раскладка 0 нарушений (25 секций, 60 компонентов — состав секций не изменился, только `Utility`
+выросла с 16 до 24 вариантов).
+
 Ветка не слита и не запушена — жду ревью.

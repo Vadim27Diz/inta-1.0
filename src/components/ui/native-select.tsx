@@ -7,7 +7,8 @@ const nativeSelectVariants = cva(
   [
     "w-full min-w-0 appearance-none rounded-md border border-border-input bg-transparent text-on-surface",
     "transition-colors outline-none",
-    "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
+    // кольцо фокуса поля — вплотную, скругление само повторяет radius (см. input.tsx)
+    "focus-visible:ring-3 focus-visible:ring-focus-ring",
     "aria-invalid:border-danger",
     "disabled:cursor-not-allowed disabled:border-transparent disabled:bg-disabled disabled:text-on-disabled",
   ],

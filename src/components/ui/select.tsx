@@ -45,7 +45,8 @@ function SelectTrigger({
       className={cn(
         "flex w-fit items-center justify-between gap-1.5 rounded-lg border border-border-input bg-transparent py-2 pr-2 pl-2.5 typo-body-sm whitespace-nowrap transition-colors outline-none select-none",
         "hover:bg-surface-hover",
-        "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
+        // кольцо фокуса поля — вплотную, скругление само повторяет radius (см. input.tsx)
+        "focus-visible:ring-3 focus-visible:ring-focus-ring",
         "disabled:cursor-not-allowed disabled:border-transparent disabled:bg-disabled disabled:text-on-disabled",
         "aria-invalid:border-danger",
         "data-placeholder:text-on-surface-muted",

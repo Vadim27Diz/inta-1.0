@@ -75,6 +75,12 @@ Figma component set → код на токенах → истории Storybook 
 Проверено: `npm run verify` (`tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`) —
 0 ошибок; раскладка страницы Components в Figma — 14 секций, 47 компонентов, без нарушений.
 
+**Изменения с v0.1.0:** фокус Input/Textarea приведён к новому стилю полей — кольцо вплотную к
+рамке (было с зазором 2px), толщина 3px (было 2px), скругление повторяет радиус поля, а не на шаг
+больше (образец — Input на ui.shadcn.com). Реализовано через `ring`/box-shadow вместо `outline`.
+Отдельные контролы (Button, Checkbox, Radio, Switch и т.п.) не затронуты — у них фокус по-прежнему
+с зазором 2px.
+
 ## Бэклог
 
 Группы 2–6 из `shadcn-mapping.md` → «Все компоненты shadcn и порядок переноса»: составные контролы

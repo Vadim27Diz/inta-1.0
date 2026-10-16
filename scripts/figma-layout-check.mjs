@@ -161,24 +161,30 @@ for (const [root, variant, container, layer, count] of data.repeatedLayers || []
   fail(`${root} / ${variant}: «${layer}» повторяется ${count}× в «${container}» как нарисованный слой, а не экземпляр компонента`);
 }
 
-// 14. каждый focus-ring — экземпляр Utility / Focus ring, скругление каждого угла — переменная
-// на шаг выше той же стороны родителя (sm→md, md→lg, lg→xl, full→full), кольцо на 4px больше
-// родителя (инсет 2px со всех сторон)
+// 14. каждый focus-ring — экземпляр Utility / Focus ring, с посадкой (Kind) по типу родителя:
+// control — зазор 2px, скругление на шаг выше; field — вплотную, скругление РАВНО родителю,
+// обводка 3px (образец ui.shadcn.com); seam — вплотную, скругление на шаг выше, Position по стороне.
 for (const row of data.focusRingShape || []) {
-  const [kind, parent, ring] = row;
-  if (kind === "not-instance") {
+  const [rowKind, parent, ring] = row;
+  if (rowKind === "not-instance") {
     fail(`${parent}: «${ring}» [${row[3]}] — не экземпляр Utility / Focus ring (${row[4] || "нарисованный слой"})`);
-  } else if (kind === "corner-step" || kind === "corner-flat" || kind === "corner-full") {
+  } else if (rowKind === "no-kind") {
+    fail(`${parent}: «${ring}» — вариант «${row[3]}» без свойства Kind (control/field/seam)`);
+  } else if (rowKind === "corner-step" || rowKind === "corner-flat" || rowKind === "corner-full") {
     fail(`${parent}: «${ring}» угол ${row[3]} — ожидался ${row[4]}, сейчас ${row[5]}`);
-  } else if (kind === "corner-unclassified") {
-    fail(`${parent}: «${ring}» угол ${row[3]} родителя не sm/md/lg/full (${row[4]}) — не из чего посчитать шаг выше`);
-  } else if (kind === "geometry") {
-    fail(`${parent}: «${ring}» геометрия ${JSON.stringify(row[3])} ≠ ожидаемой ${JSON.stringify(row[4])} (родитель + 4px, инсет 2px)`);
+  } else if (rowKind === "corner-equal") {
+    fail(`${parent}: «${ring}» (Kind=field) угол ${row[3]} — должен повторять родителя (${row[4]}), сейчас ${row[5]}`);
+  } else if (rowKind === "corner-unclassified") {
+    fail(`${parent}: «${ring}» угол ${row[3]} родителя не sm/md/lg/full (${row[4]}) — не из чего посчитать скругление кольца`);
+  } else if (rowKind === "geometry") {
+    fail(`${parent}: «${ring}» (Kind=${row[3].kind}) геометрия ${JSON.stringify(row[3])} ≠ ожидаемой ${JSON.stringify(row[4])}`);
+  } else if (rowKind === "stroke-weight") {
+    fail(`${parent}: «${ring}» (Kind=${row[3]}) обводка ${row[5]}px — ожидалось ${row[4]}px`);
   }
 }
 
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring, скругление на шаг выше родителя по каждому углу\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше)\n");
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
 }
