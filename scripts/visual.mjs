@@ -69,6 +69,9 @@ const STORIES = [
   "components-toggle--variants",
   "components-toggle--states",
   "components-toggle--content",
+  "components-toggle-group--variants",
+  "components-toggle-group--states",
+  "components-toggle-group--content",
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },
