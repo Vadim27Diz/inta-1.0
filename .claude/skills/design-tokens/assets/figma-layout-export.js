@@ -68,7 +68,8 @@ const EXEMPT_FIXED_WIDTH = {
   "Input|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
   "Textarea|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
   "Native Select|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
-  "Input OTP|slot": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер",
+  "Input OTP / Slot|State=default": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер",
+  "Input OTP / Slot|Input OTP / Slot": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер; тот же слот, что выше, но контейнер — инстанс внутри Input OTP, а не мастер-компонент",
 };
 
 // ---- правило: текст, который меняется при использовании (подпись/значение/клавиша),
@@ -81,8 +82,9 @@ const EXEMPT_NAKED_TEXT = {
 // Composite-компоненты (Field…) вкладывают ГОТОВЫЕ инстансы Input/Label и т.п. — у вложенного
 // текста владелец исключения не корневой набор ("Field"), а компонент, которому физически
 // принадлежит слой ("Input"). Идём вверх до ближайшего INSTANCE и берём имя его mainComponent
-// (сета, если тот — вариант), а не root.name — иначе ключ исключения никогда не совпадёт.
-function ownerName(t, root) {
+// (сета, если тот — вариант). Если инстанса нет — владелец корневой компонент ("Input"), а НЕ
+// вариант (`v.name` вида "Size=md, State=default" никогда не совпадёт с ключом исключения).
+function ownerName(t, rootName) {
   let n = t.parent;
   while (n) {
     if (n.type === "INSTANCE") {
@@ -92,7 +94,7 @@ function ownerName(t, root) {
     }
     n = n.parent;
   }
-  return root.name;
+  return rootName;
 }
 
 const textContainers = [];
@@ -102,7 +104,7 @@ for (const root of topLevel) {
   const v = variants[0]; // структура одинакова у всех вариантов набора
   for (const t of v.findAll((n) => n.type === "TEXT")) {
     if (/^caption /.test(t.name)) continue; // подписи под глифами — не контент компонента
-    const owner = ownerName(t, v);
+    const owner = ownerName(t, root.name);
     const hasProperty = !!(t.componentPropertyReferences && t.componentPropertyReferences.characters);
     const rootFixed = widthIsFixed(v);
     const parent = t.parent;
@@ -118,12 +120,58 @@ for (const root of topLevel) {
   }
 }
 
+// ---- правило: дочерние элементы списка (пункты Select, позже menu item/command item) — Fill
+// по ширине, не Hug. Список = вертикальный auto layout с 2+ детьми-инстансами ОДНОГО компонента.
+function sameComponent(a, b) {
+  if (!a.mainComponent || !b.mainComponent) return false;
+  const am = a.mainComponent.parent && a.mainComponent.parent.type === "COMPONENT_SET" ? a.mainComponent.parent : a.mainComponent;
+  const bm = b.mainComponent.parent && b.mainComponent.parent.type === "COMPONENT_SET" ? b.mainComponent.parent : b.mainComponent;
+  return am.id === bm.id;
+}
+const listItemSizing = [];
+for (const root of topLevel) {
+  const variants = root.type === "COMPONENT_SET" ? root.children : [root];
+  for (const v of variants) {
+    if (!("findAll" in v)) continue;
+    const lists = v.findAll((n) => "layoutMode" in n && n.layoutMode === "VERTICAL" && n.children.length >= 2 &&
+      n.children.every((ch) => ch.type === "INSTANCE") && n.children.every((ch) => sameComponent(ch, n.children[0])));
+    for (const list of lists) {
+      for (const item of list.children) {
+        if (item.layoutSizingHorizontal !== "FILL") {
+          listItemSizing.push([root.name, v.name, list.name, item.name, item.layoutSizingHorizontal]);
+        }
+      }
+    }
+  }
+}
+
+// ---- правило: повторяющиеся элементы внутри компонента (пункты списков, вкладки, ячейки) —
+// экземпляры общего компонента, а не нарисованные слои. 2+ соседа с одинаковым именем, ни один
+// не INSTANCE → повод вынести в переиспользуемый компонент (как Select/Item, Input OTP/Slot).
+const repeatedLayers = [];
+for (const root of topLevel) {
+  const variants = root.type === "COMPONENT_SET" ? root.children : [root];
+  for (const v of variants) {
+    if (!("findAll" in v)) continue;
+    const containers = [v, ...v.findAll((n) => "children" in n)];
+    for (const c of containers) {
+      const byName = {};
+      for (const child of c.children || []) (byName[child.name] ||= []).push(child);
+      for (const [name, group] of Object.entries(byName)) {
+        if (group.length >= 2 && group.every((n) => n.type !== "INSTANCE")) {
+          repeatedLayers.push([root.name, v.name, c.name, name, group.length]);
+        }
+      }
+    }
+  }
+}
+
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
-  ringClipping, textContainers, nakedText,
+  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };

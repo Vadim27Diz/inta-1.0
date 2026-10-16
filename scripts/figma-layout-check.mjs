@@ -123,8 +123,20 @@ for (const [component, textNode, chars, exempt] of data.nakedText || []) {
   fail(`${component}: текстовый слой «${textNode}» («${chars}») без component property — нечем управлять при использовании`);
 }
 
+// 12. дочерние элементы списка (пункты Select, позже menu item/command item) — Fill по ширине,
+// не Hug: подсветка состояния должна тянуться на всю ширину панели, а не только по тексту
+for (const [root, variant, list, item, sizing] of data.listItemSizing || []) {
+  fail(`${root} / ${variant}: пункт списка «${item}» в «${list}» — ${sizing}, должен быть Fill`);
+}
+
+// 13. повторяющиеся элементы внутри компонента (пункты списков, вкладки, ячейки) — экземпляры
+// общего компонента, а не нарисованные слои (как Select/Item, Input OTP/Slot)
+for (const [root, variant, container, layer, count] of data.repeatedLayers || []) {
+  fail(`${root} / ${variant}: «${layer}» повторяется ${count}× в «${container}» как нарисованный слой, а не экземпляр компонента`);
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(data))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои\n");
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
 }
