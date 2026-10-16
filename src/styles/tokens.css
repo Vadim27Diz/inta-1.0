@@ -242,6 +242,7 @@
   --ds-color-primary-subtle-hover: var(--ds-brand-primary-200);
   --ds-color-primary-subtle-pressed: var(--ds-brand-primary-300);
   --ds-color-on-primary-subtle: var(--ds-brand-primary-900);
+  --ds-color-on-surface-danger: var(--ds-color-link-danger);
 }
 
 .dark, .dark [data-brand], [data-brand].dark {
@@ -310,6 +311,7 @@
   --ds-color-primary-subtle-hover: var(--ds-brand-primary-900);
   --ds-color-primary-subtle-pressed: var(--ds-brand-primary-950);
   --ds-color-on-primary-subtle: var(--ds-brand-primary-100);
+  --ds-color-on-surface-danger: var(--ds-color-link-danger);
 }
 
 /* Layer 4 — Component (object-level, aliases into Theme) */
@@ -322,6 +324,7 @@
   --ds-sidebar-on-hover: var(--ds-color-on-surface-hover);
   --ds-sidebar-border: var(--ds-color-border);
   --ds-sidebar-focus-ring: var(--ds-color-focus-ring);
+  --ds-switch-thumb: var(--ds-color-on-primary);
 }
 
 /* Tailwind v4 mapping */
@@ -396,6 +399,7 @@
   --color-primary-subtle-hover: var(--ds-color-primary-subtle-hover);
   --color-primary-subtle-pressed: var(--ds-color-primary-subtle-pressed);
   --color-on-primary-subtle: var(--ds-color-on-primary-subtle);
+  --color-on-surface-danger: var(--ds-color-on-surface-danger);
   --color-sidebar-surface: var(--ds-sidebar-surface);
   --color-sidebar-on-surface: var(--ds-sidebar-on-surface);
   --color-sidebar-primary: var(--ds-sidebar-primary);
@@ -404,6 +408,7 @@
   --color-sidebar-on-hover: var(--ds-sidebar-on-hover);
   --color-sidebar-border: var(--ds-sidebar-border);
   --color-sidebar-focus-ring: var(--ds-sidebar-focus-ring);
+  --color-switch-thumb: var(--ds-switch-thumb);
   --font-sans: var(--ds-font-sans);
   --font-heading: var(--ds-font-heading);
   --font-mono: var(--ds-font-mono);

@@ -51,6 +51,32 @@ CLAUDE.md                              ← правила проекта (Claude
 
 Имена семейств в пакетах совпадают со значениями токенов из Figma, поэтому `@font-face` ничего не переопределяет — достаточно импорта. Каждый вес приходит с подмножествами latin, latin-ext, cyrillic, greek, vietnamese и `unicode-range`: браузер качает только то, что встретилось на странице. Теперь переключение бренда main ↔ demo меняет и гарнитуру, а не только цвета и радиусы.
 
+## Что готово
+
+**Группа 1 — базовые контролы** (`src/components/ui/`, ветка `feat/group-1-controls`), каждый —
+Figma component set → код на токенах → истории Storybook → числовая сверка:
+
+| Компонент | Варианты / состояния |
+|---|---|
+| Button | primary/secondary/neutral/outline/ghost/danger/danger-subtle/inverse/link/link-danger × sm/md/lg/icon |
+| Icon | `lucide-react` напрямую, 33 глифа в Figma (`li:*`), размеры 12/16/20/24/32/40 |
+| Label | default/required, привязка к полю через `peer`/`group` |
+| Input | sm/md/lg × default/focus/disabled/invalid/invalid-focus × value/placeholder |
+| Textarea | то же без размеров, многострочный, `field-sizing-content` |
+| Checkbox | default/focus/disabled/invalid × unchecked/checked/indeterminate |
+| Radio Group | default/focus/disabled/invalid × checked/unchecked |
+| Switch | default/focus/disabled × off/on, токен слоя Component `switch/thumb` |
+| Badge | primary/secondary/neutral/outline/danger/danger-subtle/success/warning/info |
+| Separator | horizontal/vertical |
+| Kbd | моноширинный `typo-code` |
+| Spinner | `motion-safe:animate-spin`, 5 размеров |
+| Skeleton | `motion-safe:animate-pulse` |
+
+Проверено: `npm run verify` (`tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`) —
+0 ошибок; раскладка страницы Components в Figma — 14 секций, 47 компонентов, без нарушений.
+
 ## Бэклог
 
-- Пусто.
+Группы 2–6 из `shadcn-mapping.md` → «Все компоненты shadcn и порядок переноса»: составные контролы
+(Field, Select, Toggle, Slider, Progress…), контент и раскладка (Card, Alert, Tabs…), оверлеи (Dialog,
+Dropdown Menu, Toast…), сложные (Combobox, Calendar, Data Table…), чат/AI.

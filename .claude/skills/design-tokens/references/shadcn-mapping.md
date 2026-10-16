@@ -2,6 +2,14 @@
 
 Компоненты ставим CLI (`npx shadcn@latest add <name>`), затем переписываем классы. Линтер `check-tokens.mjs` находит всё, что осталось от shadcn, и подсказывает замену.
 
+Версии, с которыми сверены `data-*`-атрибуты ниже: `shadcn` CLI **4.21.5**, `radix-ui` **1.8.1**
+(пакет-бандл, не отдельные `@radix-ui/react-*`). После `npx shadcn@latest add <name>` сверь
+фактическую версию `radix-ui` в `package.json` с этой — другая мажорная/минорная версия может
+поменять набор `data-*` (так и было: разметка CLI ожидала `data-checked`, а установленный Radix
+отдавал `data-state=checked|unchecked|indeterminate` — см. «Выборные контролы» ниже). Если версия
+разошлась — проверь атрибуты вручную (DevTools на смонтированном компоненте) прежде чем переносить
+классы на `data-[...]`.
+
 ## Замена токенов
 
 | shadcn | ds | Комментарий |
@@ -53,6 +61,59 @@
 Когда брать `danger`, `danger-subtle` или `link-danger` — таблица в `examples/button.md`.
 
 Размеры: `default` → `md`; `sm`, `lg`, `icon`, `icon-sm`, `icon-lg` без изменений. Те же имена вариантов используются в Badge, Toggle, Alert и т.д., где они есть.
+
+## Поля ввода: Label, Input, Textarea
+
+| Что | Решение | Почему |
+|---|---|---|
+| Фон поля | `bg-transparent` | `bg-surface` на карточке `surface-raised` выложил бы заплатку цвета страницы — та же причина, что у `outline`/`ghost` кнопки |
+| Обводка | `border border-border-input`, hover нет | токена `border/input-hover` в системе нет, а выдумывать значение нельзя |
+| Фокус | `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring` | как у Button |
+| Ошибка | `aria-invalid:border-danger` | красная только обводка; кольцо фокуса остаётся обычным `focus-ring`, иначе в состоянии «ошибка + фокус» два красных кольца спорят друг с другом |
+| Disabled | `disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent disabled:placeholder:text-on-disabled` | не `opacity-50` |
+| Placeholder | `placeholder:text-on-surface-muted` | |
+| Размеры Input | `sm h-8 px-3 typo-body-sm`, `md h-9 px-4 typo-body-sm`, `lg h-10 px-4 typo-body-md` | высоты как у Button; кегль по шкале body, а не label — в поле лежит контент, а не подпись |
+| Textarea | `min-h-16 px-3 py-2 typo-body-sm field-sizing-content` | растёт по содержимому |
+| Label | `typo-label-md text-on-surface`, `required` → `<span aria-hidden>*</span>` с `text-on-surface-danger` | disabled приходит от контрола: `peer-disabled:` (поле-сосед) и `group-data-[disabled=true]:`; вариант `*:` красит и звёздочку, у неё свой цвет |
+
+## Выборные контролы: Checkbox, Radio Group, Switch
+
+| Что | Решение | Почему |
+|---|---|---|
+| Выбранное состояние | `enabled:data-[state=checked]:bg-primary` (и `border-primary`, `text-on-primary`) | без `enabled:` выбранное перебивает `disabled:`: у утилит Tailwind одинаковая специфичность, спор решает порядок в CSS, а не порядок в списке классов |
+| Ошибка | `data-[state=unchecked]:aria-invalid:border-danger` | у выбранного контрола рамка остаётся `primary` — красная рамка вокруг уже выбранного пункта читается как «выбор неверен», хотя ошибка у группы. Так же собран и набор в Figma |
+| Disabled | `disabled:bg-disabled disabled:border-transparent disabled:text-on-disabled`, точка радио — `group-disabled/radio:bg-on-disabled` | не `opacity-50` |
+| Фокус | `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring` | как у всех контролов |
+| Область нажатия | `after:absolute after:-inset-x-2 after:-inset-y-2` | рамка остаётся 16×16, а палец попадает: это псевдоэлемент, а не увеличенный контрол |
+| Checkbox | `size-4 rounded-sm`, галка и минус — `lucide-react` `size-3` (в Figma — `Icon Size=12`) | в наборе Icon нет 14, поэтому 12 и в коде, и в Figma |
+| Radio | `size-4 rounded-full`, точка `size-2 bg-primary` | |
+| Switch | дорожка `h-5 w-9 px-0.5 rounded-full`, бегунок `size-4 bg-on-primary`, ход `translate-x-0 → translate-x-4` | 36 − 4 (отступы) − 16 (бегунок) = 16, всё по шкале, без `translate-x-[calc(100%-2px)]` |
+| Дорожка off | `bg-border-input` | `bg-surface-muted` неразличим на `surface`; `border-input` — единственный серый, который виден в обеих темах |
+
+Размера `sm` у Switch нет: shadcn-овские `h-[18.4px]`/`w-[32px]` — произвольные значения, в шкалу не ложатся.
+
+## Badge, Separator, Kbd, Spinner, Skeleton
+
+Без состояний (не интерактивны) — истории `Default`/`Variants`/`Content`/`BrandMatrix`, без `States`.
+
+- **Badge.** `variant`: `primary`/`secondary`/`neutral`/`outline`/`danger` — по аналогии с Button; плюс
+  `danger-subtle`/`success`/`warning`/`info` — статусы на `*-subtle` токенах. У Button уже есть ровно
+  такая же пара `danger`/`danger-subtle` (сплошной и приглушённый), поэтому статус «danger» — это
+  variant `danger-subtle`, а не второй вариант с тем же именем `danger`. `success`/`warning`/`info`
+  всегда приглушённые — непри глушённых аналогов `bg-success`/`bg-warning`/`bg-info` в Badge нет (они
+  резервируются под Alert, группа 3). Форма — `rounded-full`, не токен.
+- **Separator.** Единственный цвет — `border-border` (не `border-border-input`: это декоративная линия,
+  а не обводка поля). Размер по `data-[orientation=…]` — `h-px w-full` / `h-full w-px`.
+- **Kbd.** Не из Radix — обычный `<kbd>`. Текст — `typo-code` (`font/mono` = JetBrains Mono, **не** шрифт
+  бренда Inter/IBM Plex Sans): при цифровой сверке (`figma-code-diff.mjs`) шрифт клавиши проверяется
+  отдельно от общего допущения «шрифт = бренд», иначе ложное расхождение на каждой комбинации.
+- **Spinner.** Обёртка над `lucide-react` `LoaderCircle`, не над кастомным Icon-компонентом (иконки в
+  проекте — всегда `lucide-react` напрямую). Вращение — `motion-safe:animate-spin`. Числовая проверка
+  геометрии идёт с `reducedMotion: "reduce"` в Playwright: без этого `getBoundingClientRect()` ловит
+  иконку в случайный момент вращения, и ось-выровненный прямоугольник повёрнутого квадрата оказывается
+  больше исходного — ложное расхождение по `height`/`width`, не связанное с токенами.
+- **Skeleton.** Прямоугольник `bg-surface-muted`, пульсация `motion-safe:animate-pulse`. В Figma оба —
+  статичный кадр; анимация и `prefers-reduced-motion` проверяются только в коде/браузере, не в макете.
 
 ## Все компоненты shadcn и порядок переноса
 
