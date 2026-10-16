@@ -1,3 +1,4 @@
+import { useState } from "react"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import {
   Select,
@@ -18,13 +19,21 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-function Fruits({ size }: { size?: "sm" | "md" }) {
+function Fruits({
+  size,
+  defaultOpen,
+  container,
+}: {
+  size?: "sm" | "md"
+  defaultOpen?: boolean
+  container?: React.ComponentProps<typeof SelectContent>["container"]
+}) {
   return (
-    <Select defaultValue="apple">
+    <Select defaultValue="apple" defaultOpen={defaultOpen}>
       <SelectTrigger size={size} className="w-48">
         <SelectValue placeholder="Выберите фрукт" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent container={container}>
         <SelectGroup>
           <SelectLabel>Фрукты</SelectLabel>
           <SelectItem value="apple">Яблоко</SelectItem>
@@ -112,11 +121,11 @@ export const Content: Story = {
   ),
 }
 
-// Портал Select рендерит SelectContent в document.body — локальные обёртки BrandMatrix
-// (data-brand/dark на div внутри истории) на неё не действуют, работает только глобальный
-// тулбар (он выставлен на :root). Поэтому здесь показываем закрытый триггер во всех 4
-// комбинациях — он не порталится и красится корректно; открытую панель в тёмной теме
-// проверяем отдельно глазами через тулбар Theme на States.
+// Портал Select рендерит SelectContent в document.body, вне DOM-дерева обёртки истории —
+// локальный data-brand/dark на div на него не действует (см. SKILL.md → «Топ ловушек» →
+// «Порталы»). SelectContent принимает проп container и передаёт его в Radix Portal — здесь
+// каждая ячейка даёт себя в качестве container через ref, поэтому открытая панель рисуется
+// внутри своей ячейки и красится в нужные бренд/тему, как и всё остальное на ней.
 const combos = [
   { brand: "main", dark: false },
   { brand: "main", dark: true },
@@ -124,26 +133,37 @@ const combos = [
   { brand: "demo", dark: true },
 ] as const
 
+function BrandMatrixCell({ brand, dark }: { brand: "main" | "demo"; dark: boolean }) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+  return (
+    <div
+      ref={setContainer}
+      data-brand={brand}
+      className={
+        (dark ? "dark " : "") +
+        "relative flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 text-on-surface"
+      }
+    >
+      <p className="typo-caption text-on-surface-muted">
+        {brand} / {dark ? "dark" : "light"}
+      </p>
+      {container && (
+        <>
+          <Fruits defaultOpen container={container} />
+          <div className="rounded-lg border border-border bg-surface-raised p-4 text-on-surface-raised">
+            <Fruits container={container} />
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 export const BrandMatrix: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-20">
       {combos.map((c) => (
-        <div
-          key={c.brand + String(c.dark)}
-          data-brand={c.brand}
-          className={
-            (c.dark ? "dark " : "") +
-            "flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 text-on-surface"
-          }
-        >
-          <p className="typo-caption text-on-surface-muted">
-            {c.brand} / {c.dark ? "dark" : "light"}
-          </p>
-          <Fruits />
-          <div className="rounded-lg border border-border bg-surface-raised p-4 text-on-surface-raised">
-            <Fruits />
-          </div>
-        </div>
+        <BrandMatrixCell key={c.brand + String(c.dark)} brand={c.brand} dark={c.dark} />
       ))}
     </div>
   ),

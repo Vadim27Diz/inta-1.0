@@ -60,6 +60,15 @@ src/components/ui/<name>.stories.tsx
 - Бренд: атрибут `data-brand="main" | "demo"` на `<html>` (или на любой обёртке — токены пересчитаются внутри).
 - Тема: класс `dark` на том же элементе.
 - Компоненты ничего об этом не знают — меняются только значения CSS-переменных.
+- **Исключение — порталы.** Radix `Portal` рендерит контент в `document.body`, вне DOM-дерева
+  обёртки с `data-brand`/`dark` — CSS-каскад до него не доходит, действует только то, что стоит на
+  `<html>` (глобальный тулбар Storybook). Компонент-обёртка над любым Radix-примитивом с порталом
+  (`Select`, дальше `Popover`, `Dropdown Menu`, `Dialog`…) должен принимать проп `container` и
+  передавать его в `<…Primitive.Portal container={container}>` — тогда вызывающий код (в том числе
+  история `BrandMatrix`) может указать, КУДА портал рисуется, и локальный `data-brand`/`dark` снова
+  работает. Без этого компонент нельзя полноценно проверить в 4 комбинациях бренд × тема иначе чем
+  через глобальный тулбар по одной за раз. См. `select.tsx` → `SelectContent` (эталон) и SKILL.md →
+  «Топ ловушек» → «Порталы».
 
 ## .storybook/preview.tsx
 
@@ -123,6 +132,25 @@ export const BrandMatrix: Story = {
 ```
 
 Hover/pressed/focus — это CSS-состояния, пропсов для них нет и добавлять их ради историй нельзя. Чтобы показать их статично, поставь аддон `storybook-addon-pseudo-states` и в истории `States` задай `parameters: { pseudo: { hover: [...], active: [...], focusVisible: [...] } }`. Без аддона история `States` показывает только `disabled`, а остальное проверяется мышью и клавишей Tab.
+
+Для компонента с порталом (см. «Как переключаются бренд и тема» выше) `BrandMatrix` должен открывать
+портал внутри своей ячейки, иначе он покрасится в глобальный тулбар, а не в локальную ячейку:
+
+```tsx
+function BrandMatrixCell({ brand, dark }: { brand: "main" | "demo"; dark: boolean }) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  return (
+    <div ref={setContainer} data-brand={brand}
+         className={(dark ? "dark " : "") + "bg-surface text-on-surface rounded-lg border border-border p-6"}>
+      <p className="typo-caption text-on-surface-muted mb-3">{brand} / {dark ? "dark" : "light"}</p>
+      {container && <Component {...args} defaultOpen container={container} />}
+    </div>
+  );
+}
+```
+
+`container` — `null` до первого рендера (ref ещё не привязан), поэтому сам портал рендерится только
+когда он не `null`; `defaultOpen` — чтобы открытая панель была видна на снимке без клика.
 
 ## Проверка в браузере
 
