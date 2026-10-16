@@ -102,8 +102,35 @@ for (const [root, variant, layer, type] of data.absoluteLayers || []) {
   fail(`${root} / ${variant}: слой «${layer}» [${type}] абсолютный — курсор и всё, что зависит от длины текста, должно быть в потоке auto layout`);
 }
 
+// 9. focus-ring нигде не обрезан предком — на ВСЕХ страницах (Components, Playground, Foundations),
+// не только на Components. clipsContent=true у предка допустим, только если кольцо целиком внутри
+// его рамки — снимок это уже учитывает (ringClipping содержит только реальные нарушения).
+for (const [pg, ancestor, type, rx, ry, rw, rh, ax, ay, aw, ah] of data.ringClipping || []) {
+  fail(`${pg}: кольцо фокуса ${rw}×${rh} обрезано предком «${ancestor}» [${type}] ${aw}×${ah} — clipsContent=true, а кольцо не помещается внутри`);
+}
+
+// 10. контейнер текстового слоя — только Hug/Fill по ширине, не Fixed (кроме явных исключений
+// с причиной — поля ввода фиксированной ширины по дизайну)
+for (const [component, textNode, container, rootFixed, parentFixed, exempt] of data.textContainers || []) {
+  if (exempt) continue;
+  fail(`${component}: контейнер «${container}» текстового слоя «${textNode}» — фиксированная ширина, должен быть Hug/Fill`);
+}
+
+// 11. текст, который меняется при использовании (подпись/значение/клавиша), подключён как
+// TEXT property — не «голый» текстовый слой (кроме явных исключений с причиной)
+for (const [component, textNode, chars, exempt] of data.nakedText || []) {
+  if (exempt) continue;
+  fail(`${component}: текстовый слой «${textNode}» («${chars}») без component property — нечем управлять при использовании`);
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(data))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property\n");
+if (data.textContainers?.some((r) => r[5])) {
+  console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
+}
+if (data.nakedText?.some((r) => r[3])) {
+  console.log("исключения (голый текст): " + data.nakedText.filter((r) => r[3]).map((r) => `${r[0]} — ${r[3]}`).join(" · "));
+}
 for (const e of errors) console.log(`✗ ${e}`);
 console.log(errors.length ? `${errors.length} нарушений` : "✓ раскладка в порядке");
 process.exit(errors.length ? 1 : 0);

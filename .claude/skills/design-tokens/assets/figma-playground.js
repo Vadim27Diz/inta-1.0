@@ -9,25 +9,26 @@
 // Структура одинакова во всех 4 фреймах (Main/Light, Main/Dark, Demo/Light, Demo/Dark):
 //   1. Buttons — 10 вариантов в default одним рядом на surface; состояния
 //      default/hover/pressed/focus/disabled и размеры sm/md/lg/icon — только у primary.
-//   2. Одна карточка surface-raised: outline/ghost/link в focus (проверка «заплатки» на
-//      приподнятой поверхности), Label + Input (value), Input invalid, Input disabled,
-//      Textarea focus (с курсором).
+//   2. Одна карточка surface-raised (обводка color/border/default, подпись «на surface-raised»):
+//      outline/ghost/link в focus (проверка «заплатки» на приподнятой поверхности),
+//      Label + Input (value), Input invalid, Input disabled, Textarea focus (с курсором).
 //   3. Selection — Checkbox, Radio Group, Switch: выкл / вкл / disabled.
-//   4. Display — Badge (все варианты одним рядом), затем Kbd, Spinner, Skeleton,
-//      Separator (vertical) в одном ряду.
+//   4. Display — Badge (все варианты одним рядом), разделитель на всю ширину, под ним
+//      Kbd, Spinner, Skeleton одним рядом.
 //   5. Icons — 5 глифов одним размером (Size=16).
 //
-// Вся раскладка — auto layout (через helper'ы row/sectionFrame), без единой ручной координаты
-// внутри фрейма; сами 4 фрейма верхнего уровня расставлены по сетке 2×2 с отступом 160 между
-// рамками бренда (абсолютные x/y — здесь это нормально, это верхний уровень страницы, не
-// компонент-сет: см. figma.md → «Раскладка страницы Playground»).
+// Вся раскладка — auto layout (через helper'ы newFrame/row/sectionFrame), без единой ручной
+// координаты внутри фрейма; сами 4 фрейма верхнего уровня расставлены по сетке 2×2 с отступом
+// 160 между рамками бренда (абсолютные x/y — здесь это нормально, это верхний уровень страницы,
+// не компонент-сет: см. figma.md → «Раскладка страницы Playground»).
 //
 // Пересборка после добавления компонента в группу 1 (или следующую группу — тогда структура
 // секций расширяется): допиши вариант в нужный блок ниже и прогони скрипт заново целиком —
 // он идемпотентен, чистит фреймы перед сборкой.
 //
-// Проверка после прогона: npm run figma:layout НЕ покрывает эту страницу (правило — только
-// про Components); здесь проверка глазами — скриншот каждого из 4 фреймов.
+// Проверка после прогона: npm run figma:layout покрывает ОДНО правило на этой странице —
+// ни один focus-ring нигде не обрезан предком (см. figma.md → «Страница Playground» и
+// «Раскладка страницы Components» п.7). Остальное — глазами, скриншотом каждого из 4 фреймов.
 
 const page = figma.root.children.find((p) => p.name === "Playground");
 await figma.setCurrentPageAsync(page);
@@ -63,6 +64,14 @@ const byName = Object.fromEntries(themeVars.map((v) => [v.name, v]));
 await figma.loadFontAsync({ family: "Inter", style: "Regular" });
 await figma.loadFontAsync({ family: "IBM Plex Sans", style: "Regular" });
 
+// Новый фрейм в Figma по умолчанию clipsContent=true — ловушка №6 (SKILL.md → «Топ-5 ловушек»):
+// ряд ровно по высоте контента обрезает кольцо фокуса, которое на 2px больше с каждой стороны.
+// Единая точка создания фрейма — чтобы её нельзя было забыть.
+function newFrame() {
+  const f = figma.createFrame();
+  f.clipsContent = false;
+  return f;
+}
 // находит вариант набора по набору свойств, независимо от порядка в имени
 function pick(set, props) {
   const entries = Object.entries(props);
@@ -78,7 +87,7 @@ function inst(component, overrides) {
   return i;
 }
 function row(parent, { wrap = false, spacing = 12, align = "CENTER" } = {}) {
-  const f = figma.createFrame();
+  const f = newFrame();
   f.layoutMode = "HORIZONTAL";
   if (wrap) { f.layoutWrap = "WRAP"; f.counterAxisSpacing = spacing; }
   f.itemSpacing = spacing;
@@ -90,8 +99,16 @@ function row(parent, { wrap = false, spacing = 12, align = "CENTER" } = {}) {
   if (wrap) { f.primaryAxisSizingMode = "FIXED"; f.layoutSizingHorizontal = "FILL"; }
   return f;
 }
+function caption(text) {
+  const cap = figma.createText();
+  cap.fontName = { family: "Inter", style: "Regular" };
+  cap.textStyleId = captionStyle.id;
+  cap.characters = text;
+  cap.fills = [figma.variables.setBoundVariableForPaint(cap.fills[0], "color", byName["color/on-surface-muted"])];
+  return cap;
+}
 function sectionFrame(parent, title) {
-  const s = figma.createFrame();
+  const s = newFrame();
   s.name = title;
   s.layoutMode = "VERTICAL";
   s.itemSpacing = 12;
@@ -100,25 +117,18 @@ function sectionFrame(parent, title) {
   s.fills = [];
   parent.appendChild(s);
   s.layoutSizingHorizontal = "FILL";
-  const cap = figma.createText();
-  cap.fontName = { family: "Inter", style: "Regular" };
-  cap.textStyleId = captionStyle.id;
-  cap.characters = title;
+  const cap = caption(title);
   s.appendChild(cap);
-  cap.fills = [figma.variables.setBoundVariableForPaint(cap.fills[0], "color", byName["color/on-surface-muted"])];
+  cap.layoutSizingHorizontal = "FILL";
   return s;
 }
 
 function buildFrame(frame) {
   for (const c of [...frame.children]) c.remove();
 
-  const topCap = figma.createText();
-  topCap.fontName = { family: "Inter", style: "Regular" };
-  topCap.textStyleId = captionStyle.id;
-  topCap.characters = frame.name.toLowerCase() + " · на surface";
+  const topCap = caption(frame.name.toLowerCase() + " · на surface");
   frame.appendChild(topCap);
   topCap.layoutSizingHorizontal = "FILL";
-  topCap.fills = [figma.variables.setBoundVariableForPaint(topCap.fills[0], "color", byName["color/on-surface-muted"])];
 
   // ---------- 1. Buttons ----------
   const buttons = sectionFrame(frame, "Buttons");
@@ -137,7 +147,7 @@ function buildFrame(frame) {
   sizesRow.appendChild(inst(pick(REF.Button, { Variant: "primary", Size: "icon", State: "default" }), { "Icon left#87:181": true }));
 
   // ---------- 2. card on surface-raised ----------
-  const card = figma.createFrame();
+  const card = newFrame();
   card.name = "surface-raised";
   card.layoutMode = "VERTICAL";
   card.itemSpacing = 12;
@@ -148,6 +158,12 @@ function buildFrame(frame) {
   frame.appendChild(card);
   card.layoutSizingHorizontal = "FILL";
   card.fills = [figma.variables.setBoundVariableForPaint({ type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", byName["color/surface-raised"])];
+  card.strokes = [figma.variables.setBoundVariableForPaint({ type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", byName["color/border/default"])];
+  card.strokeWeight = 1;
+
+  const cardCap = caption("на surface-raised");
+  card.appendChild(cardCap);
+  cardCap.layoutSizingHorizontal = "FILL";
 
   const focusRow = row(card, { wrap: true });
   for (const v of ["outline", "ghost", "link"]) {
@@ -181,11 +197,15 @@ function buildFrame(frame) {
   for (const v of ["primary", "secondary", "neutral", "outline", "danger", "danger-subtle", "success", "warning", "info"]) {
     badgeRow.appendChild(inst(pick(REF.Badge, { Variant: v })));
   }
+  // разделитель на всю ширину ряда, остальные три — строкой под ним (не рядом: вертикальный
+  // Separator высотой 64 рядом с иконкой 16px давал пустой на вид прямоугольник)
+  const sepInst = inst(pick(REF.Separator, { Orientation: "horizontal" }));
+  display.appendChild(sepInst);
+  sepInst.layoutSizingHorizontal = "FILL";
   const miscRow = row(display);
   miscRow.appendChild(inst(REF.Kbd));
   miscRow.appendChild(inst(REF.Spinner));
   miscRow.appendChild(inst(REF.Skeleton));
-  miscRow.appendChild(inst(pick(REF.Separator, { Orientation: "vertical" })));
 
   // ---------- 5. Icons ----------
   const icons = sectionFrame(frame, "Icons");

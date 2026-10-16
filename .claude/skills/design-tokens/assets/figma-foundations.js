@@ -148,6 +148,15 @@ const setModes = (node, brand, theme) => {
   node.setExplicitVariableModeForCollection(C.Theme, MODE[theme]);
 };
 
+// Новый фрейм в Figma по умолчанию clipsContent=true — ловушка (SKILL.md → «Топ-5 ловушек»):
+// контейнер ровно по размеру контента режет тень/кольцо фокуса, которые выходят за его границы.
+// Единая точка создания простого (не auto-layout) фрейма — чтобы её нельзя было забыть.
+// Тот же helper дословно — в figma-playground.js.
+function newFrame() {
+  const f = figma.createFrame();
+  f.clipsContent = false;
+  return f;
+}
 function AL(dir, props) {
   const f = figma.createAutoLayout(dir, props || {});
   f.fills = [];
@@ -171,10 +180,9 @@ async function para(style, chars, colorName, width) {
 // плашка-образец: заливка + радиус + обводка, всё переменными
 function block(w, h, fillNames, opts) {
   const o = opts || {};
-  const f = figma.createFrame();
+  const f = newFrame();
   f.name = (Array.isArray(fillNames) ? fillNames.join(" + ") : fillNames) || o.border || "sample";
   f.resize(w, h);
-  f.clipsContent = false;
   f.fills = (Array.isArray(fillNames) ? fillNames : [fillNames]).map(paint);
   bindRadius(f, o.radius || "radius/md");
   if (o.border !== false) {
@@ -568,12 +576,11 @@ async function grid2x2(fill) {
     for (const sp of spacings.slice(i * perCol, (i + 1) * perCol)) {
       const r = AL("HORIZONTAL", { name: sp.name, itemSpacing: 12, counterAxisAlignItems: "CENTER" });
       r.appendChild(await para("numeric/xs", sp.name, "color/on-surface", 112));
-      const bar = figma.createFrame();
+      const bar = newFrame();
       bar.name = sp.name;
       bar.resize(Math.max(sp.value, 0.01), 14);
       bar.fills = [paint("color/primary/default")];
       bindRadius(bar, "radius/sm");
-      bar.clipsContent = false;
       r.appendChild(bar);
       try {
         bar.setBoundVariable("width", need(sp.name));
