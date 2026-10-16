@@ -45,7 +45,7 @@ if (fs.existsSync(EXPORTER_PATH)) {
   }
 }
 
-const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select", "Toggle", "Toggle Group", "Button Group", "Slider", "Progress"];
+const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select", "Toggle", "Toggle Group", "Button Group", "Slider", "Progress", "Utility"];
 const PAD = 64, GAP = 160, PITCH = 64;
 const box = (a) => ({ name: a[0], type: a[1], x: a[2], y: a[3], w: a[4], h: a[5] });
 
@@ -161,8 +161,24 @@ for (const [root, variant, container, layer, count] of data.repeatedLayers || []
   fail(`${root} / ${variant}: «${layer}» повторяется ${count}× в «${container}» как нарисованный слой, а не экземпляр компонента`);
 }
 
+// 14. каждый focus-ring — экземпляр Utility / Focus ring, скругление каждого угла — переменная
+// на шаг выше той же стороны родителя (sm→md, md→lg, lg→xl, full→full), кольцо на 4px больше
+// родителя (инсет 2px со всех сторон)
+for (const row of data.focusRingShape || []) {
+  const [kind, parent, ring] = row;
+  if (kind === "not-instance") {
+    fail(`${parent}: «${ring}» [${row[3]}] — не экземпляр Utility / Focus ring (${row[4] || "нарисованный слой"})`);
+  } else if (kind === "corner-step" || kind === "corner-flat" || kind === "corner-full") {
+    fail(`${parent}: «${ring}» угол ${row[3]} — ожидался ${row[4]}, сейчас ${row[5]}`);
+  } else if (kind === "corner-unclassified") {
+    fail(`${parent}: «${ring}» угол ${row[3]} родителя не sm/md/lg/full (${row[4]}) — не из чего посчитать шаг выше`);
+  } else if (kind === "geometry") {
+    fail(`${parent}: «${ring}» геометрия ${JSON.stringify(row[3])} ≠ ожидаемой ${JSON.stringify(row[4])} (родитель + 4px, инсет 2px)`);
+  }
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring, скругление на шаг выше родителя по каждому углу\n");
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
 }

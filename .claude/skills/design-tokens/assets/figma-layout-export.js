@@ -170,12 +170,83 @@ for (const root of topLevel) {
   }
 }
 
+// ---- правило: каждый focus-ring — экземпляр Utility / Focus ring (не нарисованный слой);
+// его скругление по каждому из 4 углов — переменная НА ШАГ ВЫШЕ той же стороны родителя
+// (sm→md, md→lg, lg→xl; full→full — без переменной, full статичен и в коде, см. SKILL.md);
+// прямой угол родителя (0) — прямой угол и у кольца на той же стороне (ряд Input OTP, Position
+// first/middle/last). Кольцо больше родителя на 4px по каждой оси (инсет 2px со всех сторон).
+const allVars = await figma.variables.getLocalVariablesAsync();
+const idToName = {};
+for (const v of allVars) idToName[v.id] = v.name;
+function cornerVarName(n, corner) {
+  const bv = n.boundVariables && n.boundVariables[corner];
+  return bv && bv.id ? idToName[bv.id] || bv.id : null;
+}
+const SCALE_UP = { "radius/sm": "radius/md", "radius/md": "radius/lg", "radius/lg": "radius/xl" };
+const CORNERS = ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"];
+const FULL_THRESHOLD = 999;
+const focusRingShape = [];
+for (const r of page.findAll((n) => n.name === "focus-ring")) {
+  const directParent = r.parent;
+  if (!directParent || !("topLeftRadius" in directParent)) continue; // геометрия родителя не читается — не наш случай
+  // Slider: Root — плоский (не auto-layout) фрейм, фокусируется не он целиком, а Thumb (кольцо —
+  // СОСЕД Thumb внутри Root, не его дитя, т.к. Root не auto-layout). Если непосредственный родитель
+  // сам не скруглён и его размер не объясняет размер кольца (родитель+4) — настоящая форма, с
+  // которой сверяем углы, это сосед (обычно Thumb), чей размер+4 совпадает с кольцом; офсет x/y
+  // тогда считаем от соседа, а не от (0,0), т.к. кольцо и сосед — в одной системе координат
+  // (оба — прямые дети Root), а не в системе координат самого соседа.
+  let parent = directParent;
+  let offsetBaseX = 0, offsetBaseY = 0;
+  const parentExplainsSize = Math.abs(r.width - (directParent.width + 4)) <= 0.5 && Math.abs(r.height - (directParent.height + 4)) <= 0.5;
+  if (!parentExplainsSize && "children" in directParent) {
+    // сосед может быть ELLIPSE (бегунок Slider) — у неё нет topLeftRadius вовсе, она круглая по
+    // природе; сверяем только по размеру (сосед+4 = кольцо), не требуем наличия радиуса.
+    const sibling = directParent.children.find((s) => s !== r &&
+      Math.abs(r.width - (s.width + 4)) <= 0.5 && Math.abs(r.height - (s.height + 4)) <= 0.5);
+    if (sibling) { parent = sibling; offsetBaseX = sibling.x; offsetBaseY = sibling.y; }
+  }
+  const parentIsEllipse = parent.type === "ELLIPSE";
+  const main = r.type === "INSTANCE" ? r.mainComponent : null;
+  const mainSetName = main ? (main.parent && main.parent.type === "COMPONENT_SET" ? main.parent.name : main.name) : null;
+  if (r.type !== "INSTANCE" || mainSetName !== "Utility / Focus ring") {
+    focusRingShape.push(["not-instance", parent.name, r.name, r.type, mainSetName]);
+    continue;
+  }
+  for (const corner of CORNERS) {
+    // ELLIPSE (бегунок) не имеет per-corner радиуса — она круглая по природе, что эквивалентно
+    // "full" на все 4 угла для целей этого сравнения.
+    const parentVal = parentIsEllipse ? FULL_THRESHOLD : parent[corner];
+    const parentVar = parentIsEllipse ? null : cornerVarName(parent, corner);
+    const ringVal = r[corner];
+    const ringVar = cornerVarName(r, corner);
+    if (parentVal >= FULL_THRESHOLD) {
+      if (ringVal < FULL_THRESHOLD) focusRingShape.push(["corner-full", parent.name, r.name, corner, "full", ringVal]);
+    } else if (parentVal === 0) {
+      if (ringVal !== 0) focusRingShape.push(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
+    } else if (parentVar && SCALE_UP[parentVar]) {
+      if (ringVar !== SCALE_UP[parentVar]) focusRingShape.push(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
+    } else {
+      focusRingShape.push(["corner-unclassified", parent.name, r.name, corner, parentVar || parentVal, ringVar || ringVal]);
+    }
+  }
+  // геометрия — через собственные width/height/x/y узлов (frame-относительные), НЕ
+  // absoluteBoundingBox: у кольца strokeAlign=OUTSIDE, поэтому absoluteBoundingBox шире
+  // фрейма на 2×strokeWeight с каждой стороны — сравнение по нему даёт ложное расхождение.
+  const okW = Math.abs(r.width - (parent.width + 4)) <= 0.5;
+  const okH = Math.abs(r.height - (parent.height + 4)) <= 0.5;
+  const okX = Math.abs((r.x - offsetBaseX) + 2) <= 0.5;
+  const okY = Math.abs((r.y - offsetBaseY) + 2) <= 0.5;
+  if (!okW || !okH || !okX || !okY) {
+    focusRingShape.push(["geometry", parent.name, r.name, { w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + 4, wantH: parent.height + 4, wantDx: -2, wantDy: -2 }]);
+  }
+}
+
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
-  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers,
+  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };
