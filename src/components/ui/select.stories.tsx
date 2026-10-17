@@ -23,10 +23,12 @@ function Fruits({
   size,
   defaultOpen,
   container,
+  indicatorSide,
 }: {
   size?: "sm" | "md"
   defaultOpen?: boolean
   container?: React.ComponentProps<typeof SelectContent>["container"]
+  indicatorSide?: "left" | "right"
 }) {
   return (
     <Select defaultValue="apple" defaultOpen={defaultOpen}>
@@ -36,9 +38,15 @@ function Fruits({
       <SelectContent container={container}>
         <SelectGroup>
           <SelectLabel>Фрукты</SelectLabel>
-          <SelectItem value="apple">Яблоко</SelectItem>
-          <SelectItem value="banana">Банан</SelectItem>
-          <SelectItem value="cherry">Вишня</SelectItem>
+          <SelectItem value="apple" indicatorSide={indicatorSide}>
+            Яблоко
+          </SelectItem>
+          <SelectItem value="banana" indicatorSide={indicatorSide}>
+            Банан
+          </SelectItem>
+          <SelectItem value="cherry" indicatorSide={indicatorSide}>
+            Вишня
+          </SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
@@ -54,6 +62,17 @@ export const Variants: Story = {
     <div className="flex items-center gap-4">
       <Fruits size="sm" />
       <Fruits size="md" />
+    </div>
+  ),
+}
+
+// indicatorSide: "right" — дефолт, не ломает уже существующие места использования Select;
+// "left" — опционально, соответствует новому варианту Indicator=left в Select / Item
+export const IndicatorSide: Story = {
+  render: () => (
+    <div className="flex items-start gap-8">
+      <Fruits defaultOpen indicatorSide="right" />
+      <Fruits defaultOpen indicatorSide="left" />
     </div>
   ),
 }
@@ -77,9 +96,12 @@ export const States: Story = {
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="apple">Яблоко</SelectItem>
-          <SelectItem value="banana">Банан</SelectItem>
-          <SelectItem value="cherry">Вишня</SelectItem>
+          <SelectGroup>
+            <SelectLabel>Фрукты</SelectLabel>
+            <SelectItem value="apple">Яблоко</SelectItem>
+            <SelectItem value="banana">Банан</SelectItem>
+            <SelectItem value="cherry">Вишня</SelectItem>
+          </SelectGroup>
         </SelectContent>
       </Select>
       <Select>

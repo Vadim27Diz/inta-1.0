@@ -5,10 +5,23 @@ import { cn } from "cn"
 import { Select as SelectPrimitive } from "radix-ui"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
+// SelectTrigger и SelectContent — соседи под Select, не родитель/ребёнок (Content рендерится
+// в портал). Радиус панели должен совпадать с радиусом триггера (sm → rounded-md, md → rounded-lg),
+// поэтому Trigger сообщает свой размер наверх через контекст, а Content его читает.
+const SelectSizeContext = React.createContext<{
+  size: "sm" | "md"
+  setSize: (size: "sm" | "md") => void
+}>({ size: "md", setSize: () => {} })
+
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot="select" {...props} />
+  const [size, setSize] = React.useState<"sm" | "md">("md")
+  return (
+    <SelectSizeContext.Provider value={{ size, setSize }}>
+      <SelectPrimitive.Root data-slot="select" {...props} />
+    </SelectSizeContext.Provider>
+  )
 }
 
 function SelectGroup({
@@ -38,6 +51,11 @@ function SelectTrigger({
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "md"
 }) {
+  const { setSize } = React.useContext(SelectSizeContext)
+  React.useEffect(() => {
+    setSize(size)
+  }, [size, setSize])
+
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
@@ -75,13 +93,15 @@ function SelectContent({
 }: React.ComponentProps<typeof SelectPrimitive.Content> & {
   container?: React.ComponentProps<typeof SelectPrimitive.Portal>["container"]
 }) {
+  const { size } = React.useContext(SelectSizeContext)
   return (
     <SelectPrimitive.Portal container={container}>
       <SelectPrimitive.Content
         data-slot="select-content"
+        data-size={size}
         data-align-trigger={position === "item-aligned"}
         className={cn(
-          "relative z-50 max-h-(--radix-select-content-available-height) min-w-36 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-lg border border-border bg-surface-overlay text-on-surface-overlay shadow-md duration-100",
+          "relative z-50 max-h-(--radix-select-content-available-height) min-w-36 origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-lg data-[size=sm]:rounded-md border border-border bg-surface-overlay text-on-surface-overlay shadow-md duration-100",
           "data-[align-trigger=true]:animate-none",
           "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
@@ -124,13 +144,22 @@ function SelectLabel({
 function SelectItem({
   className,
   children,
+  indicatorSide = "right",
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Item>) {
+}: React.ComponentProps<typeof SelectPrimitive.Item> & {
+  // по умолчанию "right" — так уже было во всех местах использования до появления пропа,
+  // менять дефолт на "left" означало бы молча перекрасить весь существующий Select в проекте.
+  // Критерий (черновой): "right" — всегда, если нет особой причины для другого; "left" — когда
+  // в списке уже занят правый слот осмысленным содержимым (шорткат, счётчик, вторичный текст) и
+  // чек-марку там тесно. Ориентир для Combobox и будущих списков с чек-марком (группа 5).
+  indicatorSide?: "left" | "right"
+}) {
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 typo-body-sm outline-hidden select-none",
+        "relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 typo-body-sm outline-hidden select-none",
+        indicatorSide === "right" ? "pr-8 pl-1.5" : "pl-8 pr-1.5",
         "focus:bg-surface-hover focus:text-on-surface-hover",
         "data-disabled:pointer-events-none data-disabled:text-on-disabled",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -139,7 +168,12 @@ function SelectItem({
       )}
       {...props}
     >
-      <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center">
+      <span
+        className={cn(
+          "pointer-events-none absolute flex size-4 items-center justify-center",
+          indicatorSide === "right" ? "right-2" : "left-2"
+        )}
+      >
         <SelectPrimitive.ItemIndicator>
           <CheckIcon className="pointer-events-none" />
         </SelectPrimitive.ItemIndicator>
