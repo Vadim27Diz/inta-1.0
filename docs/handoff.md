@@ -522,3 +522,276 @@ Size у Select), так что сравнивать было не с чем — 
 просто другие размеры). `npm run verify`: `tokens:check` 22/0, `tailwind:check` 385/0,
 `tokens:contrast` 152/139/9/0/4 (те же давние warnings), `figma:diff` 864/0, `figma:layout` —
 0 нарушений. Ветка не слита и не запушена.
+
+## Новый чат — группа 3 начата, подгруппа 3a: Typography
+
+Группа 2 сдана (см. выше). Новая ветка `feat/group-3` от `main`. Группа 3 (16 компонентов) разбита
+по согласованию с человеком на подгруппы 3a (контент: Card, Alert, Avatar, Empty, Item, Typography)
+и 3b (раскладка: Table, Tabs, Accordion, Collapsible, Breadcrumb, Pagination, Aspect Ratio, Scroll
+Area, Resizable, Direction) — отдельное ревью между ними. Внутри 3a порядок: Typography → Avatar →
+Item → Empty → Card → Alert (Typography первой, т.к. `typo-*` использует весь остальной контент;
+Alert последней — самый токеночувствительный, 4 цветовых варианта).
+
+**Typography** — первый компонент подгруппы. Не из CLI shadcn (`npx shadcn add typography` не
+существует — это страница-демонстрация стилей в доке shadcn, не устанавливаемый компонент), поэтому
+структура и мэппинг на `typo-*` — собственное решение, не перенос готового кода.
+
+12 вариантов (`variant` = имя стиля), каждый на своём `typo-*` + html-тег по умолчанию:
+
+| variant | typo-* | цвет | тег | примечание |
+|---|---|---|---|---|
+| h1…h4 | heading-1…4 | on-surface | h1…h4 | |
+| p | body-md | on-surface | p | |
+| lead | body-lg | on-surface-muted | p | |
+| large | heading-4 | on-surface | div | тот же стиль, что h4 — эмфаза без уровня заголовка, нет точного аналога "text-lg font-semibold" в каталоге, выбран ближайший существующий токен вместо придумывания значения |
+| small | label-md | on-surface | small | |
+| muted | body-sm | on-surface-muted | p | |
+| blockquote | body-md + italic | on-surface | blockquote | обводка слева `border-l-2 border-border`, паддинг `pl-6` |
+| inline-code | code (font/mono) | on-surface | code | фон `bg-surface-muted`, `rounded-sm px-1.5 py-0.5` — не переиспользует Kbd (там `on-surface-muted` + рамка), инлайн-код чуть контрастнее |
+| list | body-md | on-surface | ul | `list-disc pl-6 [&>li]:mt-2`, потребитель передаёт `<li>` сам |
+
+`asChild` (Slot) как у Button/Badge — переопределить тег инстанса.
+
+Figma: новый component set `Typography` (12 вариантов, одна ось `Variant`, без `State` — не
+интерактивен), секция положена в конец колонки после `Utility` (y=18442, по формуле `y + height +
+160` предыдущей секции). Общее свойство `Text` (TEXT, умолчание «Aa» — специмен-плейсхолдер, не
+литерал имени компонента: у Typography 12 вариантов различаются ролью контента, а не только цветом,
+как у Badge, поэтому показывать одно и то же слово на каждом масштабе — осознанный выбор, не баг).
+Декоративный маркер списка «•» — голый текстовый слой, добавлена запись в
+`EXEMPT_NAKED_TEXT` (`figma-layout-export.js`) по аналогии с `*` у Label.
+
+Проверки:
+- `npm run tokens:check` 23/0, `npm run tailwind:check` 394/0.
+- `npm run tokens:contrast` — без изменений (152/139/9/0/4, те же давние warnings), Typography не
+  трогает глобальные токены.
+- `node scripts/figma-code-diff.mjs` — добавлена секция `Typography` (12 вариантов × 4 комбинации,
+  font-size/line-height/weight/family + цвет). По пути нашёл и починил пробел в самом харнессе: он
+  угадывал семейство шрифта брендов по жёсткому правилу «Main→Inter, Demo→IBM Plex Sans», не зная
+  про `font/heading` (в Demo это IBM Plex **Serif**, не Sans) — раньше не всплывало, т.к. ни один
+  компонент из EXPECT до этого не проверял сами заголовочные стили. Добавлен флаг `headingFont` на
+  пробы h1–h4/large. Итог: 1112 проверок, 0 расхождений (было 864, компонент новый).
+- `npm run figma:layout` — пересняли `figma/layout.json` (26 секций, 61 компонент), 0 нарушений;
+  добавлена `"Typography"` в `ORDER` (`figma-layout-check.mjs`).
+- `npm run visual` — `components-typography--variants`/`--content` добавлены в `scripts/visual.mjs`
+  STORIES, отсмотрены все 4 комбинации бренд×тема (main/Inter, demo/IBM Plex Serif-заголовки +
+  Sans-текст, тёмная тема — контраст и italic/код-чип читаются).
+- `npx tsc -b` — 0 ошибок.
+
+Файлы: `src/components/ui/typography.tsx`, `typography.stories.tsx` (новые); `scripts/visual.mjs`,
+`scripts/figma-layout-check.mjs`, `scripts/figma-code-diff.mjs`,
+`.claude/skills/design-tokens/assets/figma-layout-export.js`, `figma/layout.json` (правки).
+Новых токенов не потребовалось — весь нужный набор (`typo-*`, `on-surface(-muted)`,
+`border/default`, `surface-muted`, `radius/sm`, спейсинги) уже был в каталоге.
+
+## Тот же чат — подгруппа 3a: Avatar
+
+Второй компонент подгруппы. Radix `Avatar.Root`/`Image`/`Fallback` (из уже установленного бандла
+`radix-ui`, экспорт `Avatar` подтверждён — не отдельный пакет).
+
+Решения:
+- **Size** — своя ось (у shadcn-базы размера нет, всегда `size-8`): `sm`/`md`/`lg` →
+  `size-8`/`size-10`/`size-12` (32/40/48) — та же шкала, что уже использовал `Skeleton`'s
+  образец-аватар (40×40, см. группу 1) — не придумывал новый дефолт, подхватил существующий.
+- **AvatarFallback** — `bg-neutral text-on-neutral typo-label-sm uppercase` (не
+  `bg-surface-muted`, как в shadcn-базе `bg-muted`): «нейтральный» токен уже значит «второй
+  приглушённый фон» у Button/Badge, семантически точнее для плашки-заглушки, чем поверхностный
+  муted-токен. Один статичный `typo-label-sm` на все 3 размера — умышленно не масштабировал
+  размер инициалов вместе с размером круга (не усложнял сверх необходимого).
+- **AvatarImage** — `size-full object-cover`, обрезка — через `overflow-hidden` + `rounded-full`
+  на корне.
+
+Figma: component set `Avatar`, 2 оси — `Size` (sm/md/lg) × `Content` (photo/initials) = 6
+вариантов, сетка 3×2 (`layoutWrap=WRAP`, ширина зафиксирована под 3 колонки). В Figma нет
+сетевого изображения — вариант `photo` смоделирован как плейсхолдер: круг `color/surface-muted` +
+инстанс `Icon` (глиф `li:user`, цвет `color/on-surface-muted`, размер иконки по размеру круга
+16/20/24) — не выдумывал новый глиф, переиспользовал существующий набор `Icon / Glyphs`. Вариант
+`initials` — круг `color/neutral` + текст `label/sm` `color/on-neutral`, общее свойство `Initials`
+(TEXT, умолчание «AB»). Секция — после `Typography` (y=19450).
+
+Ловушка на сборке (нашёл сам, до проверки): `node.clone()`-подобных рисков не было (строил с нуля,
+не клонировал), но подтвердил на практике приём из прошлой заметки про `INSTANCE_SWAP` —
+`setProperties` на вложенном `Icon base` принимает **id ноды** глифа (`114:243` у `li:user`), не
+его `key` (тот нужен только в `preferredValues` при добавлении свойства) — проверил числом через
+`componentProperties` после установки, не только глазами.
+
+Истории: Default, Variants (3 размера), **States** (фото загружено / фото не загрузилось — битый
+`src` / фото не задано — все три схлопываются в `AvatarFallback`, проверено как реальная ветка
+Radix, не только статика), Content (один символ, 3+ символа, эмодзи, пустой фолбэк), BrandMatrix.
+Демо-«фото» — инлайн SVG через `data:` URI (силуэт на цветном фоне), не сетевой запрос: снимки
+`npm run visual` остаются детерминированными офлайн.
+
+Проверки: `tokens:check` 24/0 (то же 1 старое предупреждение `progress.tsx`), `tailwind:check`
+398/0, `tokens:contrast` без изменений (152/139/9/0/4 — `neutral`/`on-neutral` уже проверенная пара
+из группы 1, новых предупреждений не добавил), `figma-code-diff` — добавлены секции `Avatar`
+(геометрия 3 размеров × radius-full × 4 комбинации) и `Avatar fallback` (цвет/шрифт), итог
+**1172 проверки, 0 расхождений** (было 1112). `npm run figma:layout` — пересняли `figma/layout.json`
+(**27 секций, 62 компонента**), 0 нарушений, `"Avatar"` добавлен в `ORDER`. `npx tsc -b` — 0 ошибок.
+`npm run visual` — Variants/States/Content отсмотрены в 4 комбинациях бренд×тема (фото, фолбэк по
+битому src, фолбэк без фото — все три различимы и в тёмной теме).
+
+Файлы: `src/components/ui/avatar.tsx`, `avatar.stories.tsx` (новые); `scripts/visual.mjs`,
+`scripts/figma-code-diff.mjs`, `figma/layout.json`, `scripts/figma-layout-check.mjs` (правки).
+Новых токенов не потребовалось (`neutral`/`on-neutral`, `surface-muted`/`on-surface-muted`,
+`radius/full` — всё уже в каталоге).
+
+## Тот же чат — подгруппа 3a: Item
+
+Третий компонент. В отличие от Typography, `Item` — настоящий компонент реестра shadcn (новее
+Avatar/Typography по времени появления в их системе), поэтому код сверил с **реальным исходником**
+(`apps/v4/registry/new-york-v4/ui/item.tsx` из `shadcn-ui/ui` на GitHub через `WebFetch`), а не
+восстанавливал по памяти — у этого компонента несколько «похожих, но разных» версий в документации
+(страница доки упоминала `size: default/sm/xs` и проп `render`, реальный зарегистрированный файл —
+`size: default/sm` и `asChild`+`Slot`, как и весь остальной проект). Взял за основу файл, не доку.
+
+Состав 1:1 с исходником: `Item`, `ItemGroup`, `ItemSeparator` (обёртка над уже built `Separator`),
+`ItemMedia`, `ItemContent`, `ItemTitle`, `ItemDescription`, `ItemActions`, `ItemHeader`, `ItemFooter`.
+
+Перевод токенов (см. `itemVariants`/`itemMediaVariants` в `item.tsx`):
+- `variant`: `default` (прозрачный) / `outline` (`border-border`, не `border-input` — декоративная
+  рамка строки, та же логика, что у `Separator`) / `muted` — в оригинале `bg-muted/50` (опиcity-трюк,
+  golden rule 3 запрещает); заменил на `bg-surface-muted` без прозрачности, тот же смысл «тише, чем
+  обычная строка».
+- Фокус — в оригинале `ring-[3px] ring-ring/50` (произвольное значение + прозрачность, оба под
+  запретом); **использовал готовую модель `control`** из `Utility / Focus ring` по прямому указанию
+  CLAUDE.md, не изобретал: `outline-2 outline-offset-2 outline-focus-ring`.
+- `[a]:hover:bg-accent/50` → `[a]:hover:bg-surface-hover` (убрал `/50`, тот же токен, что и везде
+  для hover/accent). Приём `[a]:` сохранён как в оригинале — hover/фокус реально проявляются только
+  когда `Item` рендерится как `<a>`/`<button>` (`asChild`), на обычном `div` `focus-visible` не
+  срабатывает сам по себе (нет `tabindex`), а hover остаётся декоративно нейтральным.
+- `ItemMedia variant=icon`: `bg-muted` → `bg-surface-muted`, добавил явный `border-border` (в
+  оригинале голый `border`, цвет брался из глобальной CSS-переменной темы — у нас так же есть
+  глобальное правило `* { border-color: var(--border) }`, но по конвенции проекта (Badge/Button
+  `outline`) токен прописывается явно, не полагаясь на неявное наследование).
+- `ItemTitle`/`ItemDescription`: `text-sm font-medium`/`text-sm font-normal text-muted-foreground`
+  → `typo-label-md`/`typo-body-sm` + `text-on-surface`/`text-on-surface-muted` (готовые стили точно
+  соответствуют размеру и весу оригинала, `leading-snug`/`leading-normal` — несущественная разница
+  в line-height, не стал подбирать произвольное значение под неё).
+- Ссылки внутри `ItemDescription`: `hover:text-primary` → `hover:text-link-hover` (наш токен для
+  инлайн-ссылок, не цвет кнопки).
+
+Figma: component set `Item`, 2 оси — `Variant` (default/outline/muted) × `Size` (default/sm) = 6
+вариантов, одна колонка. Каждый вариант — реальная композиция: `media` (квадрат 32×32, не зависит
+от `Size`, как и в коде) с инстансом `Icon` (глиф `li:mail`) + `content` (`title`+`description`,
+`description` — как у `Typography`: голый `TEXT` с Fixed-width 240 через `resize`+`textAutoResize`,
+не фрейм, поэтому не задевает правило 9 про Hug/Fill) + инстанс `Badge` (`Variant=neutral`, «New»)
+как `actions`. Два общих свойства `Title`/`Description` (TEXT). Фокус/hover **не смоделированы в
+Figma** — описание компонента явно объясняет почему (интерактивность — опциональный `asChild`-путь,
+не основной сценарий статичной строки), чтобы это не читалось как забытое.
+
+Баг на сборке (нашёл сам, скриншотом до отчёта): у `content`-фрейма осталась **дефолтная белая
+заливка** Figma (`createFrame()` создаёт фрейм с белым fill по умолчанию, я явно обнулил заливку у
+`root`/`media`, но забыл про `content`) — на `default`/`outline` это было незаметно (белое на белом),
+на `muted` обнажилось белым пятном под текстом поверх серого фона строки. Починил точечным проходом
+по всем 6 вариантам (`content.fills = []`), перепроверил скриншотом.
+
+Истории: Default, Variants (3 варианта), **States** (та же логика, что у Avatar — три реальные ветки:
+кликабельная строка с hover через `asChild`+`<a>`, она же в фокусе, и обычный статичный `div`
+рядом — наглядно показывает, что у статичной строки нет ни подсветки, ни кольца), Content (длинный
+заголовок/описание с `line-clamp-2`, `ItemMedia variant=image` на той же инлайн-SVG технике, что у
+Avatar, `ItemHeader`+`ItemFooter` в сборе, `ItemGroup`+`ItemSeparator`), BrandMatrix.
+
+Проверки: `tokens:check` 25/0 (то же 1 старое предупреждение), `tailwind:check` 414/0 (подтвердил,
+что `[a]:hover:…` и `group-has-[[data-slot=…]]/item:…` компилируются в Tailwind v4 как есть).
+`tokens:contrast` без изменений. `figma-code-diff` — добавлены секции `Item` (геометрия/радиус/
+цвет 3 вариантов + media + title + description) и `Item states` (hover-фон и control-кольцо фокуса
+по тем же числам, что у Button/Toggle) — **1272 проверки, 0 расхождений** (было 1172). `figma:layout`
+— пересняли (**28 секций, 63 компонента**), 0 нарушений, `"Item"` добавлен в `ORDER`; новых
+исключений в `EXEMPT_*` не понадобилось (title/description оба на shared-свойствах — не naked;
+fixed-width только у голого TEXT, не у фрейма — не ловится правилом). `npx tsc -b` — 0 ошибок.
+`npm run visual` — Variants/States/Content отсмотрены в 4 комбинациях (hover/focus контрастны и в
+тёмной теме, line-clamp не ломает высоту строки).
+
+Файлы: `src/components/ui/item.tsx`, `item.stories.tsx` (новые); `scripts/visual.mjs`,
+`scripts/figma-code-diff.mjs`, `scripts/figma-layout-check.mjs`, `figma/layout.json` (правки).
+Новых токенов не потребовалось.
+
+Подгруппа 3a: готово 3 из 6 (Typography, Avatar, Item). Дальше по согласованному порядку —
+Empty → Card → Alert, затем ревью всей 3a целиком (не по одному компоненту) перед переходом к 3b.
+
+## Тот же чат — расширение Avatar: AvatarBadge, AvatarGroup, AvatarGroupCount
+
+Человек нашёл более богатую версию Avatar на ui.shadcn.com/docs/components/base/avatar (наш перенос
+делался до того, как эти под-компоненты появились в реестре). Достал **реальный исходник** через
+`WebFetch` на GitHub (`apps/v4/registry/new-york-v4/ui/avatar.tsx`), не по доке — у «base» в URL
+доки не было отдельного registry/style, это просто категория в навигации, установка та же
+(`shadcn add avatar`).
+
+**Решено заранее (план/ответ человека), не додумывал по ходу:**
+1. Ось `size`: у исходника теперь `default/sm/lg` = 24/32/40px — другие числа, чем наши `sm/md/lg` =
+   32/40/48 (уже выпущенные, отревьюенные). Решение человека: **оставить нашу шкалу без изменений**
+   (вариант A), ничего в геометрии/`figma-code-diff` уже сданного Avatar не трогать.
+2. `AvatarBadge`: в исходнике `bg-green-600` — это код ТОЛЬКО примера использования в доке, не самого
+   компонента (сам примитив — `bg-primary text-primary-foreground`, обобщённая точка). Решение:
+   **без встроенного `status`-пропа** — дефолт `bg-primary`, паттерны online/busy/offline только в
+   историях через `className` на инстансе (`bg-success`/`bg-danger`/`bg-surface-muted` — все три уже
+   в каталоге с группы 1, новых токенов не заводил).
+
+**Код** (`avatar.tsx`):
+- `Avatar`: добавлен `data-size={size}` (дублирует `size` явным атрибутом) + `group/avatar` — по
+  этому `AvatarBadge` читает размер родителя через `group-data-[size=…]/avatar:`, как в оригинале
+  (сама геометрия `size-8/10/12` по-прежнему через `cva`, не через data-selector — наш обычный
+  паттерн, не паттерн этого конкретного файла shadcn).
+- `AvatarBadge`: `bg-primary text-on-primary ring-2 ring-surface`, размер `size-2.5/3/3.5` (10/12/
+  14px) + иконка `size-2` (8px) на всех трёх ступенях — числа не придуманы: для sm/md у нас те же
+  32/40px, что у shadcn `default/lg`, поэтому взял их badge-размеры 10/12 как есть; для нашего
+  лишнего `lg`(48, у shadcn эквивалента нет) — продолжил их же арифметику +2 → 14px.
+- `AvatarGroup`: `-space-x-2` (**−8px**, число из исходника, не придумано) + `*:data-[slot=avatar]:
+  ring-2 ring-surface` (разделитель между перекрывающимися кругами).
+- `AvatarGroupCount`: размер следует размеру аватаров в группе через `group-has-data-[size=…]/
+  avatar-group:` (сами числа — 1:1 на наши три размера, а не уникальные, т.к. это просто «ещё один
+  круг такого же диаметра»), `bg-surface-muted` + `typo-label-sm text-on-surface-muted`.
+
+**Figma — два разных подхода по месту:**
+- `AvatarBadge` — **не новые варианты набора Avatar**: его `root` — auto-layout, абсолютно
+  позиционированный слой кольца сломал бы правило 7 `figma:layout` («в наборах компонентов нет
+  абсолютных слоёв, кроме `focus-ring`» — расширять список исключений ради одной декоративной точки
+  не стал, в отличие от `Slider` в своё время не было смысла перестраивать `Root` в плоский фрейм
+  ради одной точки). Вместо этого — иллюстрация прямо в секции `Avatar`, под существующим набором:
+  3 обычных (не auto-layout) обёртки с **экземплярами** `Avatar` (Size=sm/md/lg, Content=photo) +
+  нарисованный кружок (`color/primary/default`, обводка `color/surface` 2px). Не компонент — секция
+  не сканируется тем же правилом, что COMPONENT_SET.
+- `AvatarGroup` — **отдельный компонент** (по прямой просьбе), новая секция после `Item`: auto-layout
+  с `itemSpacing = −8` (raw, без переменной — это отрицание `spacing/2`, отдельного токена для
+  отрицательных значений в системе нет и заводить не стал), 3 экземпляра `Avatar` (обводка `color/
+  surface` 2px добавлена поверх инстансов) + нарисованный кружок-счётчик «+3» (`color/surface-muted`,
+  `label/sm`, та же обводка). Свойство `Count` (TEXT) добавлено и привязано — то же решение, что у
+  Badge/Kbd, не оставлять текст «голым» слоем.
+
+**Две находки на сборке (сам, до отчёта):**
+1. Опечатка в первой версии скрипта — координаты `badge-label`/`badge-row` внутри секции `Avatar`
+   считал как `(узел.y − секция.y)`, будто `avatarSet.y` абсолютный; на деле координаты детей секции
+   **уже относительные** (как и у Field/Input Group раньше) — дал гигантское отрицательное число,
+   `resizeWithoutConstraints` упал валидацией `height ≥ 0`. Починил, весь скрипт безопасно
+   переиграл (ничего не успело примениться — `use_figma` откатывает целиком при ошибке).
+2. После добавления `AvatarGroup` `figma:layout` поймал два реальных новых случая правила
+   «текстовый контейнер — Hug/Fill, не Fixed», которых не было видно раньше: (а) `count`-текст внутри
+   нарисованного круга-счётчика (круг фиксированного размера по дизайну — тот же случай, что у
+   Input/Textarea/Input OTP Slot, добавил exemption `"Avatar Group|avatar-group-count"`); (б) текст
+   `initials` ВНУТРИ экземпляров `Avatar`, вложенных в `AvatarGroup`, — сам круг `Avatar` тоже
+   фиксированного размера по дизайну, но это не ловилось раньше, потому что исходный скрипт сканирует
+   на голый/fixed-текст только `variants[0]` каждого набора, а у Avatar это `Content=photo` (без
+   текста вообще) — баг молчал, пока `Avatar Group` не вложил именно `Content=initials` варианты и не
+   сделал их видимыми через рекурсивный обход инстансов. Добавил exemption `"Avatar|Avatar"` с
+   пояснением в коде скрипта, почему он не всплывал раньше — не стал чинить саму сканирующую логику
+   (глубже, чем нужно для этой задачи; существующее ограничение `variants[0]` работало для всех
+   остальных 20+ компонентов).
+
+**Проверки (полный `npm run verify` + 4 комбинации глазами, как просил человек):**
+`tokens:check` 25/0 (то же старое предупреждение `progress.tsx`), `tailwind:check` 433/0
+(`group-has-data-[size=…]`, `ring-surface` — компилируются), `tokens:contrast` без изменений
+(152/139/9/0/4). `figma-code-diff` — три новые секции (`Avatar badge`: размер/радиус/`bg-primary` по
+3 ступеням; `Avatar group`: ширина строки = `4×size − 3×8` числом, проверяет именно перекрытие, не
+только визуально; `count`: размер/цвет/текст по 3 ступеням) — **1392 проверки, 0 расхождений** (было
+1272; ring/box-shadow разделителя не проверял числом — харнесс заточен под focus-кольцо, не под
+всегда-включённый ring, как и у Item-blockquote раньше, проверено глазами). `figma:layout` —
+пересняли (**29 секций, 64 компонента**), 0 нарушений, `"Avatar Group"` добавлен в `ORDER`.
+`npx tsc -b` — 0 ошибок. `npm run visual` — Badge/Group отсмотрены в 4 комбинациях бренд×тема (teal
+success в demo, кольца и перекрытие читаются в тёмной теме).
+
+Файлы: `avatar.tsx`/`avatar.stories.tsx` (правки, не новые); `scripts/visual.mjs`,
+`scripts/figma-code-diff.mjs`, `scripts/figma-layout-check.mjs`,
+`.claude/skills/design-tokens/assets/figma-layout-export.js`, `figma/layout.json` (правки). Новых
+токенов не потребовалось — весь набор (`primary`/`on-primary`, `success`/`danger`/`surface-muted`,
+`surface`, `on-surface-muted`) уже был в каталоге.
+
+Возвращаемся к плану 3a — дальше Empty.

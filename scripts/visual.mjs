@@ -81,6 +81,16 @@ const STORIES = [
   "components-progress--variants",
   "components-progress--states",
   "components-progress--content",
+  "components-typography--variants",
+  "components-typography--content",
+  "components-avatar--variants",
+  "components-avatar--states",
+  "components-avatar--content",
+  "components-avatar--badge",
+  "components-avatar--group",
+  "components-item--variants",
+  "components-item--states",
+  "components-item--content",
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },
