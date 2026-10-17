@@ -75,8 +75,40 @@ Figma component set → код на токенах → истории Storybook 
 Проверено: `npm run verify` (`tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`) —
 0 ошибок; раскладка страницы Components в Figma — 14 секций, 47 компонентов, без нарушений.
 
+**Изменения с v0.1.0:** фокус Input/Textarea приведён к новому стилю полей — кольцо вплотную к
+рамке (было с зазором 2px), толщина 3px (было 2px), скругление повторяет радиус поля, а не на шаг
+больше (образец — Input на ui.shadcn.com). Реализовано через `ring`/box-shadow вместо `outline`.
+Отдельные контролы (Button, Checkbox, Radio, Switch и т.п.) не затронуты — у них фокус по-прежнему
+с зазором 2px.
+
+**Группа 2 — составные контролы** (ветка `feat/group-2`), тот же порядок Figma → код → истории →
+числовая сверка:
+
+| Компонент | Варианты / состояния |
+|---|---|
+| Field | композиция Label+Input+подсказка/ошибка, default/invalid |
+| Input Group | обёртка Input/Textarea с текстовым аддоном, Addon=start/end × State=default/focus |
+| Input OTP | код подтверждения на `input-otp` (новая зависимость, MIT), default/invalid/focus по слотам |
+| Native Select | стилизованный `<select>` без Radix, Size=sm/md/lg × State=default/focus/invalid/disabled |
+| Select | выпадающая поверхность на Radix, State=closed/open/focus; `Select / Item` — Indicator=left/right (по умолчанию right, см. комментарий в `select.tsx`), радиус панели следует размеру триггера |
+| Toggle | variant=default/outline × size=sm/md/lg |
+| Toggle Group | variant/size через React Context, инстансы Toggle |
+| Button Group | orientation=horizontal/vertical, без Radix, `role=group` |
+| Slider | track/range/thumb, orientation=horizontal/vertical |
+| Progress | value 0–100%, не интерактивен |
+
+Отдельно — служебный компонент **`Utility / Focus ring`**, не из `shadcn-mapping.md`: в Figma нет
+кода-аналога, это наша добавка для единообразного кольца фокуса across всех контролов (`Kind` —
+`control`/`field`/`seam`, `Scale` — радиус родителя). В коде ему соответствует просто
+`focus-visible:ring-*`/`outline-*` на каждом компоненте — компонент существует только на стороне
+Figma, как общий источник геометрии кольца для дизайнеров.
+
+Проверено: `npm run verify` — 0 ошибок (`tokens:check` 22 файла, `tailwind:check` 385 классов,
+`tokens:contrast` 152 проверки/9 некритичных APCA-предупреждений, `figma:diff` 864 проверки);
+раскладка страницы Components в Figma — 25 секций, 60 компонентов, без нарушений.
+
 ## Бэклог
 
-Группы 2–6 из `shadcn-mapping.md` → «Все компоненты shadcn и порядок переноса»: составные контролы
-(Field, Select, Toggle, Slider, Progress…), контент и раскладка (Card, Alert, Tabs…), оверлеи (Dialog,
-Dropdown Menu, Toast…), сложные (Combobox, Calendar, Data Table…), чат/AI.
+Группы 3–6 из `shadcn-mapping.md` → «Все компоненты shadcn и порядок переноса»: контент и раскладка
+(Card, Alert, Tabs…), оверлеи (Dialog, Dropdown Menu, Toast…), сложные (Combobox, Calendar, Data
+Table…), чат/AI.

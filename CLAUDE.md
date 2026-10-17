@@ -13,7 +13,12 @@
 - Пары поверхность/контент: `bg-X` + `text-on-X`.
 - `src/styles/tokens.css` генерируется: правим Figma → экспорт → `npm run tokens:build`.
 - Новый глобальный токен или новый бренд — только после согласования с человеком.
+- Новую npm-зависимость можно ставить без согласования, но в отчёте по задаче указывать: название, лицензию, зачем нужна.
 - Объекты в Figma, созданные не агентом, не удаляем и не переписываем без вопроса — даже если они мешают пересборке и выглядят как черновик. Перед любой чисткой страницы сверяем её состав и спрашиваем про чужое.
+
+## Figma
+
+Файл **Inta 1.0**, `fileKey` = `uUb84csG4wOfbUjB38ODiz`. Страницы: `Cover`, `Foundations`, `Components`, `Playground` (см. скилл design-tokens → `references/figma.md` → «Структура файла»).
 
 ## Команды
 
@@ -22,13 +27,14 @@
 | `npm run tokens:build` | `tokens/tokens.json` → `src/styles/tokens.css` |
 | `npm run tokens:catalog` | то же + обновляет каталог токенов в скилле |
 | `npm run tokens:check` | линтер компонентов на «не-токены», должен давать 0 ошибок |
+| `npm run tailwind:check` | каждый Tailwind-класс из `src/components` реально есть в собранном CSS, должен давать 0 ошибок |
 | `npm run tokens:contrast` | WCAG и APCA для пар `X` / `on-X` во всех состояниях × 4 комбинации |
 | `npm run storybook` | Storybook на :6006, тулбар Brand (main/demo) × Theme (light/dark) |
 | `npm run visual` | снимки историй в 4 комбинациях бренд × тема → `visual.local/` |
 | `npm run icons:stroke` | толщина линии иконок lucide-react в настоящем Chrome |
 | `npm run figma:diff` | цифровая сверка Figma ↔ `getComputedStyle` в 4 комбинациях |
 | `npm run figma:layout` | раскладка страницы Components по снимку `figma/layout.json` |
-| `npm run verify` | tokens:check + tokens:contrast + figma:diff + figma:layout |
+| `npm run verify` | tokens:check + tokens:contrast + tailwind:check + figma:diff + figma:layout |
 
 ## Бренды
 

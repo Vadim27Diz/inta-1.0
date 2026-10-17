@@ -4,6 +4,19 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Every `var(--x)` / Tailwind v4 shorthand `util-(--x)` in component code must resolve to a real
+// CSS custom property — a typo'd or hallucinated token name silently falls back to Tailwind's
+// default and nobody notices until a screenshot looks wrong. Build the set of names tokens.css
+// actually declares (left-hand side of a declaration only — not var(--x) references on the right).
+const TOKENS_CSS = "src/styles/tokens.css";
+const definedVars = new Set();
+if (fs.existsSync(TOKENS_CSS)) {
+  for (const m of fs.readFileSync(TOKENS_CSS, "utf8").matchAll(/^\s*(--[\w-]+)\s*:/gm)) definedVars.add(m[1]);
+}
+// Radix/Base UI inject their own CSS vars at runtime (--radix-select-trigger-width, --anchor-width);
+// they're never in tokens.css and that's fine — see shadcn-mapping.md: "не дизайн-решения".
+const EXEMPT_VAR_PREFIXES = ["--radix-", "--anchor-"];
+
 const root = process.argv[2] || "src/components";
 const PALETTE = "slate|gray|zinc|neutral-\\d|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|mauve|olive|mist|taupe";
 const COLOR_UTIL = "bg|text|border|border-[trblxy]|ring|ring-offset|fill|stroke|outline|from|via|to|shadow|decoration|divide|placeholder|caret|accent";
@@ -68,6 +81,11 @@ for (const f of files) {
     if (/(#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(|\boklch\()/.test(line) && !/var\(--/.test(line))
       report("error", f, n, line.trim().slice(0, 60), "raw color value; use a semantic color token");
     if (/style=\{\{/.test(line)) report("warn", f, n, "style={{…}}", "inline style; prefer token classes, or var(--ds-…) only");
+    for (const vm of line.matchAll(/\(--([\w-]+)\)/g)) {
+      const varName = `--${vm[1]}`;
+      if (EXEMPT_VAR_PREFIXES.some((p) => varName.startsWith(p))) continue;
+      if (!definedVars.has(varName)) report("error", f, n, varName, "no such CSS variable in tokens.css; typo, or a token that was never added");
+    }
     for (const cls of line.split(/[\s"'`]+/)) {
       // "rounded" is the one dash-free class worth checking: since --radius-*: initial it compiles to nothing.
       if (!/^[!\w:\-[\]/.%=#()&>*~+@,]+$/.test(cls) || (!cls.includes("-") && !/(^|:)rounded$/.test(cls))) continue;

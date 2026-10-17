@@ -2,6 +2,7 @@
   "name": "ds",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +19,8 @@
     "icons:stroke": "node scripts/icon-stroke-check.mjs",
     "figma:diff": "node scripts/figma-code-diff.mjs",
     "figma:layout": "node scripts/figma-layout-check.mjs",
-    "verify": "npm run tokens:check && npm run tokens:contrast && npm run figma:diff && npm run figma:layout"
+    "tailwind:check": "node scripts/check-tailwind-classes.mjs",
+    "verify": "npm run tokens:check && npm run tokens:contrast && npm run tailwind:check && npm run figma:diff && npm run figma:layout"
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans": "^5.3.0",
@@ -27,6 +29,7 @@
     "@fontsource/jetbrains-mono": "^5.3.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
+    "input-otp": "^1.5.0",
     "lucide-react": "^1.57.0",
     "radix-ui": "^1.8.1",
     "react": "^19.2.8",
@@ -37,6 +40,7 @@
   "devDependencies": {
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/react-vite": "^10.6.2",
+    "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",

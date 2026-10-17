@@ -11,11 +11,17 @@
 //      default/hover/pressed/focus/disabled и размеры sm/md/lg/icon — только у primary.
 //   2. Одна карточка surface-raised (обводка color/border/default, подпись «на surface-raised»):
 //      outline/ghost/link в focus (проверка «заплатки» на приподнятой поверхности),
-//      Label + Input (value), Input invalid, Input disabled, Textarea focus (с курсором).
+//      Label + Input (value), Input invalid, Input disabled, Textarea focus (с курсором),
+//      Slider focus, Progress 40% (трек — border/input, та же причина, что у Input/Textarea;
+//      добавлены по просьбе человека, вне общего правила «ровно один раз», см. п.4 ниже).
 //   3. Selection — Checkbox, Radio Group, Switch: выкл / вкл / disabled.
-//   4. Display — Badge (все варианты одним рядом), разделитель на всю ширину, под ним
+//   4. Forms (группа 2, составные контролы) — Field default/invalid, Input Group
+//      addon=start/end, Input OTP default, Native Select md/default, Select open (панель —
+//      проверка Select/Item в контексте, отличном от его собственной секции Components),
+//      Toggle pressed, Toggle Group, Button Group horizontal, Slider default, Progress 40%.
+//   5. Display — Badge (все варианты одним рядом), разделитель на всю ширину, под ним
 //      Kbd, Spinner, Skeleton одним рядом.
-//   5. Icons — 5 глифов одним размером (Size=16).
+//   6. Icons — 5 глифов одним размером (Size=16).
 //
 // Вся раскладка — auto layout (через helper'ы newFrame/row/sectionFrame), без единой ручной
 // координаты внутри фрейма; сами 4 фрейма верхнего уровня расставлены по сетке 2×2 с отступом
@@ -49,6 +55,16 @@ const REF = {
   Spinner: await figma.getNodeByIdAsync("173:230"),
   Skeleton: await figma.getNodeByIdAsync("173:233"),
   IconSet: await figma.getNodeByIdAsync("115:32"),
+  Field: await figma.getNodeByIdAsync("207:213"),
+  InputGroup: await figma.getNodeByIdAsync("214:208"),
+  InputOTP: await figma.getNodeByIdAsync("217:238"),
+  NativeSelect: await figma.getNodeByIdAsync("220:289"),
+  Select: await figma.getNodeByIdAsync("223:268"),
+  Toggle: await figma.getNodeByIdAsync("265:411"),
+  ToggleGroup: await figma.getNodeByIdAsync("271:387"),
+  ButtonGroup: await figma.getNodeByIdAsync("274:431"),
+  Slider: await figma.getNodeByIdAsync("277:1110"),
+  Progress: await figma.getNodeByIdAsync("279:387"),
 };
 // 5 глифов для секции Icons — id компонентов li:* из Icon / Glyphs
 const GLYPHS = {
@@ -175,6 +191,11 @@ function buildFrame(frame) {
   row(card).appendChild(inst(pick(REF.Input, { Size: "md", State: "invalid", Content: "value" })));
   row(card).appendChild(inst(pick(REF.Input, { Size: "md", State: "disabled", Content: "value" })));
   row(card).appendChild(inst(pick(REF.Textarea, { State: "focus", Content: "value" })));
+  // Slider/Progress — трек на color/border/input, та же причина, что у Input/Textarea выше:
+  // проверить его на surface-raised, не только на surface (добавлены по явной просьбе человека
+  // при ревью — вне правила «каждый компонент ровно один раз», см. комментарий выше у функции).
+  row(card).appendChild(inst(pick(REF.Slider, { State: "focus" })));
+  row(card).appendChild(inst(pick(REF.Progress, { Value: "40%" })));
 
   // ---------- 3. Selection ----------
   const selection = sectionFrame(frame, "Selection");
@@ -191,7 +212,25 @@ function buildFrame(frame) {
   swRow.appendChild(inst(pick(REF.Switch, { State: "default", Checked: "on" })));
   swRow.appendChild(inst(pick(REF.Switch, { State: "disabled", Checked: "off" })));
 
-  // ---------- 4. Display ----------
+  // ---------- 4. Forms (группа 2, составные контролы) ----------
+  const forms = sectionFrame(frame, "Forms");
+  const formsRow = row(forms, { wrap: true });
+  formsRow.appendChild(inst(pick(REF.Field, { State: "default" })));
+  formsRow.appendChild(inst(pick(REF.Field, { State: "invalid" })));
+  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "start" })));
+  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "end" })));
+  formsRow.appendChild(inst(pick(REF.InputOTP, { State: "default" })));
+  formsRow.appendChild(inst(pick(REF.NativeSelect, { Size: "md", State: "default" })));
+  formsRow.appendChild(inst(pick(REF.Select, { State: "open" })));
+  // Toggle…Progress — вторая половина группы 2, добавлены этим прогоном (были в Components,
+  // не были в Playground — см. handoff «Ревью группы 2», находка 2)
+  formsRow.appendChild(inst(pick(REF.Toggle, { Variant: "default", Size: "md", State: "default", Pressed: "on" })));
+  formsRow.appendChild(inst(pick(REF.ToggleGroup, { Variant: "default", Size: "md" })));
+  formsRow.appendChild(inst(pick(REF.ButtonGroup, { Orientation: "horizontal" })));
+  formsRow.appendChild(inst(pick(REF.Slider, { State: "default" })));
+  formsRow.appendChild(inst(pick(REF.Progress, { Value: "40%" })));
+
+  // ---------- 5. Display ----------
   const display = sectionFrame(frame, "Display");
   const badgeRow = row(display, { wrap: true });
   for (const v of ["primary", "secondary", "neutral", "outline", "danger", "danger-subtle", "success", "warning", "info"]) {
@@ -207,7 +246,7 @@ function buildFrame(frame) {
   miscRow.appendChild(inst(REF.Spinner));
   miscRow.appendChild(inst(REF.Skeleton));
 
-  // ---------- 5. Icons ----------
+  // ---------- 6. Icons ----------
   const icons = sectionFrame(frame, "Icons");
   const iconsRow = row(icons);
   for (const key of Object.keys(GLYPHS)) {

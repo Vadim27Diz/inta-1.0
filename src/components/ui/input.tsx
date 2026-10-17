@@ -8,8 +8,9 @@ const inputVariants = cva(
     "transition-colors outline-none",
     // прозрачный фон, а не bg-surface: поле одинаково выглядит на surface и на surface-raised
     "placeholder:text-on-surface-muted selection:bg-primary selection:text-on-primary",
-    // кольцо фокуса — outline, как у Button: зазор прозрачный и показывает подложку
-    "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
+    // кольцо фокуса поля — box-shadow (ring), не outline: вплотную к рамке, без зазора,
+    // скругление само повторяет radius поля (как у Input на ui.shadcn.com)
+    "focus-visible:ring-3 focus-visible:ring-focus-ring",
     // ошибка — только обводка; кольцо фокуса остаётся обычным focus-ring
     "aria-invalid:border-danger",
     "disabled:cursor-not-allowed disabled:border-transparent disabled:bg-disabled",

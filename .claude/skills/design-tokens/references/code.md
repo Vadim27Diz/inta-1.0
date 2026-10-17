@@ -30,6 +30,7 @@ src/components/ui/<name>.stories.tsx
     "tokens:catalog": "node .claude/skills/design-tokens/scripts/build-tokens.mjs tokens/tokens.json src/styles/tokens.css .claude/skills/design-tokens/references/token-catalog.md",
     "tokens:check": "node .claude/skills/design-tokens/scripts/check-tokens.mjs src/components",
     "tokens:contrast": "node .claude/skills/design-tokens/scripts/check-contrast.mjs tokens/tokens.json",
+    "tailwind:check": "node scripts/check-tailwind-classes.mjs",
     "storybook": "storybook dev -p 6006",
     "visual": "node scripts/visual.mjs",
     "icons:stroke": "node scripts/icon-stroke-check.mjs"
@@ -60,6 +61,15 @@ src/components/ui/<name>.stories.tsx
 - Бренд: атрибут `data-brand="main" | "demo"` на `<html>` (или на любой обёртке — токены пересчитаются внутри).
 - Тема: класс `dark` на том же элементе.
 - Компоненты ничего об этом не знают — меняются только значения CSS-переменных.
+- **Исключение — порталы.** Radix `Portal` рендерит контент в `document.body`, вне DOM-дерева
+  обёртки с `data-brand`/`dark` — CSS-каскад до него не доходит, действует только то, что стоит на
+  `<html>` (глобальный тулбар Storybook). Компонент-обёртка над любым Radix-примитивом с порталом
+  (`Select`, дальше `Popover`, `Dropdown Menu`, `Dialog`…) должен принимать проп `container` и
+  передавать его в `<…Primitive.Portal container={container}>` — тогда вызывающий код (в том числе
+  история `BrandMatrix`) может указать, КУДА портал рисуется, и локальный `data-brand`/`dark` снова
+  работает. Без этого компонент нельзя полноценно проверить в 4 комбинациях бренд × тема иначе чем
+  через глобальный тулбар по одной за раз. См. `select.tsx` → `SelectContent` (эталон) и SKILL.md →
+  «Топ ловушек» → «Порталы».
 
 ## .storybook/preview.tsx
 
@@ -124,6 +134,25 @@ export const BrandMatrix: Story = {
 
 Hover/pressed/focus — это CSS-состояния, пропсов для них нет и добавлять их ради историй нельзя. Чтобы показать их статично, поставь аддон `storybook-addon-pseudo-states` и в истории `States` задай `parameters: { pseudo: { hover: [...], active: [...], focusVisible: [...] } }`. Без аддона история `States` показывает только `disabled`, а остальное проверяется мышью и клавишей Tab.
 
+Для компонента с порталом (см. «Как переключаются бренд и тема» выше) `BrandMatrix` должен открывать
+портал внутри своей ячейки, иначе он покрасится в глобальный тулбар, а не в локальную ячейку:
+
+```tsx
+function BrandMatrixCell({ brand, dark }: { brand: "main" | "demo"; dark: boolean }) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  return (
+    <div ref={setContainer} data-brand={brand}
+         className={(dark ? "dark " : "") + "bg-surface text-on-surface rounded-lg border border-border p-6"}>
+      <p className="typo-caption text-on-surface-muted mb-3">{brand} / {dark ? "dark" : "light"}</p>
+      {container && <Component {...args} defaultOpen container={container} />}
+    </div>
+  );
+}
+```
+
+`container` — `null` до первого рендера (ref ещё не привязан), поэтому сам портал рендерится только
+когда он не `null`; `defaultOpen` — чтобы открытая панель была видна на снимке без клика.
+
 ## Проверка в браузере
 
 Storybook смотрят глазами, но три вещи проверяются числами — через Chromium (playwright,
@@ -134,7 +163,8 @@ playwright менять без нужды не стоит — другая ве�
 |---|---|
 | `npm run visual` | снимает перечисленные в `scripts/visual.mjs` истории в 4 комбинациях бренд × тема, 1x, в `visual.local/`. Бренд и тема передаются глобалами Storybook (`?globals=brand:demo;theme:dark`) — то же, что делает тулбар. Флаги: `--no-build` (по готовому `storybook-static/`), `--dev` (по запущенному dev-серверу), `--story <id>` |
 | `npm run icons:stroke` | толщина линии `lucide-react` в настоящем Chrome: `isPointInStroke` + интеграл чернил по столбцу на скриншоте. Должна совпасть с `2 × size / 24` и с высотой слоя `Vector` у `li:minus` в Figma |
-| `npm run verify` | `tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`. `visual` сюда не входит: снимки — для глаз, не для CI |
+| `npm run verify` | `tokens:check` + `tokens:contrast` + `tailwind:check` + `figma:diff` + `figma:layout`. `visual` сюда не входит: снимки — для глаз, не для CI |
+| `npm run tailwind:check` | каждый класс из `cn()`/`cva()`/`className` в `src/components` реально порождает правило в собранном Tailwind CSS (через `@tailwindcss/node` `candidatesToCss`, парсинг файлов — TS Compiler API). Ловит опечатку в имени класса и класс токена, который удалили из `tokens.css`: Tailwind v4 на такое не падает, он просто ничего не генерирует |
 | `npm run figma:layout` | правило раскладки страницы Components по снимку `figma/layout.json` (см. figma.md → «Раскладка страницы Components») |
 | `npm run figma:diff` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
 
@@ -154,6 +184,7 @@ playwright менять без нужды не стоит — другая ве�
 ## Definition of done для компонента
 
 - [ ] Классы только из `token-catalog.md` + шкалы Tailwind; `npm run tokens:check` — 0 ошибок.
+- [ ] Ни один класс не опечатан; `npm run tailwind:check` — 0 ошибок.
 - [ ] `npm run tokens:contrast` — 0 ошибок (WCAG ≥ 4.5). Предупреждения APCA (< 60) читаем, но они не блокируют.
 - [ ] Варианты и размеры совпадают с Figma component set.
 - [ ] Истории `Default`, `Variants`, `States`, `BrandMatrix`.
@@ -161,3 +192,4 @@ playwright менять без нужды не стоит — другая ве�
 - [ ] Фокус с клавиатуры виден: `focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring`.
 - [ ] `npm run visual` — истории сняты в 4 комбинациях, неудобный контент не ломает раскладку.
 - [ ] `node scripts/figma-code-diff.mjs` — 0 расхождений с Figma.
+- [ ] Перед слиянием ветки — снимок `figma/layout.json` переснят заново, `npm run verify` прогнан после этого (см. SKILL.md → Definition of done, пункт 9: обычная проверка сверяет снимок сам с собой, дрейф живой Figma она не ловит).

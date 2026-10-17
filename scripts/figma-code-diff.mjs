@@ -29,14 +29,14 @@ const EXPECT = [
   ] },
   { story: "components-input--states", title: "Input states", probes: [
     { sel: "input", at: 0, name: "default",       height: 36, padX: 16, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface" },
-    { sel: "input", at: 1, name: "focus",         height: 36, border: "--ds-color-border-input", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "input", at: 1, name: "focus",         height: 36, border: "--ds-color-border-input", ring: "--ds-color-focus-ring", ringWidth: 3 },
     { sel: "input", at: 2, name: "invalid",       height: 36, border: "--ds-color-danger" },
-    { sel: "input", at: 3, name: "invalid+focus", height: 36, border: "--ds-color-danger", outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "input", at: 3, name: "invalid+focus", height: 36, border: "--ds-color-danger", ring: "--ds-color-focus-ring", ringWidth: 3 },
     { sel: "input", at: 4, name: "disabled",      height: 36, bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
   ] },
   { story: "components-textarea--states", title: "Textarea", probes: [
     { sel: "textarea", at: 0, name: "default",       minHeight: 64, padX: 12, padY: 8, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [14, 20, 400] },
-    { sel: "textarea", at: 1, name: "focus",         outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "textarea", at: 1, name: "focus",         ring: "--ds-color-focus-ring", ringWidth: 3 },
     { sel: "textarea", at: 2, name: "invalid",       border: "--ds-color-danger" },
     { sel: "textarea", at: 4, name: "disabled",      bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
   ] },
@@ -152,13 +152,14 @@ for (const group of EXPECT) {
           borderColor: s.borderTopColor, borderWidth: toPx(s.borderTopWidth),
           color: s.color, bg: s.backgroundColor,
           outlineColor: s.outlineColor, outlineWidth: toPx(s.outlineWidth), outlineStyle: s.outlineStyle, outlineOffset: toPx(s.outlineOffset),
+          boxShadow: s.boxShadow,
           fontSize: toPx(s.fontSize), lineHeight: toPx(s.lineHeight), fontWeight: Number(s.fontWeight), fontFamily: s.fontFamily.split(",")[0].replace(/["']/g, ""),
           gap: toPx(s.columnGap),
           markColor: mark ? getComputedStyle(mark).color : null,
           // тип переменной — по полю, в котором она объявлена в EXPECT (radius = размер, остальные = цвет),
           // а не по имени: токены Component-слоя (switch/thumb, sidebar/*) не содержат "color" в названии
           vars: Object.fromEntries([
-            ...new Set(probes.flatMap((x) => (x.radius ? [[x.radius, "size"]] : []).concat(["border", "color", "bg", "outline", "markColor"].map((k) => x[k] && [x[k], "color"]).filter(Boolean)).map((e) => JSON.stringify(e)))),
+            ...new Set(probes.flatMap((x) => (x.radius ? [[x.radius, "size"]] : []).concat(["border", "color", "bg", "outline", "ring", "markColor"].map((k) => x[k] && [x[k], "color"]).filter(Boolean)).map((e) => JSON.stringify(e)))),
           ].map((e) => JSON.parse(e)).map(([n, kind]) => [n, kind === "color" ? rgb(cssVar(n)) : String(px(cssVar(n)))])),
         };
       });
@@ -183,6 +184,21 @@ for (const group of EXPECT) {
       if (p.color) eq("color", m.color, m.vars[p.color]);
       if (p.markColor) eq("звёздочка", m.markColor, m.vars[p.markColor]);
       if (p.outline) { eq("outline-color", m.outlineColor, m.vars[p.outline]); eq("outline-style", m.outlineStyle, "solid"); near("outline-width", m.outlineWidth, p.outlineWidth); near("outline-offset", m.outlineOffset, p.outlineOffset); }
+      if (p.ring) {
+        // Kind=field — кольцо через box-shadow (Tailwind ring-N), не outline: вплотную, без
+        // зазора. box-shadow — список слоёв через запятую ("<color> Xpx Xpx Xpx Spx" каждый);
+        // настоящее кольцо — единственный слой с ненулевым spread (4-е число), остальные
+        // (inset-shadow/ring-offset-shadow/shadow) — заглушки "0 0 0 0".
+        const layers = (m.boxShadow || "").split(/,(?![^(]*\))/).map((s) => s.trim());
+        const ring = layers.map((l) => l.match(/^(.+?)\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(-?[\d.]+)px$/))
+          .find((mm) => mm && parseFloat(mm[5]) !== 0);
+        checks.push({ label: "ring", got: ring ? "found" : "none", want: "found", ok: !!ring });
+        if (ring) {
+          eq("ring-color", ring[1], m.vars[p.ring]);
+          near("ring-width", parseFloat(ring[5]), p.ringWidth);
+          near("ring-offset", parseFloat(ring[2]), 0); near("ring-offset", parseFloat(ring[3]), 0);
+        }
+      }
       if (p.font) {
         near("font-size", m.fontSize, p.font[0]); near("line-height", m.lineHeight, p.font[1]); near("font-weight", m.fontWeight, p.font[2]);
         // мало токенов — typo-code/numeric-* висят на font/mono, а не на шрифте бренда
