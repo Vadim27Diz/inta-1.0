@@ -91,6 +91,15 @@ const STORIES = [
   "components-item--variants",
   "components-item--states",
   "components-item--content",
+  "components-empty--variants",
+  "components-empty--content",
+  "components-card--variants",
+  "components-card--content",
+  "components-alert--variants",
+  "components-alert--content",
+  "components-aspect-ratio--default",
+  "components-breadcrumb--default",
+  "components-collapsible--default",
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },

@@ -152,6 +152,30 @@ const EXPECT = [
     { sel: "[data-slot=avatar-group-count]", at: 1, name: "count md", height: 40, width: 40, radiusFull: true, bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted" },
     { sel: "[data-slot=avatar-group-count]", at: 2, name: "count lg", height: 48, width: 48, radiusFull: true, bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted" },
   ] },
+  // контейнер без width/height: border-dashed на auto-hug фрейме в Figma считает ширину на 2px
+  // больше (434 vs 432) даже при strokeAlign=INSIDE — тот же эффект уже был у Item/outline
+  // (382 vs 384), поэтому здесь, как и там, геометрия root не проверяется числом.
+  { story: "components-empty--variants", title: "Empty", probes: [
+    { sel: "[data-slot=empty]", at: 1, name: "container", radius: "--ds-radius-lg", border: "--ds-color-border" },
+    { sel: "[data-slot=empty-icon][data-variant=icon]", at: 0, name: "media icon", height: 40, width: 40, radius: "--ds-radius-lg", bg: "--ds-color-surface-muted", color: "--ds-color-on-surface" },
+    { sel: "[data-slot=empty-title]", at: 1, name: "title", font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=empty-description]", at: 1, name: "description", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
+  { story: "components-card--variants", title: "Card", probes: [
+    { sel: "[data-slot=card]", at: 0, name: "container", radius: "--ds-radius-xl", border: "--ds-color-border", bg: "--ds-color-surface-raised", color: "--ds-color-on-surface-raised" },
+    { sel: "[data-slot=card-title]", at: 1, name: "title", font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=card-description]", at: 1, name: "description", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
+  // border-border всегда — обводка нейтральная для всех 5 статусов (решение принято, не
+  // цветная под вариант). Title/Icon красятся под Variant (--ds-color-on-<variant>-subtle),
+  // Description — ВСЕГДА --ds-color-on-surface-muted, независимо от варианта (см. alert.tsx:
+  // AlertDescription задаёт цвет явно, AlertTitle наследует от Alert).
+  { story: "components-alert--variants", title: "Alert", probes: [
+    { sel: "[data-slot=alert]", at: 0, name: "container default", radius: "--ds-radius-lg", border: "--ds-color-border", bg: "--ds-color-surface-raised", color: "--ds-color-on-surface-raised" },
+    { sel: "[data-slot=alert]", at: 4, name: "container danger", radius: "--ds-radius-lg", border: "--ds-color-border", bg: "--ds-color-danger-subtle", color: "--ds-color-on-danger-subtle" },
+    { sel: "[data-slot=alert-title]", at: 1, name: "title info", font: [14, 20, 500], color: "--ds-color-on-info-subtle" },
+    { sel: "[data-slot=alert-description]", at: 3, name: "description warning", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },
