@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as InputOTPStories from "./input-otp.stories"
+import { inputOtpDocs } from "./input-otp.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={InputOTPStories} />
+
+<Title>{inputOtpDocs.title}</Title>
+
+<DocsPurpose docs={inputOtpDocs} />
+
+<Canvas of={InputOTPStories.Default} />
+
+<DocsWhenToUse docs={inputOtpDocs} />
+<DocsWhenNotToUse docs={inputOtpDocs} />
+<DocsAnatomy docs={inputOtpDocs} />
+
+<DocsVariants docs={inputOtpDocs} />
+<Canvas of={InputOTPStories.Variants} />
+
+<DocsStates docs={inputOtpDocs} />
+<Canvas of={InputOTPStories.States} />
+
+<DocsContentRules docs={inputOtpDocs} />
+<DocsAccessibility docs={inputOtpDocs} />
+<DocsRelated docs={inputOtpDocs} />
+<DocsForDevelopers docs={inputOtpDocs} />

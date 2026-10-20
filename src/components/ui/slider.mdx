@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as SliderStories from "./slider.stories"
+import { sliderDocs } from "./slider.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={SliderStories} />
+
+<Title>{sliderDocs.title}</Title>
+
+<DocsPurpose docs={sliderDocs} />
+
+<Canvas of={SliderStories.Default} />
+
+<DocsWhenToUse docs={sliderDocs} />
+<DocsWhenNotToUse docs={sliderDocs} />
+<DocsAnatomy docs={sliderDocs} />
+
+<DocsVariants docs={sliderDocs} />
+<Canvas of={SliderStories.Variants} />
+
+<DocsStates docs={sliderDocs} />
+<Canvas of={SliderStories.States} />
+
+<DocsContentRules docs={sliderDocs} />
+<DocsAccessibility docs={sliderDocs} />
+<DocsRelated docs={sliderDocs} />
+<DocsForDevelopers docs={sliderDocs} />

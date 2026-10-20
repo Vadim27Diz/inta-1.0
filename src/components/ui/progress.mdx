@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as ProgressStories from "./progress.stories"
+import { progressDocs } from "./progress.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={ProgressStories} />
+
+<Title>{progressDocs.title}</Title>
+
+<DocsPurpose docs={progressDocs} />
+
+<Canvas of={ProgressStories.Default} />
+
+<DocsWhenToUse docs={progressDocs} />
+<DocsWhenNotToUse docs={progressDocs} />
+<DocsAnatomy docs={progressDocs} />
+
+<DocsVariants docs={progressDocs} />
+<Canvas of={ProgressStories.Variants} />
+
+<DocsStates docs={progressDocs} />
+<Canvas of={ProgressStories.States} />
+
+<DocsContentRules docs={progressDocs} />
+<DocsAccessibility docs={progressDocs} />
+<DocsRelated docs={progressDocs} />
+<DocsForDevelopers docs={progressDocs} />

@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as ToggleGroupStories from "./toggle-group.stories"
+import { toggleGroupDocs } from "./toggle-group.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={ToggleGroupStories} />
+
+<Title>{toggleGroupDocs.title}</Title>
+
+<DocsPurpose docs={toggleGroupDocs} />
+
+<Canvas of={ToggleGroupStories.Default} />
+
+<DocsWhenToUse docs={toggleGroupDocs} />
+<DocsWhenNotToUse docs={toggleGroupDocs} />
+<DocsAnatomy docs={toggleGroupDocs} />
+
+<DocsVariants docs={toggleGroupDocs} />
+<Canvas of={ToggleGroupStories.Variants} />
+
+<DocsStates docs={toggleGroupDocs} />
+<Canvas of={ToggleGroupStories.States} />
+
+<DocsContentRules docs={toggleGroupDocs} />
+<DocsAccessibility docs={toggleGroupDocs} />
+<DocsRelated docs={toggleGroupDocs} />
+<DocsForDevelopers docs={toggleGroupDocs} />

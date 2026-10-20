@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as ButtonGroupStories from "./button-group.stories"
+import { buttonGroupDocs } from "./button-group.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={ButtonGroupStories} />
+
+<Title>{buttonGroupDocs.title}</Title>
+
+<DocsPurpose docs={buttonGroupDocs} />
+
+<Canvas of={ButtonGroupStories.Default} />
+
+<DocsWhenToUse docs={buttonGroupDocs} />
+<DocsWhenNotToUse docs={buttonGroupDocs} />
+<DocsAnatomy docs={buttonGroupDocs} />
+
+<DocsVariants docs={buttonGroupDocs} />
+<Canvas of={ButtonGroupStories.Variants} />
+
+<DocsStates docs={buttonGroupDocs} />
+<Canvas of={ButtonGroupStories.States} />
+
+<DocsContentRules docs={buttonGroupDocs} />
+<DocsAccessibility docs={buttonGroupDocs} />
+<DocsRelated docs={buttonGroupDocs} />
+<DocsForDevelopers docs={buttonGroupDocs} />

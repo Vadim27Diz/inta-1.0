@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as KbdStories from "./kbd.stories"
+import { kbdDocs } from "./kbd.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={KbdStories} />
+
+<Title>{kbdDocs.title}</Title>
+
+<DocsPurpose docs={kbdDocs} />
+
+<Canvas of={KbdStories.Default} />
+
+<DocsWhenToUse docs={kbdDocs} />
+<DocsWhenNotToUse docs={kbdDocs} />
+<DocsAnatomy docs={kbdDocs} />
+
+<DocsVariants docs={kbdDocs} />
+<Canvas of={KbdStories.Variants} />
+
+<DocsStates docs={kbdDocs} />
+
+<DocsContentRules docs={kbdDocs} />
+<DocsAccessibility docs={kbdDocs} />
+<DocsRelated docs={kbdDocs} />
+<DocsForDevelopers docs={kbdDocs} />
