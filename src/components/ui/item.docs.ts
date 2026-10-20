@@ -88,8 +88,8 @@ export const itemDocs: ComponentDocs = {
       en: "The focus ring classes (focus-visible:outline-*) are always present, but the ring only actually appears when the root is a genuinely focusable element (asChild) — on a plain <div>, :focus-visible never matches; that's not a bug.",
     },
     {
-      ru: "ItemGroup сам проставляет role=\"list\" на обёртку, но Item не получает role=\"listitem\" — в отличие от, например, DocsRelated в этом же наборе, где role=\"list\" и role=\"listitem\" идут парой. Без role=\"listitem\" на каждом Item список может не распознаваться скринридером как список из N строк; если это важно, добавляйте role=\"listitem\" на Item сами.",
-      en: "ItemGroup sets role=\"list\" on its wrapper on its own, but Item doesn't get role=\"listitem\" — unlike, say, this very kit's DocsRelated, where role=\"list\" and role=\"listitem\" come as a pair. Without role=\"listitem\" on each Item, a screen reader may not recognize the group as a list of N rows; add role=\"listitem\" to Item yourself if that matters.",
+      ru: "ItemGroup проставляет role=\"list\" на обёртку, а Item — role=\"listitem\" на себя: та же пара, что у DocsRelated в этом же наборе. Скринридер объявляет группу как список из N строк автоматически, без лишней настройки — даже если конкретный Item рендерится как <div>, а не <li>.",
+      en: "ItemGroup sets role=\"list\" on its wrapper, and Item sets role=\"listitem\" on itself — the same pair used by this very kit's DocsRelated. A screen reader announces the group as a list of N rows automatically, with no extra setup — even though a given Item renders as a <div>, not an <li>.",
     },
     {
       ru: "ItemSeparator наследует decorative=true от Separator по умолчанию (сам его не переопределяет) — role=\"none\", визуальная линия, не объявляется скринридером как разделитель.",
@@ -114,11 +114,9 @@ export const itemDocs: ComponentDocs = {
       ru: "hover/focus-visible в itemVariants — [a]:hover:bg-surface-hover и безусловный focus-visible:outline-*, точно та же модель, что у BreadcrumbLink/Button: срабатывает только когда соответствующий псевдокласс применим к реальному тегу.",
       en: "hover/focus-visible in itemVariants — [a]:hover:bg-surface-hover and an unconditional focus-visible:outline-* — follow the same model as BreadcrumbLink/Button: they only fire when the matching pseudo-class actually applies to the real tag.",
     },
-  ],
-  openQuestions: [
     {
-      ru: "role=\"listitem\" на Item — добавить его в сам компонент (например, через проп у ItemGroup, транслируемый детям) или оставить ручной обязанностью того, кто использует ItemGroup? Сейчас список считается декларированным лишь наполовину (role=\"list\" без role=\"listitem\").",
-      en: "role=\"listitem\" on Item — should it be added by the component itself (e.g. via a prop on ItemGroup, passed down to children), or stay a manual responsibility for whoever uses ItemGroup? Right now the list is only half-declared (role=\"list\" with no role=\"listitem\").",
+      ru: "role=\"listitem\" задан прямо в JSX перед {...props} — как и у Spinner, его можно переопределить снаружи, передав свой role.",
+      en: "role=\"listitem\" is set directly in JSX before {...props} — like Spinner's role, it can be overridden from outside by passing your own role.",
     },
   ],
 }

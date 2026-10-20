@@ -66,6 +66,7 @@ function Item({
       data-slot="item"
       data-variant={variant}
       data-size={size}
+      role="listitem"
       className={cn(itemVariants({ variant, size }), className)}
       {...props}
     />
