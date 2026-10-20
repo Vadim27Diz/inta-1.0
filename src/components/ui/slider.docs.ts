@@ -80,6 +80,10 @@ export const sliderDocs: ComponentDocs = {
       ru: "При диапазоне (двух бегунках) каждый фокусируется и объявляется отдельно, в порядке минимум → максимум.",
       en: "With a range (two thumbs), each is focused and announced separately, in minimum → maximum order.",
     },
+    {
+      ru: "У бегунка нет доступного имени по умолчанию — без него скринридер объявит только число, не то, что оно регулирует. Передавайте prop thumbLabel (строка для одного значения, массив из двух строк для диапазона — «минимум», «максимум»), компонент сам имя не придумывает.",
+      en: "The thumb has no accessible name by default — without one, a screen reader announces only the number, not what it controls. Pass the thumbLabel prop (a string for a single value, an array of two strings for a range — “minimum”, “maximum”); the component doesn't make one up on its own.",
+    },
   ],
   related: [
     { name: "Progress", description: { ru: "невзаимодействующий индикатор хода процесса", en: "a non-interactive progress indicator" } },
@@ -97,6 +101,10 @@ export const sliderDocs: ComponentDocs = {
     {
       ru: "Фокус-кольцо — outline на Thumb (focus-visible:outline-solid outline-2 outline-focus-ring), не влияет на Track/Range.",
       en: "The focus ring is an outline on the Thumb (focus-visible:outline-solid outline-2 outline-focus-ring), it doesn't affect the Track/Range.",
+    },
+    {
+      ru: "thumbLabel ставится как aria-label на каждый Thumb по индексу (Array.isArray(thumbLabel) ? thumbLabel[i] : thumbLabel) — строка применяется к единственному бегунку, массив — по одной строке на бегунок в диапазоне.",
+      en: "thumbLabel is set as aria-label on each Thumb by index (Array.isArray(thumbLabel) ? thumbLabel[i] : thumbLabel) — a string applies to the single thumb, an array gives one string per thumb in a range.",
     },
   ],
 }
