@@ -174,9 +174,10 @@ https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137
 
 Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — промежуточные build #26
 (до правки `role="listitem"`, 0 изменений) и #27 (после той правки, тоже 0 — ARIA-атрибут не
-влияет на пиксели). После 4 фиксов второго ревью — **build #29**:
-https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=29 — **1 визуальное
-изменение, ожидает подтверждения человеком в Chromatic UI**. Изменение ожидаемое: новая
+влияет на пиксели). После 4 фиксов второго ревью — build #29 (0 принятых изменений, ещё не просмотрен), затем build
+#30 (после коммита с этим файлом — тот же набор историй, то же изменение переносится как
+ожидающее): https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=30 — **1
+визуальное изменение, ожидает подтверждения человеком в Chromatic UI**. Изменение ожидаемое: новая
 demo-строка (asChild-ссылка внутри `ItemGroup`) в story `Item/Content`, добавленная как цель
 Playwright-проверки фикса `role="listitem"` — не регрессия в существующих снимках. Preview:
-https://6ad4a76c23be4704dc8eca20-zmdgxmazbv.chromatic.com/
+https://6ad4a76c23be4704dc8eca20-qbnrkcckqs.chromatic.com/
