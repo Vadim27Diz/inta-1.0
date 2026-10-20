@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as TextareaStories from "./textarea.stories"
+import { textareaDocs } from "./textarea.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={TextareaStories} />
+
+<Title>{textareaDocs.title}</Title>
+
+<DocsPurpose docs={textareaDocs} />
+
+<Canvas of={TextareaStories.Default} />
+
+<DocsWhenToUse docs={textareaDocs} />
+<DocsWhenNotToUse docs={textareaDocs} />
+<DocsAnatomy docs={textareaDocs} />
+
+<DocsVariants docs={textareaDocs} />
+<Canvas of={TextareaStories.Variants} />
+
+<DocsStates docs={textareaDocs} />
+<Canvas of={TextareaStories.States} />
+
+<DocsContentRules docs={textareaDocs} />
+<DocsAccessibility docs={textareaDocs} />
+<DocsRelated docs={textareaDocs} />
+<DocsForDevelopers docs={textareaDocs} />

@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as FieldStories from "./field.stories"
+import { fieldDocs } from "./field.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={FieldStories} />
+
+<Title>{fieldDocs.title}</Title>
+
+<DocsPurpose docs={fieldDocs} />
+
+<Canvas of={FieldStories.Default} />
+
+<DocsWhenToUse docs={fieldDocs} />
+<DocsWhenNotToUse docs={fieldDocs} />
+<DocsAnatomy docs={fieldDocs} />
+
+<DocsVariants docs={fieldDocs} />
+<Canvas of={FieldStories.Variants} />
+
+<DocsStates docs={fieldDocs} />
+<Canvas of={FieldStories.States} />
+
+<DocsContentRules docs={fieldDocs} />
+<DocsAccessibility docs={fieldDocs} />
+<DocsRelated docs={fieldDocs} />
+<DocsForDevelopers docs={fieldDocs} />

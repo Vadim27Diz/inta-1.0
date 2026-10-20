@@ -1,0 +1,39 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as SelectStories from "./select.stories"
+import { selectDocs } from "./select.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={SelectStories} />
+
+<Title>{selectDocs.title}</Title>
+
+<DocsPurpose docs={selectDocs} />
+
+<Canvas of={SelectStories.Default} />
+
+<DocsWhenToUse docs={selectDocs} />
+<DocsWhenNotToUse docs={selectDocs} />
+<DocsAnatomy docs={selectDocs} />
+
+<DocsVariants docs={selectDocs} />
+<Canvas of={SelectStories.Variants} />
+<Canvas of={SelectStories.IndicatorSide} />
+
+<DocsStates docs={selectDocs} />
+<Canvas of={SelectStories.States} />
+
+<DocsContentRules docs={selectDocs} />
+<DocsAccessibility docs={selectDocs} />
+<DocsRelated docs={selectDocs} />
+<DocsForDevelopers docs={selectDocs} />

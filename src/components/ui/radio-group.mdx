@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as RadioGroupStories from "./radio-group.stories"
+import { radioGroupDocs } from "./radio-group.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={RadioGroupStories} />
+
+<Title>{radioGroupDocs.title}</Title>
+
+<DocsPurpose docs={radioGroupDocs} />
+
+<Canvas of={RadioGroupStories.Default} />
+
+<DocsWhenToUse docs={radioGroupDocs} />
+<DocsWhenNotToUse docs={radioGroupDocs} />
+<DocsAnatomy docs={radioGroupDocs} />
+
+<DocsVariants docs={radioGroupDocs} />
+<Canvas of={RadioGroupStories.Variants} />
+
+<DocsStates docs={radioGroupDocs} />
+<Canvas of={RadioGroupStories.States} />
+
+<DocsContentRules docs={radioGroupDocs} />
+<DocsAccessibility docs={radioGroupDocs} />
+<DocsRelated docs={radioGroupDocs} />
+<DocsForDevelopers docs={radioGroupDocs} />
