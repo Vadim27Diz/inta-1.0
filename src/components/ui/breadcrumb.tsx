@@ -67,14 +67,14 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
 
 function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span">) {
   return (
+    // не aria-hidden на всём элементе: это стирало бы из дерева доступности и вложенный
+    // sr-only текст ниже — скрываем только декоративную иконку, текст должен озвучиваться
     <span
       data-slot="breadcrumb-ellipsis"
-      role="presentation"
-      aria-hidden="true"
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
-      <MoreHorizontal className="size-4" />
+      <MoreHorizontal className="size-4" aria-hidden="true" />
       <span className="sr-only">More</span>
     </span>
   )
