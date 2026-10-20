@@ -67,6 +67,13 @@ export const Content: Story = {
           описание переносится как обычный текст, занимая несколько строк без ограничения высоты.
         </AlertDescription>
       </Alert>
+      <Alert variant="info">
+        <Info />
+        <AlertTitle>
+          Заголовок_с_одним_очень_длинным_словом_без_пробелов_которое_должно_обрезаться_многоточием_а_не_переносится_на_вторую_строку
+        </AlertTitle>
+        <AlertDescription>Заголовок выше должен остаться в одну строку с line-clamp-1.</AlertDescription>
+      </Alert>
       <Alert variant="danger">
         <CircleAlert />
         <AlertDescription>Алерт без заголовка — только описание.</AlertDescription>
