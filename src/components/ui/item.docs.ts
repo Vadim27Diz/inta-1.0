@@ -88,8 +88,12 @@ export const itemDocs: ComponentDocs = {
       en: "The focus ring classes (focus-visible:outline-*) are always present, but the ring only actually appears when the root is a genuinely focusable element (asChild) — on a plain <div>, :focus-visible never matches; that's not a bug.",
     },
     {
-      ru: "ItemGroup проставляет role=\"list\" на обёртку, а Item — role=\"listitem\" на себя: та же пара, что у DocsRelated в этом же наборе. Скринридер объявляет группу как список из N строк автоматически, без лишней настройки — даже если конкретный Item рендерится как <div>, а не <li>.",
-      en: "ItemGroup sets role=\"list\" on its wrapper, and Item sets role=\"listitem\" on itself — the same pair used by this very kit's DocsRelated. A screen reader announces the group as a list of N rows automatically, with no extra setup — even though a given Item renders as a <div>, not an <li>.",
+      ru: "ItemGroup проставляет role=\"list\" на обёртку; Item узнаёт, что находится внутри неё, через контекст — та же пара, что у DocsRelated в этом же наборе. Без ItemGroup Item никакой роли не получает (listitem без родителя list — невалидный ARIA), так что сам по себе, вне группы, Item ничего не объявляет сверх своего содержимого.",
+      en: "ItemGroup sets role=\"list\" on its wrapper; Item learns it's inside one via context — the same pair used by this very kit's DocsRelated. Without an ItemGroup, Item gets no role at all (a listitem with no list parent is invalid ARIA), so on its own, outside a group, Item announces nothing beyond its content.",
+    },
+    {
+      ru: "Внутри ItemGroup: обычный Item (без asChild) ставит role=\"listitem\" на себя — скринридер объявляет группу как список из N строк, даже если каждый Item рендерится как <div>, а не <li>. С asChild (строка-ссылка/кнопка) role=\"listitem\" уходит на невидимую обёртку вокруг неё (display:contents, не меняет раскладку), а сама ссылка/кнопка сохраняет свою обычную роль — иначе role=\"listitem\" прямо на <a> перекрыл бы её роль ссылки, и скринридер перестал бы объявлять её как ссылку.",
+      en: "Inside an ItemGroup: a plain Item (no asChild) sets role=\"listitem\" on itself — a screen reader announces the group as a list of N rows, even though each Item renders as a <div>, not an <li>. With asChild (a link/button row), role=\"listitem\" goes on an invisible wrapper around it (display:contents, doesn't affect layout), while the link/button keeps its normal role — otherwise role=\"listitem\" directly on the <a> would override its link role, and a screen reader would stop announcing it as a link.",
     },
     {
       ru: "ItemSeparator наследует decorative=true от Separator по умолчанию (сам его не переопределяет) — role=\"none\", визуальная линия, не объявляется скринридером как разделитель.",
@@ -115,8 +119,8 @@ export const itemDocs: ComponentDocs = {
       en: "hover/focus-visible in itemVariants — [a]:hover:bg-surface-hover and an unconditional focus-visible:outline-* — follow the same model as BreadcrumbLink/Button: they only fire when the matching pseudo-class actually applies to the real tag.",
     },
     {
-      ru: "role=\"listitem\" задан прямо в JSX перед {...props} — как и у Spinner, его можно переопределить снаружи, передав свой role.",
-      en: "role=\"listitem\" is set directly in JSX before {...props} — like Spinner's role, it can be overridden from outside by passing your own role.",
+      ru: "ItemGroupContext (React.createContext, не экспортируется) — булево «я внутри ItemGroup», та же техника, что у SelectSizeContext в select.tsx. Item решает роль по двум флагам: inGroup и asChild. Без asChild — role идёт прямо в JSX перед {...props}, переопределим снаружи, как у Spinner. С asChild внутри группы — компонент рендерит дополнительный <div role=\"listitem\" className=\"contents\"> вокруг Slot-рендера; этот div не участвует в cva()/className потребителя, переопределить его role через props у Item нельзя.",
+      en: "ItemGroupContext (React.createContext, not exported) is a boolean “am I inside an ItemGroup”, the same technique as SelectSizeContext in select.tsx. Item picks its role from two flags: inGroup and asChild. Without asChild, role is set directly in JSX before {...props}, overridable from outside like Spinner's. With asChild inside a group, the component renders an extra <div role=\"listitem\" className=\"contents\"> around the Slot render; that div doesn't participate in the consumer's cva()/className, and its role can't be overridden through Item's own props.",
     },
   ],
 }

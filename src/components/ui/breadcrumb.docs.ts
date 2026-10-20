@@ -73,12 +73,12 @@ export const breadcrumbDocs: ComponentDocs = {
       en: "BreadcrumbSeparator has role=\"presentation\" aria-hidden=\"true\" — the chevron isn't announced by a screen reader, automatically.",
     },
     {
-      ru: "BreadcrumbEllipsis целиком помечен aria-hidden=\"true\" — включая скрытый текст «More» внутри него. aria-hidden на родителе исключает из дерева доступности и всех потомков, поэтому этот текст скринридер не озвучивает: сейчас для скрытых уровней объявляется просто ничего, а не какая-либо подсказка.",
-      en: "BreadcrumbEllipsis is entirely marked aria-hidden=\"true\" — including the hidden “More” text inside it. aria-hidden on a parent excludes all descendants from the accessibility tree, so that text is never announced: a screen reader currently gets nothing at all for the hidden levels, not any kind of hint.",
+      ru: "BreadcrumbEllipsis больше не вешает aria-hidden на весь элемент — только на декоративную иконку (MoreHorizontal). Вложенный скрытый текст «More» теперь реально озвучивается скринридером при фокусе/просмотре блока: для скрытых уровней объявляется подсказка, а не тишина (было иначе — родительский aria-hidden глушил и текст).",
+      en: "BreadcrumbEllipsis no longer puts aria-hidden on the whole element — only on the decorative icon (MoreHorizontal). The nested hidden “More” text is now actually announced by a screen reader: the hidden levels get a hint, not silence (previously the parent's aria-hidden muted the text too).",
     },
     {
-      ru: "BreadcrumbLink — обычная <a>, доступна с клавиатуры из коробки (Tab, Enter), но собственного focus-visible-кольца, как у Button или Item, в компоненте нет — виден нативный браузерный фокус поверх общего сброса outline-focus-ring/50 на всех элементах страницы.",
-      en: "BreadcrumbLink is a plain <a>, keyboard-accessible out of the box (Tab, Enter) — but the component has no dedicated focus-visible ring like Button's or Item's; what shows is the browser's native focus indicator over the page-wide outline-focus-ring/50 reset.",
+      ru: "BreadcrumbLink — обычная <a>, доступна с клавиатуры из коробки (Tab, Enter) и теперь несёт собственное focus-visible-кольцо (outline-focus-ring), тот же паттерн, что у Button и Item — видно одинаково на surface и surface-raised, не только нативный браузерный фокус.",
+      en: "BreadcrumbLink is a plain <a>, keyboard-accessible out of the box (Tab, Enter) and now carries its own focus-visible ring (outline-focus-ring), the same pattern as Button and Item — equally visible on surface and surface-raised, not just the browser's native focus.",
     },
   ],
   related: [],
@@ -92,8 +92,8 @@ export const breadcrumbDocs: ComponentDocs = {
       en: "BreadcrumbLink accepts asChild (Slot) — to render a router's <Link> instead of <a>. BreadcrumbEllipsis has no asChild: turning it into a real “show hidden levels” menu trigger currently means wrapping it manually, not through a prop.",
     },
     {
-      ru: "Скрытый текст у BreadcrumbEllipsis захардкожен на английском («More»), хотя остальные захардкоженные подсказки в наборе — на русском (например, aria-label у Spinner), и всё равно не доходит до скринридера из-за aria-hidden на родителе.",
-      en: "BreadcrumbEllipsis's hidden text is hardcoded in English (“More”), while the rest of the kit's hardcoded hints are in Russian (e.g. Spinner's aria-label) — and it never reaches a screen reader anyway, due to the parent's aria-hidden.",
+      ru: "Скрытый текст у BreadcrumbEllipsis захардкожен на английском («More»), хотя остальные захардкоженные подсказки в наборе — на русском (например, aria-label у Spinner); теперь он реально доходит до скринридера (см. «Доступность»), так что языковое несоответствие стало заметным на практике, не только в коде — решать вместе с i18n, см. бэклог в handoff.",
+      en: "BreadcrumbEllipsis's hidden text is hardcoded in English (“More”), while the rest of the kit's hardcoded hints are in Russian (e.g. Spinner's aria-label); it now actually reaches a screen reader (see “Accessibility”), so the language mismatch is now practically visible, not just in the code — to be decided together with i18n, see the backlog in handoff.",
     },
   ],
   openQuestions: [
