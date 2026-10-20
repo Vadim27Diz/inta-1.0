@@ -35,6 +35,8 @@ export interface ComponentDocs {
   whenNotToUse: WhenNotToUseEntry[]
   /** 4. Анатомия — реальные subcomponent'ы/слоты из кода. */
   anatomy: AnatomyPart[]
+  /** 5а. Правила выбора между вариантами — иерархия, порядок, когда какой. Необязательно. */
+  variantGuidance?: Text[]
   /** 5а. Варианты — значения variant/size и т.п. из cva(). */
   variants: VariantEntry[]
   /** 5б. Состояния — из [&_svg]/disabled/focus-visible/aria-invalid и stories States. */
@@ -45,6 +47,12 @@ export interface ComponentDocs {
   accessibility: Text[]
   /** 8. Связанные компоненты. */
   related: RelatedComponent[]
+  /**
+   * Необязательный раздел для разработчиков — рендерится последним. Сюда,
+   * а не в основной текст, идут Tailwind-классы, токены, data-slot, Radix,
+   * npm-скрипты, поведение браузера и прочая реализация.
+   */
+  forDevelopers?: Text[]
   /** Открытые вопросы к человеку — не часть страницы, попадают в отчёт PR. */
   openQuestions?: Text[]
 }

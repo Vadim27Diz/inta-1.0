@@ -112,9 +112,14 @@ function VariantList({ items, locale }: { items: ComponentDocs["variants"]; loca
 
 export function DocsVariants({ docs }: { docs: ComponentDocs }) {
   const locale = useLocale()
-  if (docs.variants.length === 0) return null
+  if (docs.variants.length === 0 && !docs.variantGuidance?.length) return null
   return (
     <Section title={labels.variants[locale]}>
+      {!!docs.variantGuidance?.length && (
+        <div className="mb-4">
+          <List items={docs.variantGuidance.map((t) => t[locale])} />
+        </div>
+      )}
       <VariantList items={docs.variants} locale={locale} />
     </Section>
   )
@@ -147,6 +152,23 @@ export function DocsAccessibility({ docs }: { docs: ComponentDocs }) {
     <Section title={labels.accessibility[locale]}>
       <List items={docs.accessibility.map((t) => t[locale])} />
     </Section>
+  )
+}
+
+// Отдельный, визуально приглушённый блок в конце страницы — реализация
+// (Tailwind-классы, токены, data-slot, Radix, npm-скрипты, поведение
+// браузера), которая не нужна дизайнеру/продакту для решения о том,
+// когда и как использовать компонент.
+export function DocsForDevelopers({ docs }: { docs: ComponentDocs }) {
+  const locale = useLocale()
+  if (!docs.forDevelopers?.length) return null
+  return (
+    <section className="mt-10 border-t border-border pt-8">
+      <h2 className="typo-label-lg text-on-surface-muted">{labels.forDevelopers[locale]}</h2>
+      <div className="mt-3 typo-body-sm text-on-surface-muted">
+        <List items={docs.forDevelopers.map((t) => t[locale])} />
+      </div>
+    </section>
   )
 }
 

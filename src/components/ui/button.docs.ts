@@ -8,16 +8,16 @@ export const buttonDocs: ComponentDocs = {
   },
   whenToUse: [
     {
-      ru: "Пользователь одним кликом инициирует действие: сохранить, отправить, создать, подтвердить, отменить.",
-      en: "A single click starts an action: save, submit, create, confirm, cancel.",
+      ru: "Пользователь одним кликом или тапом запускает действие: сохранить, отправить, создать, подтвердить, отменить.",
+      en: "A single click or tap starts an action: save, submit, create, confirm, cancel.",
     },
     {
-      ru: "Нужно показать приоритет действия относительно других: primary — главное действие на экране, остальные варианты — менее важные действия рядом с ним.",
-      en: "The action's priority relative to others matters: primary is the single main action on screen, the other variants are less prominent actions next to it.",
+      ru: "Рядом стоят несколько действий разной важности, и это важно показать визуально.",
+      en: "Several actions of different importance sit next to each other, and that priority needs to be visible.",
     },
     {
-      ru: "Действие временно недоступно до выполнения условия — через проп disabled.",
-      en: "The action is temporarily unavailable until a condition is met — via the disabled prop.",
+      ru: "Действие временно недоступно, пока не выполнено условие — кнопка выглядит и ведёт себя как неактивная.",
+      en: "The action is temporarily unavailable until a condition is met — the button looks and behaves as inactive.",
     },
   ],
   whenNotToUse: [
@@ -64,81 +64,129 @@ export const buttonDocs: ComponentDocs = {
   ],
   anatomy: [
     {
-      name: "children",
+      name: "Текст / иконка",
       description: {
-        ru: "Текст и/или иконка (SVG 16×16, размер фиксирован через [&_svg]:size-4). Порядок — слева направо по порядку children: иконка перед текстом или после него.",
-        en: "Text and/or an icon (16×16 SVG, size fixed via [&_svg]:size-4). Order follows the children order: icon before or after the text.",
+        ru: "Кнопка может содержать текст, иконку или и то и другое — порядок (иконка перед текстом или после) задаёт тот, кто собирает экран.",
+        en: "A button can contain text, an icon, or both — the order (icon before or after the text) is up to whoever assembles the screen.",
       },
     },
     {
-      name: "asChild",
+      name: "Кнопка как ссылка (asChild)",
       description: {
-        ru: "Полиморфный рендер через Radix Slot: вместо <button> рендерится переданный children-элемент (например <a>), сохраняя все классы и поведение Button.",
-        en: "Polymorphic rendering via Radix Slot: renders the passed child element (e.g. <a>) instead of <button>, keeping all of Button's classes and behavior.",
+        ru: "Кнопку можно отрендерить как ссылку или другой элемент, сохранив её вид и поведение — полезно, когда действие на самом деле переход, а не запрос к серверу.",
+        en: "The button can render as a link or another element while keeping its look and behavior — useful when the action is actually a navigation, not a server request.",
       },
+    },
+  ],
+  variantGuidance: [
+    {
+      ru: "На экране или в одном смысловом блоке держите один primary — он показывает, куда в первую очередь посмотреть. Несколько primary рядом конкурируют за внимание и сбивают пользователя.",
+      en: "Keep one primary per screen or logical block — it shows where attention should go first. Multiple primaries next to each other compete for attention and confuse the user.",
+    },
+    {
+      ru: "secondary — действие-напарник primary (например, «Отмена» рядом с «Сохранить»). neutral — равноценное действие без выраженного приоритета. outline и ghost — тише по весу, для панелей, таблиц и тулбаров, где кнопок много.",
+      en: "secondary is primary's companion action (e.g. “Cancel” next to “Save”). neutral is an action with no particular priority. outline and ghost are quieter, for panels, tables and toolbars with many buttons at once.",
+    },
+    {
+      ru: "В группе из нескольких кнопок порядок должен быть одинаковым во всём продукте — не чередуйте, например, «Отмена слева» на одном экране и «Отмена справа» на другом.",
+      en: "In a group of several buttons, the order must be consistent across the product — don't put “Cancel” on the left on one screen and on the right on another.",
+    },
+    {
+      ru: "danger — только если у действия есть подтверждение («вы уверены?») или быстрая отмена сразу после. Без этого один клик может необратимо уничтожить данные.",
+      en: "Use danger only when the action has a confirmation step (“are you sure?”) or a quick undo right after. Without one, a single click can destroy data irreversibly.",
     },
   ],
   variants: [
-    { name: "primary", description: { ru: "главное действие на экране, акцентный фон", en: "the main action on screen, accent fill" } },
-    { name: "secondary", description: { ru: "действие рядом с primary, менее приоритетное", en: "an action next to primary, lower priority" } },
-    { name: "neutral", description: { ru: "нейтральное действие без акцента", en: "a neutral action with no accent" } },
-    { name: "outline", description: { ru: "контурная кнопка, слабее по весу, чем primary/neutral", en: "outlined button, lighter weight than primary/neutral" } },
-    { name: "ghost", description: { ru: "без фона и обводки — для тулбаров, таблиц, плотных панелей", en: "no fill or border — for toolbars, tables, dense panels" } },
-    { name: "danger", description: { ru: "разрушительное действие (удалить и т.п.)", en: "a destructive action (delete, etc.)" } },
-    { name: "danger-subtle", description: { ru: "разрушительное действие с меньшим визуальным весом", en: "a destructive action with lower visual weight" } },
-    { name: "inverse", description: { ru: "для тёмных/контрастных поверхностей", en: "for dark/contrasting surfaces" } },
-    { name: "link", description: { ru: "выглядит как ссылка, без фона и паддингов кнопки", en: "looks like a link, no button fill or padding" } },
-    { name: "link-danger", description: { ru: "ссылка для разрушительного действия", en: "a link-styled destructive action" } },
-    { name: "size: sm / md / lg", description: { ru: "высота 32/36/40px", en: "32/36/40px tall" } },
-    { name: "size: icon", description: { ru: "квадратная кнопка 36×36 под одну иконку без текста", en: "a square 36×36 button for a single icon, no text" } },
+    { name: "primary", description: { ru: "главное действие на экране или в блоке — одно за раз", en: "the main action on screen or in a block — one at a time" } },
+    { name: "secondary", description: { ru: "действие-напарник primary, например «Отмена» рядом с «Сохранить»", en: "primary's companion action, e.g. “Cancel” next to “Save”" } },
+    { name: "neutral", description: { ru: "действие без выраженного приоритета", en: "an action with no particular priority" } },
+    { name: "outline", description: { ru: "менее заметная кнопка — для панелей и таблиц", en: "a quieter button — for panels and tables" } },
+    { name: "ghost", description: { ru: "минимальный вес — для тулбаров, строк таблиц, плотных карточек", en: "minimal weight — for toolbars, table rows, dense cards" } },
+    { name: "danger", description: { ru: "разрушительное действие — всегда с подтверждением или отменой", en: "a destructive action — always with confirmation or undo" } },
+    { name: "danger-subtle", description: { ru: "то же самое, но менее заметно", en: "the same, but with lower visual weight" } },
+    { name: "inverse", description: { ru: "для тёмных или контрастных поверхностей", en: "for dark or contrasting surfaces" } },
+    { name: "link", description: { ru: "действие в виде текстовой ссылки, без фона кнопки", en: "an action styled as a text link, no button fill" } },
+    { name: "link-danger", description: { ru: "разрушительное действие в виде ссылки", en: "a link-styled destructive action" } },
+    { name: "size: sm / md / lg", description: { ru: "три размера под плотность интерфейса: sm — компактные панели, md — размер по умолчанию, lg — заметные одиночные призывы к действию", en: "three sizes for interface density: sm for compact panels, md is the default, lg for prominent standalone calls to action" } },
+    { name: "size: icon", description: { ru: "квадратная кнопка под одну иконку без подписи", en: "a square button for a single icon with no label" } },
   ],
   states: [
-    { name: "hover", description: { ru: "наведение курсора — усиленный фон (*-hover)", en: "pointer hover — stronger fill (*-hover)" } },
-    { name: "active / pressed", description: { ru: "нажатие — ещё более сильный фон (*-pressed)", en: "pressed — an even stronger fill (*-pressed)" } },
-    { name: "focus-visible", description: { ru: "видимое кольцо фокуса (outline), показывается только при навигации с клавиатуры", en: "a visible focus ring (outline), shown only for keyboard navigation" } },
-    { name: "disabled", description: { ru: "недоступна для клика и фокуса, свой фон/цвет (bg-disabled/text-on-disabled)", en: "not clickable or focusable, has its own fill/color (bg-disabled/text-on-disabled)" } },
+    { name: "hover", description: { ru: "фон чуть меняется при наведении курсора — подсказывает, что элемент интерактивен", en: "the fill shifts slightly on hover — signals that the element is interactive" } },
+    { name: "active / pressed", description: { ru: "фон меняется заметнее в момент нажатия", en: "the fill changes more noticeably while pressed" } },
+    { name: "focus-visible", description: { ru: "видимое кольцо вокруг кнопки при переходе с клавиатуры (Tab) — не появляется при клике мышью", en: "a visible ring around the button when reached via keyboard (Tab) — not shown on a mouse click" } },
+    { name: "disabled", description: { ru: "кнопка не реагирует на клик и фокус, выглядит приглушённой", en: "the button doesn't respond to clicks or focus, and looks muted" } },
   ],
   contentRules: [
     {
-      ru: "Подпись — глагол в повелительном наклонении или короткое словосочетание действия: «Сохранить», «Отправить», «Удалить», не «Сохранение» или «ОК» без контекста.",
+      ru: "Подпись — глагол в повелительном наклонении или короткое словосочетание действия: «Сохранить», «Отправить», «Удалить», не «Сохранение» или голое «ОК» без контекста.",
       en: "Label is an imperative verb or a short action phrase: “Save”, “Submit”, “Delete” — not “Saving” or a bare “OK” without context.",
     },
     {
-      ru: "1–3 слова. Длинный текст не обрезается и не переносится — компонент просто становится шире (класс whitespace-nowrap), поэтому длинную подпись сокращайте на уровне текста, а не полагайтесь на вёрстку.",
-      en: "1–3 words. Long text is neither truncated nor wrapped — the button simply grows wider (whitespace-nowrap), so shorten the label itself rather than relying on layout to handle it.",
+      ru: "1–3 слова. Подпись не переносится на вторую строку и не обрезается — при длинном тексте кнопка просто становится шире, поэтому сокращайте текст заранее, а не полагайтесь на то, что он поместится.",
+      en: "1–3 words. The label neither wraps nor truncates — a long label just makes the button wider, so shorten the text up front rather than relying on it fitting.",
     },
     {
-      ru: "Кнопка size=\"icon\" без видимого текста обязана получить доступное имя — aria-label на самой кнопке (компонент его не подставляет).",
-      en: "An icon-only (size=\"icon\") button must get an accessible name — aria-label on the button itself (the component does not provide one automatically).",
+      ru: "У кнопки только с иконкой, без подписи, всё равно должно быть текстовое описание действия — для тех, кто пользуется скринридером.",
+      en: "An icon-only button with no visible label still needs a text description of the action — for screen reader users.",
     },
   ],
   accessibility: [
     {
-      ru: "Корневой элемент — нативный <button> (role=button неявный); при asChild роль и семантику задаёт переданный элемент — автор отвечает за их уместность.",
-      en: "The root element is a native <button> (implicit role=button); with asChild, the passed element determines role and semantics — the author is responsible for their correctness.",
+      ru: "Кнопка озвучивается скринридером как кнопка автоматически, без дополнительной настройки.",
+      en: "The button is announced by a screen reader as a button automatically, with no extra setup.",
     },
     {
-      ru: "Доступна с клавиатуры из коробки: Tab фокусирует, Enter/Space активируют (нативное поведение <button>).",
-      en: "Keyboard-accessible out of the box: Tab focuses, Enter/Space activate (native <button> behavior).",
+      ru: "Доступна с клавиатуры из коробки: Tab переводит фокус на кнопку, Enter или Space её нажимают.",
+      en: "Keyboard-accessible out of the box: Tab moves focus to the button, Enter or Space activates it.",
     },
     {
-      ru: "disabled использует нативный атрибут — кнопка выпадает из последовательности табуляции и недоступна screen reader'у как интерактивный элемент, отдельных aria-атрибутов не требуется.",
-      en: "disabled uses the native attribute — the button is removed from the tab order and is not exposed to screen readers as interactive; no extra aria attributes are needed.",
+      ru: "Неактивную (disabled) кнопку нельзя сфокусировать с клавиатуры, и скринридер не объявляет её как доступную для нажатия.",
+      en: "A disabled button can't be focused with the keyboard, and a screen reader doesn't announce it as actionable.",
     },
     {
-      ru: "Фокус-кольцо — outline с отступом 2px, не ring с прозрачностью, поэтому одинаково видно на surface и surface-raised.",
-      en: "The focus ring is an outline with a 2px offset, not a translucent ring — equally visible on both surface and surface-raised.",
+      ru: "Кольцо фокуса одинаково заметно на любом фоне — светлом и тёмном, обычном и приподнятом.",
+      en: "The focus ring is equally visible on any background — light or dark, flat or raised.",
     },
   ],
   related: [
     { name: "Button Group", description: { ru: "объединяет несколько Button в один визуальный блок", en: "joins several Buttons into one visual block" } },
     { name: "Toggle", description: { ru: "кнопка с устойчивым состоянием on/off", en: "a button with a persistent on/off state" } },
-    { name: "Spinner", description: { ru: "индикатор загрузки внутри кнопки (ручная композиция — готового isLoading-пропа у Button нет)", en: "a loading indicator inside a button (manual composition — Button has no built-in isLoading prop)" } },
+    { name: "Spinner", description: { ru: "индикатор загрузки внутри кнопки", en: "a loading indicator inside a button" } },
+  ],
+  forDevelopers: [
+    {
+      ru: "Иконка и текст — обычные children, порядок задаётся порядком передачи. Размер SVG фиксирован классом ([&_svg]:size-4).",
+      en: "Icon and text are plain children; order follows the order they're passed in. SVG size is fixed via a class ([&_svg]:size-4).",
+    },
+    {
+      ru: "asChild — полиморфный рендер через Radix Slot: вместо <button> рендерится переданный элемент (например <a>), с теми же классами и обработчиками.",
+      en: "asChild is polymorphic rendering via Radix Slot: the passed element (e.g. <a>) renders instead of <button>, with the same classes and handlers.",
+    },
+    {
+      ru: "Длинный текст не обрезается и не переносится: whitespace-nowrap, кнопка растёт по контенту (inline-flex, без max-width).",
+      en: "Long text doesn't truncate or wrap: whitespace-nowrap, the button grows with its content (inline-flex, no max-width).",
+    },
+    {
+      ru: "size=\"icon\" без доступного имени: добавляйте aria-label на сам <button>, компонент его не проставляет.",
+      en: "size=\"icon\" has no accessible name by default: add aria-label on the <button> itself, the component doesn't set one.",
+    },
+    {
+      ru: "disabled — нативный атрибут <button>: pointer-events-none, выпадает из tab-order, свои токены bg-disabled/text-on-disabled.",
+      en: "disabled is the native <button> attribute: pointer-events-none, removed from the tab order, its own bg-disabled/text-on-disabled tokens.",
+    },
+    {
+      ru: "Фокус-кольцо — outline (не ring), outline-offset 2px: не обрезается overflow:hidden и не зависит от фона под кнопкой, в отличие от box-shadow-ring.",
+      en: "The focus ring is an outline (not a ring), outline-offset 2px: unlike a box-shadow ring, it isn't clipped by overflow:hidden and doesn't depend on the background under the button.",
+    },
   ],
   openQuestions: [
     {
       ru: "В наборе нет отдельного компонента Link — variant=\"link\"/\"link-danger\" встроен в Button. Это сознательное решение (ссылки всегда рендерятся как Button с asChild) или отдельный Link ещё не перенесён?",
       en: "There's no dedicated Link component in the kit — variant=\"link\"/\"link-danger\" lives on Button. Is this intentional (links always render as Button with asChild), or is a separate Link simply not ported yet?",
+    },
+    {
+      ru: "Какой порядок кнопок принят в группе действий (например, в диалогах подтверждения) — primary слева или справа от Отмены? Платформенные конвенции расходятся, нужно зафиксировать свою и, возможно, проверить её в story States/BrandMatrix.",
+      en: "What button order is standard in an action group (e.g. confirmation dialogs) — is primary to the left or right of Cancel? Platform conventions differ here, so this needs to be decided and possibly captured in the States/BrandMatrix story.",
     },
   ],
 }

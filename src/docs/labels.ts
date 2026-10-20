@@ -12,4 +12,5 @@ export const labels = {
   accessibility: { ru: "Доступность", en: "Accessibility" },
   related: { ru: "Связанные компоненты", en: "Related components" },
   insteadOf: { ru: "Вместо используйте:", en: "Use instead:" },
+  forDevelopers: { ru: "Для разработчиков", en: "For developers" },
 } satisfies Record<string, Text>
