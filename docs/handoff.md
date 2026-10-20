@@ -8,7 +8,11 @@
 ## Ветка / PR
 
 PR #6 (`docs/batch-4` → `main`, https://github.com/Vadim27Diz/inta-1.0/pull/6) открыт — батч 4,
-последний из запланированных. Ждём Chromatic build и ревью.
+последний из запланированных. Chromatic build #26 — зелёный, 0 визуальных изменений (см.
+«Chromatic» ниже). В процессе документирования доступности Item/ItemGroup найден реальный пробел
+(`role="list"` без `role="listitem"`) — по решению человека исправлен тут же, в этом PR: `Item`
+теперь сам проставляет `role="listitem"`, отдельным коммитом `Fix: Item — role="listitem"...`.
+Ждём ревью.
 
 Ветки `docs/component-guidelines`, `docs/batch-2`, `docs/batch-3` не удаляются, но не используются
 для новых батчей.
@@ -85,9 +89,10 @@ Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Sk
   потомков, включая их собственный `sr-only`-текст — у `BreadcrumbEllipsis` это буквально стирает
   скрытый текст «More» (сам элемент и так `aria-hidden`). Проверять это сочетание отдельно, когда
   decorative-обёртка (`role="presentation"`/`aria-hidden`) содержит вложенный sr-only-текст «для
-  скринридера» — такой текст в реальности никуда не доходит. Также: `role="list"` без
-  `role="listitem"` на детях (как у `ItemGroup`/`Item`) — наполовину выполненный ARIA-паттерн, в
-  отличие от корректной пары в `ComponentDocsPage.tsx` → `DocsRelated`.
+  скринридера» — такой текст в реальности никуда не доходит. Также нашли `role="list"` без
+  `role="listitem"` на детях (`ItemGroup`/`Item`) — наполовину выполненный ARIA-паттерн, в отличие
+  от корректной пары в `ComponentDocsPage.tsx` → `DocsRelated`; в этот раз (в отличие от Progress в
+  батче 2) человек решил чинить сразу в этом же PR — см. «Ветка / PR» выше.
 
 ## Бэклог
 
@@ -108,10 +113,6 @@ Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Sk
 - **BreadcrumbEllipsis** (найдено в батче 4): чисто декоративный (`aria-hidden`, без `asChild`).
   Решить, станет ли он рабочим триггером показа скрытых уровней (например, через DropdownMenu) — и
   если да, как убрать `aria-hidden`/`role="presentation"` только для интерактивного случая.
-- **Item/ItemGroup** (найдено в батче 4): `ItemGroup` ставит `role="list"`, но `Item` не получает
-  `role="listitem"` — список задекларирован наполовину. Решить: добавлять ли `role="listitem"` в
-  сам компонент (например, через проп у `ItemGroup`, транслируемый детям) или оставить ручной
-  обязанностью потребителя, как сейчас.
 - **Spinner внутри Button** (найдено в батче 4): когда рядом с Spinner есть видимый текст с тем же
   смыслом («Загрузка…»), его собственный `aria-label` дублирует объявление в вычисляемом accessible
   name кнопки. Задокументировано решение на стороне потребителя (`aria-hidden="true"` на Spinner в
@@ -141,5 +142,8 @@ https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-priresoeng.chromatic.com/
 
-Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — build в процессе, ссылка
-появится в следующем обновлении этого файла.
+Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — build #26 (до правки
+`role="listitem"`): https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=26 —
+137 историй, 0 визуальных изменений. После коммита `Fix: Item — role="listitem"` CI пересоберёт
+автоматически — номер следующего build будет выше; ARIA-атрибут не рисуется, визуальных изменений
+не ожидается, но итоговый номер здесь не обновлён задним числом.
