@@ -8,8 +8,12 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  thumbLabel,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> & {
+  /** Доступное имя бегунка(ов) — одна строка для одного значения, массив для диапазона (по порядку min → max). Компонент сам его не задаёт. */
+  thumbLabel?: string | string[]
+}) {
   const values = React.useMemo(
     () => (Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max]),
     [value, defaultValue, min, max]
@@ -51,6 +55,7 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={i}
+          aria-label={Array.isArray(thumbLabel) ? thumbLabel[i] : thumbLabel}
           className={cn(
             "block size-4 shrink-0 rounded-full border border-primary bg-surface shadow-xs outline-none transition-colors",
             "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
