@@ -62,8 +62,12 @@ export const progressDocs: ComponentDocs = {
   ],
   accessibility: [
     {
-      ru: "Скринридер объявляет текущее значение и диапазон (role=\"progressbar\", aria-valuenow/aria-valuemin/aria-valuemax) автоматически, без дополнительной настройки.",
-      en: "A screen reader announces the current value and range (role=\"progressbar\", aria-valuenow/aria-valuemin/aria-valuemax) automatically, with no extra setup.",
+      ru: "Скринридер объявляет текущее значение и диапазон (role=\"progressbar\", aria-valuenow/aria-valuemin/aria-valuemax) автоматически, без дополнительной настройки — при value в диапазоне 0–100.",
+      en: "A screen reader announces the current value and range (role=\"progressbar\", aria-valuenow/aria-valuemin/aria-valuemax) automatically, with no extra setup — when value is in the 0–100 range.",
+    },
+    {
+      ru: "В indeterminate (value не передан) aria-valuenow закономерно отсутствует — скринридер объявляет только роль progressbar, без числа. Это корректное поведение ARIA для неизвестной доли, а не упущение.",
+      en: "In the indeterminate case (value not passed), aria-valuenow is correctly absent — a screen reader announces only the progressbar role, with no number. This is correct ARIA behavior for an unknown share, not an omission.",
     },
     {
       ru: "Progress не интерактивен — не получает фокус с клавиатуры, это ожидаемое поведение для индикатора, а не поля ввода.",
@@ -82,6 +86,10 @@ export const progressDocs: ComponentDocs = {
     {
       ru: "value не передан → indeterminate: сам компонент не анимирует этот случай (нет встроенной полосы loading-анимации) — анимацию, если нужна, добавляет тот, кто использует компонент.",
       en: "value not passed → indeterminate: the component itself doesn't animate this case (no built-in loading-bar animation) — add animation separately if needed.",
+    },
+    {
+      ru: "value передаётся не только в transform индикатора, но и в сам Radix Progress.Root — без этого у корня не было бы aria-valuenow и data-state всегда читался бы как indeterminate, независимо от value.",
+      en: "value is passed not only to the indicator's transform but to the Radix Progress.Root itself — without that, the root would have no aria-valuenow and data-state would always read as indeterminate, regardless of value.",
     },
   ],
 }
