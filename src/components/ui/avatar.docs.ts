@@ -88,6 +88,10 @@ export const avatarDocs: ComponentDocs = {
       en: "AvatarBadge is a dot with no text by default — a screen reader doesn't announce “online”/“busy” on its own. If the status matters, add visually-hidden text or an aria-label near the Avatar — AvatarBadge doesn't create one.",
     },
     {
+      ru: "Статусы AvatarBadge (online/busy/offline из истории Badge) различаются только цветом точки — для людей с нарушением цветовосприятия это неразличимо. Если статус важен, продублируйте его текстом: тот же визуально скрытый текст/aria-label, что для скринридера, или видимая подпись рядом — не только цвет.",
+      en: "AvatarBadge's statuses (online/busy/offline from the Badge story) differ only by the dot's color — indistinguishable for people with color vision deficiencies. If the status matters, duplicate it with text: the same visually-hidden text/aria-label used for screen readers, or a visible label nearby — not color alone.",
+    },
+    {
       ru: "AvatarGroup — визуальная стопка без role=\"list\". Если группа должна озвучиваться как набор из N участников, добавляйте эту структуру сами.",
       en: "AvatarGroup is a visual stack with no role=\"list\". If the group should announce as a set of N participants, add that structure yourself.",
     },
