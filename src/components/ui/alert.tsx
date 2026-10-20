@@ -18,12 +18,24 @@ const alertVariants = cva(
   }
 )
 
+// role зависит от variant, не хардкод: role="alert" — это ARIA live-region
+// aria-live="assertive", скринридер прерывает текущую речь и объявляет
+// содержимое немедленно. Уместно для warning/danger (реальная проблема,
+// нужна немедленная реакция), но не для default/info/success — на них
+// role="alert" прерывал бы скринридер по любому нейтральному сообщению.
+// role="status" — aria-live="polite", объявляется, когда пользователь
+// закончит текущее действие, не перебивая. Проп role можно передать явно —
+// {...props} идёт после, так что явное значение всегда выигрывает.
+const assertiveVariants = new Set(["warning", "danger"])
+
 function Alert({
   className,
   variant,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
-  return <div data-slot="alert" role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
+  const resolvedVariant = variant ?? "default"
+  const role = assertiveVariants.has(resolvedVariant) ? "alert" : "status"
+  return <div data-slot="alert" role={role} className={cn(alertVariants({ variant }), className)} {...props} />
 }
 
 // typo-label-md, без цвета — наследует text-on-* варианта (как в оригинале,
