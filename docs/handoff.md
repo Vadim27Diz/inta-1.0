@@ -8,7 +8,28 @@
 ## Ветка / PR
 
 PR #4 (`docs/batch-2` → `main`) открыт: https://github.com/Vadim27Diz/inta-1.0/pull/4 — батч 2
-документации, ещё не смёржен.
+документации, ещё не смёржен. Ревью сделал человек со стороны (не в PR-комментариях, напрямую);
+по итогам — 3 правки, уже внесены отдельными коммитами в ту же ветку:
+
+1. **Баг в коде, не доки.** `progress.tsx`: `value` деструктурировался из пропсов и уходил только
+   в `transform` индикатора, но не передавался в `ProgressPrimitive.Root` — Radix получал
+   `value=undefined` (≡ `null`), из-за чего корень всегда был `data-state="indeterminate"` без
+   `aria-valuenow`, независимо от реального значения. Полоса закрашивалась визуально правильно,
+   скринридер — нет. Исправлено: `value` передан в `Root`. Проверено Playwright по DOM собранного
+   Storybook: `value=40` → `aria-valuenow="40"` `data-state="loading"`, `value=100` →
+   `data-state="complete"`, `value=0` → `aria-valuenow="0"` `data-state="loading"`.
+2. **Баг в коде.** `slider.tsx`: у `SliderPrimitive.Thumb` не было способа задать доступное
+   имя — ни `aria-label`, ни пробрасываемого снаружи пропа на конкретный бегунок. Добавлен проп
+   `thumbLabel` (строка для одного значения, массив из двух строк для диапазона), ставится как
+   `aria-label` по индексу `Thumb`. Без `thumbLabel` поведение не меняется.
+3. **Доки.** `input-otp.docs.ts` → «Когда не использовать»: убрана неверная причина («пользователь
+   может вставить значение целиком») — вставка кода целиком штатно поддерживается компонентом,
+   это не повод выбрать `Input`. Оставлена настоящая причина: произвольная длина или значение
+   другого рода (токен, ключ, номер карты).
+
+После всех трёх — `npm run verify` (0 ошибок), Chromatic build #15:
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137 историй, 0
+визуальных изменений (ожидаемо: правки ARIA-атрибутов и прозы, не вёрстки). Готово к мёржу.
 
 PR #3 (`docs/component-guidelines` → `main`) смёржен обычным merge commit
 (https://github.com/Vadim27Diz/inta-1.0/pull/3) — батч 1 в `main`. Ветки `docs/component-guidelines`
@@ -20,7 +41,7 @@ PR #3 (`docs/component-guidelines` → `main`) смёржен обычным mer
 
 Button, Alert, Native Select — пилот. Input, Textarea, Checkbox, Switch, Radio Group, Select,
 Field, Input Group — батч 1. Input OTP, Toggle, Toggle Group, Button Group, Slider, Progress,
-Label, Kbd — батч 2 (PR #4, не смёржен).
+Label, Kbd — батч 2 (PR #4, готов к мёржу, см. выше).
 
 ## Осталось (12), батчами по ~8 — PR на каждый батч отдельно
 
@@ -60,6 +81,14 @@ Label, Kbd — батч 2 (PR #4, не смёржен).
   (`data-[state=on]`) — встретилось в батче 2 при описании Toggle. Если нужно упомянуть
   Radix-атрибут в прозе `forDevelopers`, пишите его словами («атрибут data-state со значением
   “on”»), не в синтаксисе Tailwind-селектора.
+- **Каждое утверждение в «Доступности» вида «автоматически / из коробки» сверять с кодом нашей
+  обёртки, а не с документацией Radix/shadcn.** Обёртка может ломать то, что у примитива работает
+  из коробки — пример: `progress.docs.ts` утверждал, что скринридер объявляет `aria-valuenow`
+  автоматически, но `progress.tsx` не передавал `value` в `ProgressPrimitive.Root`, и у Radix
+  получалось `value=null` (indeterminate) при любом заполнении. Доки были написаны по тому, как
+  *должен* работать примитив, а не по тому, что реально рендерит наш код. Проверка — прочитать сам
+  `<component>.tsx`, в сомнительных случаях — Playwright по DOM собранного Storybook (см. разбор
+  Progress выше), не полагаться на память о том, как ведёт себя Radix.
 
 ## Бэклог
 
@@ -82,7 +111,6 @@ Area, Resizable, Direction. Это отдельная задача со свои
 Батч 1 — build #8: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=8 —
 137 историй, 0 визуальных изменений.
 
-Батч 2 (PR #4) — build #13: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=13
-— 137 историй, 0 визуальных изменений (ожидаемо: батч 2 добавил только `.docs.ts`/`.mdx`, новых
-stories не создавал — все 8 компонентов уже имели истории из более раннего батча кода).
-Preview: https://6ad4a76c23be4704dc8eca20-xithnhaehu.chromatic.com/
+Батч 2 (PR #4) — build #15 (после 3 правок, см. «Ветка / PR» выше):
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137 историй, 0
+визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-oevxsxnzmz.chromatic.com/
