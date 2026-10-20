@@ -7,22 +7,25 @@
 
 ## Ветка / PR
 
+PR #4 (`docs/batch-2` → `main`) открыт: https://github.com/Vadim27Diz/inta-1.0/pull/4 — батч 2
+документации, ещё не смёржен.
+
 PR #3 (`docs/component-guidelines` → `main`) смёржен обычным merge commit
-(https://github.com/Vadim27Diz/inta-1.0/pull/3) — батч 1 в `main`. Ветка `docs/component-guidelines`
-не удалена, но больше не используется для новых батчей.
+(https://github.com/Vadim27Diz/inta-1.0/pull/3) — батч 1 в `main`. Ветки `docs/component-guidelines`
+и `docs/batch-2` не удаляются, но не используются для новых батчей.
 
-Каждый следующий батч — новая ветка от `main` (`docs/batch-2`, `docs/batch-3`, …) со своим PR.
+Каждый следующий батч — новая ветка от `main` (`docs/batch-3`, `docs/batch-4`, …) со своим PR.
 
-## Готово (11 из 31)
+## Готово (19 из 31)
 
 Button, Alert, Native Select — пилот. Input, Textarea, Checkbox, Switch, Radio Group, Select,
-Field, Input Group — батч 1.
+Field, Input Group — батч 1. Input OTP, Toggle, Toggle Group, Button Group, Slider, Progress,
+Label, Kbd — батч 2 (PR #4, не смёржен).
 
-## Осталось (20), батчами по ~8 — PR на каждый батч отдельно
+## Осталось (12), батчами по ~8 — PR на каждый батч отдельно
 
 | Батч | Компоненты |
 |---|---|
-| 2 — составные/вспомогательные формы | Input OTP, Toggle, Toggle Group, Button Group, Slider, Progress, Label, Kbd |
 | 3 — контент и отображение | Card, Empty, Badge, Avatar, Typography, Separator, Skeleton, Aspect Ratio |
 | 4 — навигация и прочее | Breadcrumb, Collapsible, Item, Spinner |
 
@@ -35,6 +38,10 @@ Field, Input Group — батч 1.
   **Variants** → поле `variants`, что показывает **States** → `states`. Если у компонента нет
   `variant`/`size`, но есть содержательная ось (например, checked/unchecked у Checkbox — ровно то,
   что в его story Variants) — она тоже идёт в `variants`.
+- Если у компонента вообще нет содержательных состояний (например, Kbd — статичный типографский
+  элемент без Radix и своего состояния) — `states: []` и секция `<DocsStates>`/`<Canvas>` States в
+  `.mdx` просто не рендерятся (компонент возвращает `null` на пустом массиве); это нормально, не
+  ошибка формата.
 - Доп. `<Canvas>` сверх стандартного набора — разрешён, если иллюстрирует правило из
   `variantGuidance` (пример: `select.mdx` → `<Canvas of={SelectStories.IndicatorSide} />` под
   текстом про выбор стороны чекмарка).
@@ -49,6 +56,10 @@ Field, Input Group — батч 1.
   `data-[state=checked]/data-[state=indeterminate]`), читаются линтером как один произвольный
   Tailwind-класс и падают. Писать так, чтобы каждое выражение заканчивалось реальным классом
   (`data-[state=checked]:bg-primary`) — см. `switch.docs.ts`/`radio-group.docs.ts`.
+- Тот же линтер падает и на одиночное упоминание атрибута в скобочной нотации без утилити-суффикса
+  (`data-[state=on]`) — встретилось в батче 2 при описании Toggle. Если нужно упомянуть
+  Radix-атрибут в прозе `forDevelopers`, пишите его словами («атрибут data-state со значением
+  “on”»), не в синтаксисе Tailwind-селектора.
 
 ## Бэклог
 
@@ -66,7 +77,12 @@ Breadcrumb, Collapsible. Остаток группы 3 не начат: Table, T
 Area, Resizable, Direction. Это отдельная задача со своим треком — не путать с батчами
 документации выше (документация идёт по уже существующим в `main` компонентам).
 
-## Chromatic (батч 1)
+## Chromatic
 
-Build #8: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=8 — 137 историй,
-0 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-wtxggonpbs.chromatic.com/
+Батч 1 — build #8: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=8 —
+137 историй, 0 визуальных изменений.
+
+Батч 2 (PR #4) — build #13: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=13
+— 137 историй, 0 визуальных изменений (ожидаемо: батч 2 добавил только `.docs.ts`/`.mdx`, новых
+stories не создавал — все 8 компонентов уже имели истории из более раннего батча кода).
+Preview: https://6ad4a76c23be4704dc8eca20-xithnhaehu.chromatic.com/
