@@ -121,5 +121,7 @@ Area, Resizable, Direction. Это отдельная задача со свои
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-oevxsxnzmz.chromatic.com/
 
-Батч 3 (PR #5, https://github.com/Vadim27Diz/inta-1.0/pull/5, открыт) — build запускается
-автоматически в CI на этот PR; ссылка на конкретный build появится после его завершения.
+Батч 3 (PR #5, https://github.com/Vadim27Diz/inta-1.0/pull/5, открыт) — build #20:
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137 историй, 0
+визуальных изменений (батч 3 добавляет только `.docs.ts`/`.mdx`, без новых `.stories.tsx` — число
+историй не меняется, это ожидаемо). Preview: https://6ad4a76c23be4704dc8eca20-priresoeng.chromatic.com/
