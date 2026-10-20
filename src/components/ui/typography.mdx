@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as TypographyStories from "./typography.stories"
+import { typographyDocs } from "./typography.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={TypographyStories} />
+
+<Title>{typographyDocs.title}</Title>
+
+<DocsPurpose docs={typographyDocs} />
+
+<Canvas of={TypographyStories.Default} />
+
+<DocsWhenToUse docs={typographyDocs} />
+<DocsWhenNotToUse docs={typographyDocs} />
+<DocsAnatomy docs={typographyDocs} />
+
+<DocsVariants docs={typographyDocs} />
+<Canvas of={TypographyStories.Variants} />
+
+<DocsStates docs={typographyDocs} />
+
+<DocsContentRules docs={typographyDocs} />
+<DocsAccessibility docs={typographyDocs} />
+<DocsRelated docs={typographyDocs} />
+<DocsForDevelopers docs={typographyDocs} />

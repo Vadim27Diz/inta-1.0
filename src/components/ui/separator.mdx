@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as SeparatorStories from "./separator.stories"
+import { separatorDocs } from "./separator.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={SeparatorStories} />
+
+<Title>{separatorDocs.title}</Title>
+
+<DocsPurpose docs={separatorDocs} />
+
+<Canvas of={SeparatorStories.Default} />
+
+<DocsWhenToUse docs={separatorDocs} />
+<DocsWhenNotToUse docs={separatorDocs} />
+<DocsAnatomy docs={separatorDocs} />
+
+<DocsVariants docs={separatorDocs} />
+<Canvas of={SeparatorStories.Variants} />
+
+<DocsStates docs={separatorDocs} />
+
+<DocsContentRules docs={separatorDocs} />
+<DocsAccessibility docs={separatorDocs} />
+<DocsRelated docs={separatorDocs} />
+<DocsForDevelopers docs={separatorDocs} />

@@ -1,0 +1,36 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as AspectRatioStories from "./aspect-ratio.stories"
+import { aspectRatioDocs } from "./aspect-ratio.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={AspectRatioStories} />
+
+<Title>{aspectRatioDocs.title}</Title>
+
+<DocsPurpose docs={aspectRatioDocs} />
+
+<Canvas of={AspectRatioStories.Default} />
+
+<DocsWhenToUse docs={aspectRatioDocs} />
+<DocsWhenNotToUse docs={aspectRatioDocs} />
+<DocsAnatomy docs={aspectRatioDocs} />
+
+<DocsVariants docs={aspectRatioDocs} />
+
+<DocsStates docs={aspectRatioDocs} />
+
+<DocsContentRules docs={aspectRatioDocs} />
+<DocsAccessibility docs={aspectRatioDocs} />
+<DocsRelated docs={aspectRatioDocs} />
+<DocsForDevelopers docs={aspectRatioDocs} />

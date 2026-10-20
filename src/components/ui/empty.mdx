@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as EmptyStories from "./empty.stories"
+import { emptyDocs } from "./empty.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={EmptyStories} />
+
+<Title>{emptyDocs.title}</Title>
+
+<DocsPurpose docs={emptyDocs} />
+
+<Canvas of={EmptyStories.Default} />
+
+<DocsWhenToUse docs={emptyDocs} />
+<DocsWhenNotToUse docs={emptyDocs} />
+<DocsAnatomy docs={emptyDocs} />
+
+<DocsVariants docs={emptyDocs} />
+<Canvas of={EmptyStories.Variants} />
+
+<DocsStates docs={emptyDocs} />
+
+<DocsContentRules docs={emptyDocs} />
+<DocsAccessibility docs={emptyDocs} />
+<DocsRelated docs={emptyDocs} />
+<DocsForDevelopers docs={emptyDocs} />

@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as BadgeStories from "./badge.stories"
+import { badgeDocs } from "./badge.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={BadgeStories} />
+
+<Title>{badgeDocs.title}</Title>
+
+<DocsPurpose docs={badgeDocs} />
+
+<Canvas of={BadgeStories.Default} />
+
+<DocsWhenToUse docs={badgeDocs} />
+<DocsWhenNotToUse docs={badgeDocs} />
+<DocsAnatomy docs={badgeDocs} />
+
+<DocsVariants docs={badgeDocs} />
+<Canvas of={BadgeStories.Variants} />
+
+<DocsStates docs={badgeDocs} />
+
+<DocsContentRules docs={badgeDocs} />
+<DocsAccessibility docs={badgeDocs} />
+<DocsRelated docs={badgeDocs} />
+<DocsForDevelopers docs={badgeDocs} />

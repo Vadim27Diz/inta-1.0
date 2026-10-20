@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as SkeletonStories from "./skeleton.stories"
+import { skeletonDocs } from "./skeleton.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={SkeletonStories} />
+
+<Title>{skeletonDocs.title}</Title>
+
+<DocsPurpose docs={skeletonDocs} />
+
+<Canvas of={SkeletonStories.Default} />
+
+<DocsWhenToUse docs={skeletonDocs} />
+<DocsWhenNotToUse docs={skeletonDocs} />
+<DocsAnatomy docs={skeletonDocs} />
+
+<DocsVariants docs={skeletonDocs} />
+<Canvas of={SkeletonStories.Variants} />
+
+<DocsStates docs={skeletonDocs} />
+
+<DocsContentRules docs={skeletonDocs} />
+<DocsAccessibility docs={skeletonDocs} />
+<DocsRelated docs={skeletonDocs} />
+<DocsForDevelopers docs={skeletonDocs} />
