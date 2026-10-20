@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as NativeSelectStories from "./native-select.stories"
+import { nativeSelectDocs } from "./native-select.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={NativeSelectStories} />
+
+<Title>{nativeSelectDocs.title}</Title>
+
+<DocsPurpose docs={nativeSelectDocs} />
+
+<Canvas of={NativeSelectStories.Default} />
+
+<DocsWhenToUse docs={nativeSelectDocs} />
+<DocsWhenNotToUse docs={nativeSelectDocs} />
+<DocsAnatomy docs={nativeSelectDocs} />
+
+<DocsVariants docs={nativeSelectDocs} />
+<Canvas of={NativeSelectStories.Variants} />
+
+<DocsStates docs={nativeSelectDocs} />
+<Canvas of={NativeSelectStories.States} />
+
+<DocsContentRules docs={nativeSelectDocs} />
+<Canvas of={NativeSelectStories.Content} />
+
+<DocsAccessibility docs={nativeSelectDocs} />
+<DocsRelated docs={nativeSelectDocs} />
