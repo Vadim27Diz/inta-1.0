@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as InputStories from "./input.stories"
+import { inputDocs } from "./input.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={InputStories} />
+
+<Title>{inputDocs.title}</Title>
+
+<DocsPurpose docs={inputDocs} />
+
+<Canvas of={InputStories.Default} />
+
+<DocsWhenToUse docs={inputDocs} />
+<DocsWhenNotToUse docs={inputDocs} />
+<DocsAnatomy docs={inputDocs} />
+
+<DocsVariants docs={inputDocs} />
+<Canvas of={InputStories.Variants} />
+
+<DocsStates docs={inputDocs} />
+<Canvas of={InputStories.States} />
+
+<DocsContentRules docs={inputDocs} />
+<DocsAccessibility docs={inputDocs} />
+<DocsRelated docs={inputDocs} />
+<DocsForDevelopers docs={inputDocs} />

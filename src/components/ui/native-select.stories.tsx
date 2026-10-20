@@ -106,7 +106,8 @@ export const BrandMatrix: Story = {
           }
         >
           <p className="typo-caption text-on-surface-muted">
-            {c.brand} / {c.dark ? "dark" : "light"}
+            {c.brand} / {c.dark ? "dark" : "light"} — шеврон внутри узкого поля (w-48/w-40), не у
+            края родителя
           </p>
           <NativeSelect className="w-48">
             <Options />

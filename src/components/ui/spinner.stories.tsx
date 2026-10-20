@@ -23,11 +23,20 @@ export const Variants: Story = {
   ),
 };
 
+// text-current на спиннере внутри Button: сам Spinner по умолчанию — on-surface-muted
+// (для использования на простой поверхности, как в Default/Variants/BrandMatrix), а
+// text-current здесь берёт цвет уже решённый кнопкой (text-on-primary / disabled:text-on-disabled),
+// а не фиксированный заранее — иначе в disabled-состоянии цвет кнопки меняется, а
+// захардкоженный цвет спиннера — нет, и он перестаёт совпадать с реальным фоном.
 export const Content: Story = {
   render: () => (
     <div className="flex flex-col items-start gap-3">
+      <Button>
+        <Spinner className="text-current" />
+        Загрузка…
+      </Button>
       <Button disabled>
-        <Spinner className="size-4 text-on-primary" />
+        <Spinner className="text-current" />
         Загрузка…
       </Button>
       <p className="flex items-center gap-2 typo-body-sm text-on-surface">

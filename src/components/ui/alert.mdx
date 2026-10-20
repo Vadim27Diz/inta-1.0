@@ -1,0 +1,39 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as AlertStories from "./alert.stories"
+import { alertDocs } from "./alert.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={AlertStories} />
+
+<Title>{alertDocs.title}</Title>
+
+<DocsPurpose docs={alertDocs} />
+
+<Canvas of={AlertStories.Default} />
+
+<DocsWhenToUse docs={alertDocs} />
+<DocsWhenNotToUse docs={alertDocs} />
+<DocsAnatomy docs={alertDocs} />
+
+<DocsVariants docs={alertDocs} />
+<Canvas of={AlertStories.Variants} />
+
+<DocsStates docs={alertDocs} />
+
+<DocsContentRules docs={alertDocs} />
+<Canvas of={AlertStories.Content} />
+
+<DocsAccessibility docs={alertDocs} />
+<DocsRelated docs={alertDocs} />
+<DocsForDevelopers docs={alertDocs} />

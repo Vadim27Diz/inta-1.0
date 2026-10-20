@@ -11,8 +11,20 @@ const preview: Preview = {
       description: "Тема",
       toolbar: { title: "Theme", icon: "mirror", items: ["light", "dark"], dynamicTitle: true },
     },
+    locale: {
+      description: "Язык документации",
+      toolbar: {
+        title: "Docs language",
+        icon: "globe",
+        items: [
+          { value: "ru", title: "Русский" },
+          { value: "en", title: "English" },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
-  initialGlobals: { brand: "main", theme: "light" },
+  initialGlobals: { brand: "main", theme: "light", locale: "ru" },
   decorators: [
     (Story, { globals }) => {
       const root = document.documentElement;

@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as CheckboxStories from "./checkbox.stories"
+import { checkboxDocs } from "./checkbox.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={CheckboxStories} />
+
+<Title>{checkboxDocs.title}</Title>
+
+<DocsPurpose docs={checkboxDocs} />
+
+<Canvas of={CheckboxStories.Default} />
+
+<DocsWhenToUse docs={checkboxDocs} />
+<DocsWhenNotToUse docs={checkboxDocs} />
+<DocsAnatomy docs={checkboxDocs} />
+
+<DocsVariants docs={checkboxDocs} />
+<Canvas of={CheckboxStories.Variants} />
+
+<DocsStates docs={checkboxDocs} />
+<Canvas of={CheckboxStories.States} />
+
+<DocsContentRules docs={checkboxDocs} />
+<DocsAccessibility docs={checkboxDocs} />
+<DocsRelated docs={checkboxDocs} />
+<DocsForDevelopers docs={checkboxDocs} />
