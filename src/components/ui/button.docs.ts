@@ -73,8 +73,8 @@ export const buttonDocs: ComponentDocs = {
     {
       name: "Кнопка как ссылка (asChild)",
       description: {
-        ru: "Кнопку можно отрендерить как ссылку или другой элемент, сохранив её вид и поведение — полезно, когда действие на самом деле переход, а не запрос к серверу.",
-        en: "The button can render as a link or another element while keeping its look and behavior — useful when the action is actually a navigation, not a server request.",
+        ru: "Если клик ведёт на другую страницу или URL — это переход, а не действие: рендерите Button как ссылку (asChild + <a>), даже если нужен вид variant=\"primary\". Если клик что-то делает на этой же странице (отправляет форму, открывает диалог, обращается к серверу) — это действие, а не переход, даже если выглядит как текстовая ссылка (variant=\"link\"). Отдельного компонента Link в наборе пока нет.",
+        en: "If the click leads to another page or URL — that's navigation, not an action: render Button as a link (asChild + <a>), even if it needs the look of variant=\"primary\". If the click does something on the current page (submits a form, opens a dialog, calls the server) — that's an action, not navigation, even if it looks like a text link (variant=\"link\"). There's no separate Link component in the kit yet.",
       },
     },
   ],
@@ -95,6 +95,10 @@ export const buttonDocs: ComponentDocs = {
       ru: "danger — только если у действия есть подтверждение («вы уверены?») или быстрая отмена сразу после. Без этого один клик может необратимо уничтожить данные.",
       en: "Use danger only when the action has a confirmation step (“are you sure?”) or a quick undo right after. Without one, a single click can destroy data irreversibly.",
     },
+    {
+      ru: "danger-subtle — для второстепенного разрушительного действия в списке или меню (например, «Удалить» в строке таблицы или в контекстном меню). danger — для финального подтверждения, где разрушительное действие — главное на этом шаге (диалог «Удалить навсегда?»).",
+      en: "danger-subtle is for a secondary destructive action inside a list or menu (e.g. “Delete” in a table row or a context menu). danger is for the final confirmation step, where the destructive action is the main thing on screen (a “Delete forever?” dialog).",
+    },
   ],
   variants: [
     { name: "primary", description: { ru: "главное действие на экране или в блоке — одно за раз", en: "the main action on screen or in a block — one at a time" } },
@@ -103,7 +107,7 @@ export const buttonDocs: ComponentDocs = {
     { name: "outline", description: { ru: "менее заметная кнопка — для панелей и таблиц", en: "a quieter button — for panels and tables" } },
     { name: "ghost", description: { ru: "минимальный вес — для тулбаров, строк таблиц, плотных карточек", en: "minimal weight — for toolbars, table rows, dense cards" } },
     { name: "danger", description: { ru: "разрушительное действие — всегда с подтверждением или отменой", en: "a destructive action — always with confirmation or undo" } },
-    { name: "danger-subtle", description: { ru: "то же самое, но менее заметно", en: "the same, but with lower visual weight" } },
+    { name: "danger-subtle", description: { ru: "второстепенное разрушительное действие — в списках и меню", en: "a secondary destructive action — in lists and menus" } },
     { name: "inverse", description: { ru: "для тёмных или контрастных поверхностей", en: "for dark or contrasting surfaces" } },
     { name: "link", description: { ru: "действие в виде текстовой ссылки, без фона кнопки", en: "an action styled as a text link, no button fill" } },
     { name: "link-danger", description: { ru: "разрушительное действие в виде ссылки", en: "a link-styled destructive action" } },
@@ -114,7 +118,7 @@ export const buttonDocs: ComponentDocs = {
     { name: "hover", description: { ru: "фон чуть меняется при наведении курсора — подсказывает, что элемент интерактивен", en: "the fill shifts slightly on hover — signals that the element is interactive" } },
     { name: "active / pressed", description: { ru: "фон меняется заметнее в момент нажатия", en: "the fill changes more noticeably while pressed" } },
     { name: "focus-visible", description: { ru: "видимое кольцо вокруг кнопки при переходе с клавиатуры (Tab) — не появляется при клике мышью", en: "a visible ring around the button when reached via keyboard (Tab) — not shown on a mouse click" } },
-    { name: "disabled", description: { ru: "кнопка не реагирует на клик и фокус, выглядит приглушённой", en: "the button doesn't respond to clicks or focus, and looks muted" } },
+    { name: "disabled", description: { ru: "кнопка не реагирует на клик и фокус, выглядит приглушённой — объясните рядом (подсказкой или текстом), почему действие недоступно, не оставляйте пользователя гадать", en: "the button doesn't respond to clicks or focus, and looks muted — explain nearby (a hint or text) why the action is unavailable, don't leave the user guessing" } },
   ],
   contentRules: [
     {
@@ -180,10 +184,6 @@ export const buttonDocs: ComponentDocs = {
     },
   ],
   openQuestions: [
-    {
-      ru: "В наборе нет отдельного компонента Link — variant=\"link\"/\"link-danger\" встроен в Button. Это сознательное решение (ссылки всегда рендерятся как Button с asChild) или отдельный Link ещё не перенесён?",
-      en: "There's no dedicated Link component in the kit — variant=\"link\"/\"link-danger\" lives on Button. Is this intentional (links always render as Button with asChild), or is a separate Link simply not ported yet?",
-    },
     {
       ru: "Какой порядок кнопок принят в группе действий (например, в диалогах подтверждения) — primary слева или справа от Отмены? Платформенные конвенции расходятся, нужно зафиксировать свою и, возможно, проверить её в story States/BrandMatrix.",
       en: "What button order is standard in an action group (e.g. confirmation dialogs) — is primary to the left or right of Cancel? Platform conventions differ here, so this needs to be decided and possibly captured in the States/BrandMatrix story.",

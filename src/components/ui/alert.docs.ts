@@ -29,8 +29,8 @@ export const alertDocs: ComponentDocs = {
     },
     {
       description: {
-        ru: "Короткое уведомление, которое должно исчезнуть само через несколько секунд и не привязано к конкретному месту на странице. В наборе сейчас нет отдельного компонента для этого — см. открытый вопрос.",
-        en: "A short notification that should disappear on its own after a few seconds and isn't tied to a specific spot on the page. The kit has no dedicated component for this yet — see the open question.",
+        ru: "Короткое уведомление, которое должно исчезнуть само через несколько секунд и не привязано к конкретному месту на странице. Для временных уведомлений компонента в наборе пока нет.",
+        en: "A short notification that should disappear on its own after a few seconds and isn't tied to a specific spot on the page. There's no component for temporary notifications in the kit yet.",
       },
     },
   ],
@@ -112,12 +112,6 @@ export const alertDocs: ComponentDocs = {
     {
       ru: "Цвет текста для каждого variant проверен скриптом npm run tokens:contrast.",
       en: "Each variant's text color is checked by the npm run tokens:contrast script.",
-    },
-  ],
-  openQuestions: [
-    {
-      ru: "В наборе нет компонента для коротких самоисчезающих уведомлений (toast/snackbar). Alert для этого не подходит (он статичен и не автозакрывается) — планируется ли отдельный компонент?",
-      en: "There's no component for short, self-dismissing notifications (toast/snackbar). Alert doesn't fit that role (it's static and doesn't auto-dismiss) — is a dedicated component planned?",
     },
   ],
 }
