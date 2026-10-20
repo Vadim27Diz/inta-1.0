@@ -31,12 +31,15 @@ function NativeSelect({
   ...props
 }: Omit<React.ComponentProps<"select">, "size"> &
   VariantProps<typeof nativeSelectVariants>) {
+  // className (ширина — w-48 и т.п.) идёт на обёртку, а не на <select>: иначе <select>
+  // сужается, а обёртка остаётся w-full родителя — шеврон (он позиционируется от обёртки)
+  // повисает у края родителя, оторванный от реального правого края поля.
   return (
-    <div className="relative inline-block w-full">
+    <div className={cn("relative inline-block w-full", className)}>
       <select
         data-slot="native-select"
         disabled={disabled}
-        className={cn(nativeSelectVariants({ size }), className)}
+        className={cn(nativeSelectVariants({ size }), "w-full")}
         {...props}
       />
       <ChevronDownIcon
