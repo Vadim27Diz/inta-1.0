@@ -99,6 +99,83 @@ const EXPECT = [
     { sel: "[data-slot=skeleton]", at: 1, name: "line 1",  height: 16, width: 192, radius: "--ds-radius-md", bg: "--ds-color-surface-muted" },
     { sel: "[data-slot=skeleton]", at: 2, name: "line 2",  height: 12, width: 128, bg: "--ds-color-surface-muted" },
   ] },
+  // blockquote — только font/color: левая обводка (border-l-2) не ловится этим харнессом
+  // (он читает s.borderTopColor), проверена глазами на снимках npm run visual.
+  { story: "components-typography--variants", title: "Typography", probes: [
+    { sel: "[data-slot=typography]", at: 0,  name: "h1",          font: [36, 40, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=typography]", at: 1,  name: "h2",          font: [30, 36, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=typography]", at: 2,  name: "h3",          font: [24, 32, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=typography]", at: 3,  name: "h4",          font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=typography]", at: 4,  name: "p",           font: [16, 24, 400], color: "--ds-color-on-surface" },
+    { sel: "[data-slot=typography]", at: 5,  name: "lead",        font: [18, 28, 400], color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=typography]", at: 6,  name: "large",       font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=typography]", at: 7,  name: "small",       font: [14, 20, 500], color: "--ds-color-on-surface" },
+    { sel: "[data-slot=typography]", at: 8,  name: "muted",       font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=typography]", at: 9,  name: "blockquote",  font: [16, 24, 400], color: "--ds-color-on-surface" },
+    { sel: "[data-slot=typography]", at: 10, name: "inline-code", font: [14, 20, 400], fontFamily: "JetBrains Mono", color: "--ds-color-on-surface", bg: "--ds-color-surface-muted", radius: "--ds-radius-sm" },
+    { sel: "[data-slot=typography]", at: 11, name: "list",        font: [16, 24, 400], color: "--ds-color-on-surface" },
+  ] },
+  { story: "components-avatar--variants", title: "Avatar", probes: [
+    { sel: "[data-slot=avatar]", at: 0, name: "sm", height: 32, width: 32, radiusFull: true },
+    { sel: "[data-slot=avatar]", at: 1, name: "md", height: 40, width: 40, radiusFull: true },
+    { sel: "[data-slot=avatar]", at: 2, name: "lg", height: 48, width: 48, radiusFull: true },
+  ] },
+  { story: "components-avatar--content", title: "Avatar fallback", probes: [
+    { sel: "[data-slot=avatar-fallback]", at: 0, name: "initials", bg: "--ds-color-neutral", color: "--ds-color-on-neutral", font: [12, 16, 500] },
+  ] },
+  { story: "components-item--variants", title: "Item", probes: [
+    { sel: "[data-slot=item]", at: 0, name: "default",        radius: "--ds-radius-md" },
+    { sel: "[data-slot=item]", at: 1, name: "outline",        radius: "--ds-radius-md", border: "--ds-color-border" },
+    { sel: "[data-slot=item]", at: 2, name: "muted",          radius: "--ds-radius-md", bg: "--ds-color-surface-muted" },
+    { sel: "[data-slot=item-media]", at: 0, name: "media",    height: 32, width: 32, radius: "--ds-radius-sm", border: "--ds-color-border", bg: "--ds-color-surface-muted" },
+    { sel: "[data-slot=item-title]", at: 0, name: "title",    font: [14, 20, 500], color: "--ds-color-on-surface" },
+    { sel: "[data-slot=item-description]", at: 0, name: "description", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
+  { story: "components-item--states", title: "Item states", probes: [
+    { sel: "#item-hover", at: 0, name: "hover",  bg: "--ds-color-surface-hover" },
+    { sel: "#item-focus", at: 0, name: "focus",  outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+  ] },
+  // ring-2 ring-surface (box-shadow) не проверяем числом — та же причина, что у Item
+  // blockquote: харнесс для ring заточен под focus-состояние, не под всегда-включённый ring;
+  // проверено глазами на npm run visual.
+  { story: "components-avatar--badge", title: "Avatar badge", probes: [
+    { sel: "[data-slot=avatar-badge]", at: 0, name: "sm", height: 10, width: 10, radiusFull: true, bg: "--ds-color-primary" },
+    { sel: "[data-slot=avatar-badge]", at: 1, name: "md", height: 12, width: 12, radiusFull: true, bg: "--ds-color-primary" },
+    { sel: "[data-slot=avatar-badge]", at: 2, name: "lg", height: 14, width: 14, radiusFull: true, bg: "--ds-color-primary" },
+  ] },
+  { story: "components-avatar--group", title: "Avatar group", probes: [
+    // ширина строки = 4 круга минус 3 перекрытия по 8px (−space-x-2 из исходника shadcn)
+    { sel: "[data-slot=avatar-group]", at: 0, name: "sm row (4×32−3×8)", width: 104 },
+    { sel: "[data-slot=avatar-group]", at: 1, name: "md row (4×40−3×8)", width: 136 },
+    { sel: "[data-slot=avatar-group]", at: 2, name: "lg row (4×48−3×8)", width: 168 },
+    { sel: "[data-slot=avatar-group-count]", at: 0, name: "count sm", height: 32, width: 32, radiusFull: true, bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=avatar-group-count]", at: 1, name: "count md", height: 40, width: 40, radiusFull: true, bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted" },
+    { sel: "[data-slot=avatar-group-count]", at: 2, name: "count lg", height: 48, width: 48, radiusFull: true, bg: "--ds-color-surface-muted", color: "--ds-color-on-surface-muted" },
+  ] },
+  // контейнер без width/height: border-dashed на auto-hug фрейме в Figma считает ширину на 2px
+  // больше (434 vs 432) даже при strokeAlign=INSIDE — тот же эффект уже был у Item/outline
+  // (382 vs 384), поэтому здесь, как и там, геометрия root не проверяется числом.
+  { story: "components-empty--variants", title: "Empty", probes: [
+    { sel: "[data-slot=empty]", at: 1, name: "container", radius: "--ds-radius-lg", border: "--ds-color-border" },
+    { sel: "[data-slot=empty-icon][data-variant=icon]", at: 0, name: "media icon", height: 40, width: 40, radius: "--ds-radius-lg", bg: "--ds-color-surface-muted", color: "--ds-color-on-surface" },
+    { sel: "[data-slot=empty-title]", at: 1, name: "title", font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=empty-description]", at: 1, name: "description", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
+  { story: "components-card--variants", title: "Card", probes: [
+    { sel: "[data-slot=card]", at: 0, name: "container", radius: "--ds-radius-xl", border: "--ds-color-border", bg: "--ds-color-surface-raised", color: "--ds-color-on-surface-raised" },
+    { sel: "[data-slot=card-title]", at: 1, name: "title", font: [20, 28, 600], color: "--ds-color-on-surface", headingFont: true },
+    { sel: "[data-slot=card-description]", at: 1, name: "description", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
+  // border-border всегда — обводка нейтральная для всех 5 статусов (решение принято, не
+  // цветная под вариант). Title/Icon красятся под Variant (--ds-color-on-<variant>-subtle),
+  // Description — ВСЕГДА --ds-color-on-surface-muted, независимо от варианта (см. alert.tsx:
+  // AlertDescription задаёт цвет явно, AlertTitle наследует от Alert).
+  { story: "components-alert--variants", title: "Alert", probes: [
+    { sel: "[data-slot=alert]", at: 0, name: "container default", radius: "--ds-radius-lg", border: "--ds-color-border", bg: "--ds-color-surface-raised", color: "--ds-color-on-surface-raised" },
+    { sel: "[data-slot=alert]", at: 4, name: "container danger", radius: "--ds-radius-lg", border: "--ds-color-border", bg: "--ds-color-danger-subtle", color: "--ds-color-on-danger-subtle" },
+    { sel: "[data-slot=alert-title]", at: 1, name: "title info", font: [14, 20, 500], color: "--ds-color-on-info-subtle" },
+    { sel: "[data-slot=alert-description]", at: 3, name: "description warning", font: [14, 20, 400], color: "--ds-color-on-surface-muted" },
+  ] },
 ];
 const COMBOS = [
   { brand: "main", theme: "light" },
@@ -201,8 +278,12 @@ for (const group of EXPECT) {
       }
       if (p.font) {
         near("font-size", m.fontSize, p.font[0]); near("line-height", m.lineHeight, p.font[1]); near("font-weight", m.fontWeight, p.font[2]);
-        // мало токенов — typo-code/numeric-* висят на font/mono, а не на шрифте бренда
-        const wantFamily = p.fontFamily || (c.brand === "main" ? "Inter" : "IBM Plex Sans");
+        // typo-code/numeric-* висят на font/mono; typo-heading-* — на font/heading (в Demo это
+        // IBM Plex SERIF, а не Sans — в остальных токенах такого различия не было, пока не
+        // появился Typography, тестирующий сами заголовочные стили)
+        const wantFamily = p.fontFamily || (p.headingFont
+          ? (c.brand === "main" ? "Inter" : "IBM Plex Serif")
+          : (c.brand === "main" ? "Inter" : "IBM Plex Sans"));
         checks.push({ label: "font-family", got: m.fontFamily, want: wantFamily, ok: m.fontFamily === wantFamily });
       }
       if (p.gap != null) near("gap", m.gap, p.gap);

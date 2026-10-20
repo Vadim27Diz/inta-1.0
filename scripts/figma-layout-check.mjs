@@ -45,7 +45,7 @@ if (fs.existsSync(EXPORTER_PATH)) {
   }
 }
 
-const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select", "Toggle", "Toggle Group", "Button Group", "Slider", "Progress", "Utility"];
+const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select", "Toggle", "Toggle Group", "Button Group", "Slider", "Progress", "Utility", "Typography", "Avatar", "Item", "Avatar Group", "Empty", "Card", "Alert"];
 const PAD = 64, GAP = 160, PITCH = 64;
 const box = (a) => ({ name: a[0], type: a[1], x: a[2], y: a[3], w: a[4], h: a[5] });
 

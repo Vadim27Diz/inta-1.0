@@ -74,6 +74,11 @@ const EXEMPT_FIXED_WIDTH = {
   "Native Select|field": "поле ввода фиксированной ширины по дизайну — переполнение клипуется краем поля, не раздувает контейнер",
   "Input OTP / Slot|State=default": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер",
   "Input OTP / Slot|Input OTP / Slot": "слот кода фиксированного размера по дизайну (как поле ввода) — один символ, не раздувает контейнер; тот же слот, что выше, но контейнер — инстанс внутри Input OTP, а не мастер-компонент",
+  "Avatar Group|avatar-group-count": "счётчик фиксированного размера по дизайну (как кружок аватара, size-8/10/12) — не растягивается под текст «+N»",
+  "Avatar|Avatar": "круг аватара фиксированного размера по дизайну (как поле ввода) — инициалы не растягивают круг; всплыло только через Avatar Group, т.к. сам набор Avatar сканируется по variants[0] (Content=photo, без текста)",
+  "Card|text": "ширина Card (288, как w-72 в коде) фиксирована по дизайну — иначе компонент хугается к однострочной ширине короткого демо-текста и не демонстрирует перенос длинного заголовка/описания, который и был целью правки card.tsx (min-w-0/break-words)",
+  "Card|content": "та же причина, что у Card|text — фиксированная ширина карточки нужна, чтобы Content демонстрировал перенос, а не хугался к одной строке",
+  "Alert|content": "ширина Alert (384, как w-96 в историях) фиксирована по дизайну — иначе компонент хугается к однострочной ширине короткого дефолтного текста (Title и Description, оба внутри фрейма content) и не демонстрирует line-clamp-1 заголовка и перенос/break-words описания, который и проверяет story Content",
 };
 
 // ---- правило: текст, который меняется при использовании (подпись/значение/клавиша),
@@ -81,6 +86,7 @@ const EXEMPT_FIXED_WIDTH = {
 const EXEMPT_NAKED_TEXT = {
   "Label|required": "декоративный маркер обязательности — всегда литеральная «*», не пользовательский контент",
   "Input OTP|separator": "декоративный разделитель между группами слотов — всегда литеральное тире, не пользовательский контент",
+  "Typography|bullet": "декоративный маркер пункта списка — всегда литеральная «•», не пользовательский контент",
 };
 
 // Composite-компоненты (Field…) вкладывают ГОТОВЫЕ инстансы Input/Label и т.п. — у вложенного
@@ -101,6 +107,20 @@ function ownerName(t, rootName) {
   return rootName;
 }
 
+// Та же проблема, что решает ownerName(), но для «фиксированная ли ширина»: текст внутри
+// вложенного инстанса (Button/Badge и т.п.) физически принадлежит ЕГО собственной геометрии,
+// не геометрии корня, который его на себя нанизал. Без этой развязки Card (сам по себе
+// Fixed-width по дизайну — см. EXEMPT_FIXED_WIDTH) заражал «Fixed» даже Label вложенной кнопки,
+// хотя сама кнопка внутри остаётся Hug, как и в своей собственной секции.
+function nearestInstance(t) {
+  let n = t.parent;
+  while (n) {
+    if (n.type === "INSTANCE") return n;
+    n = n.parent;
+  }
+  return null;
+}
+
 const textContainers = [];
 const nakedText = [];
 for (const root of topLevel) {
@@ -110,7 +130,8 @@ for (const root of topLevel) {
     if (/^caption /.test(t.name)) continue; // подписи под глифами — не контент компонента
     const owner = ownerName(t, root.name);
     const hasProperty = !!(t.componentPropertyReferences && t.componentPropertyReferences.characters);
-    const rootFixed = widthIsFixed(v);
+    const fixedScope = nearestInstance(t) || v;
+    const rootFixed = widthIsFixed(fixedScope);
     const parent = t.parent;
     const parentFixed = parent && parent !== v && "layoutMode" in parent ? widthIsFixed(parent) : null;
     if (rootFixed || parentFixed) {

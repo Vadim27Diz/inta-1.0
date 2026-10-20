@@ -16,6 +16,10 @@ if (fs.existsSync(TOKENS_CSS)) {
 // Radix/Base UI inject their own CSS vars at runtime (--radix-select-trigger-width, --anchor-width);
 // they're never in tokens.css and that's fine — see shadcn-mapping.md: "не дизайн-решения".
 const EXEMPT_VAR_PREFIXES = ["--radix-", "--anchor-"];
+// Tailwind v4's own theme scale variable (defined by Tailwind itself, e.g. `--spacing: 0.25rem`),
+// not a ds design decision — used in upstream shadcn components for computed arbitrary values
+// like `calc(var(--spacing)*4)`. Exact name, not a prefix: don't widen this into a loophole.
+const EXEMPT_VAR_NAMES = ["--spacing"];
 
 const root = process.argv[2] || "src/components";
 const PALETTE = "slate|gray|zinc|neutral-\\d|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|mauve|olive|mist|taupe";
@@ -83,7 +87,7 @@ for (const f of files) {
     if (/style=\{\{/.test(line)) report("warn", f, n, "style={{…}}", "inline style; prefer token classes, or var(--ds-…) only");
     for (const vm of line.matchAll(/\(--([\w-]+)\)/g)) {
       const varName = `--${vm[1]}`;
-      if (EXEMPT_VAR_PREFIXES.some((p) => varName.startsWith(p))) continue;
+      if (EXEMPT_VAR_PREFIXES.some((p) => varName.startsWith(p)) || EXEMPT_VAR_NAMES.includes(varName)) continue;
       if (!definedVars.has(varName)) report("error", f, n, varName, "no such CSS variable in tokens.css; typo, or a token that was never added");
     }
     for (const cls of line.split(/[\s"'`]+/)) {
@@ -98,7 +102,16 @@ for (const f of files) {
       if (/^(bg|text|border)-secondary(-|$)/.test(util) && hasShadcnSecondary)
         report("warn", f, n, cls, "check: shadcn 'secondary' (grey) is our 'neutral'; our 'secondary' is the brand's 2nd color");
       const arb = util.match(/^-?[\w-]+-\[(.+)\]$/) || util.match(/^\[(.+)\]$/);
-      if (arb && !/^(var\(--|calc\(.*var\(--|--)/.test(arb[1]))
+      // grid-rows-[auto_auto] / grid-cols-[1fr_auto] / grid-cols-[0_1fr]: track-sizing keywords
+      // (auto/fr/minmax/repeat) plus a bare `0` (dimensionless zero-width track, e.g. Alert's
+      // icon column collapsing to nothing when there's no icon) — none of these are a design
+      // magnitude, there's no spacing/color scale for "two rows, content-sized" or "zero-or-icon
+      // column", and Tailwind has no non-arbitrary utility for asymmetric grid templates.
+      // Still rejects a smuggled raw length (px/rem/%) in the same bracket, which IS tokenizable.
+      const isGridTrackList = /^grid-(rows|cols)-\[(.+)\]$/.test(util) &&
+        util.match(/^grid-(rows|cols)-\[(.+)\]$/)[2].split("_").every((t) =>
+          /^(auto|none|subgrid)$/i.test(t) || /^0$/.test(t) || /^[\d.]+fr$/i.test(t) || /^(minmax|repeat)\(.+\)$/i.test(t));
+      if (arb && !isGridTrackList && !/^(var\(--|calc\(.*var\(--|--)/.test(arb[1]))
         report("error", f, n, cls, "arbitrary value; use the Tailwind scale or a token (var(--ds-…) only if no class exists)");
       if (/^(bg|text|border|ring)-[a-z-]+\/\d+$/.test(util) && !paletteRe.test(util) && !shadcnRe.test(util))
         report("warn", f, n, cls, "opacity on a token (e.g. bg-primary/90); states have their own tokens: -hover, -pressed");
