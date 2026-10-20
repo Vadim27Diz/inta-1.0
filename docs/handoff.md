@@ -7,9 +7,10 @@
 
 ## Ветка / PR
 
-Батч 3 — ветка `docs/batch-3` от свежего `main` (после мёржа PR #4). PR открыт, ждём Chromatic и
-ревью. Ветки `docs/component-guidelines`, `docs/batch-2` не удаляются, но не используются для
-новых батчей. Каждый следующий батч — новая ветка от `main` со своим PR.
+Батч 3 — ветка `docs/batch-3` от свежего `main` (после мёржа PR #4). PR #5
+(https://github.com/Vadim27Diz/inta-1.0/pull/5) открыт, ждём Chromatic и ревью. Ветки
+`docs/component-guidelines`, `docs/batch-2` не удаляются, но не используются для новых батчей.
+Каждый следующий батч — новая ветка от `main` со своим PR.
 
 ## Готово (27 из 31)
 
@@ -120,4 +121,5 @@ Area, Resizable, Direction. Это отдельная задача со свои
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-oevxsxnzmz.chromatic.com/
 
-Батч 3 (PR #5, открыт) — build в процессе, см. ссылку в самом PR после завершения.
+Батч 3 (PR #5, https://github.com/Vadim27Diz/inta-1.0/pull/5, открыт) — build запускается
+автоматически в CI на этот PR; ссылка на конкретный build появится после его завершения.
