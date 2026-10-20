@@ -31,7 +31,16 @@ function BreadcrumbLink({
 }: React.ComponentProps<"a"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot.Root : "a"
   return (
-    <Comp data-slot="breadcrumb-link" className={cn("transition-colors hover:text-on-surface", className)} {...props} />
+    <Comp
+      data-slot="breadcrumb-link"
+      className={cn(
+        "outline-none transition-colors hover:text-on-surface",
+        // то же кольцо фокуса, что у Button/Item — outline, не ring, не обрезается overflow
+        "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
@@ -67,14 +76,14 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
 
 function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span">) {
   return (
+    // не aria-hidden на всём элементе: это стирало бы из дерева доступности и вложенный
+    // sr-only текст ниже — скрываем только декоративную иконку, текст должен озвучиваться
     <span
       data-slot="breadcrumb-ellipsis"
-      role="presentation"
-      aria-hidden="true"
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
-      <MoreHorizontal className="size-4" />
+      <MoreHorizontal className="size-4" aria-hidden="true" />
       <span className="sr-only">More</span>
     </span>
   )

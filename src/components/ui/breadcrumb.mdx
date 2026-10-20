@@ -1,0 +1,36 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as BreadcrumbStories from "./breadcrumb.stories"
+import { breadcrumbDocs } from "./breadcrumb.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={BreadcrumbStories} />
+
+<Title>{breadcrumbDocs.title}</Title>
+
+<DocsPurpose docs={breadcrumbDocs} />
+
+<Canvas of={BreadcrumbStories.Default} />
+
+<DocsWhenToUse docs={breadcrumbDocs} />
+<DocsWhenNotToUse docs={breadcrumbDocs} />
+<DocsAnatomy docs={breadcrumbDocs} />
+
+<DocsVariants docs={breadcrumbDocs} />
+
+<DocsStates docs={breadcrumbDocs} />
+
+<DocsContentRules docs={breadcrumbDocs} />
+<DocsAccessibility docs={breadcrumbDocs} />
+<DocsRelated docs={breadcrumbDocs} />
+<DocsForDevelopers docs={breadcrumbDocs} />

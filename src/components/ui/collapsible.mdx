@@ -1,0 +1,36 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as CollapsibleStories from "./collapsible.stories"
+import { collapsibleDocs } from "./collapsible.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={CollapsibleStories} />
+
+<Title>{collapsibleDocs.title}</Title>
+
+<DocsPurpose docs={collapsibleDocs} />
+
+<Canvas of={CollapsibleStories.Default} />
+
+<DocsWhenToUse docs={collapsibleDocs} />
+<DocsWhenNotToUse docs={collapsibleDocs} />
+<DocsAnatomy docs={collapsibleDocs} />
+
+<DocsVariants docs={collapsibleDocs} />
+
+<DocsStates docs={collapsibleDocs} />
+
+<DocsContentRules docs={collapsibleDocs} />
+<DocsAccessibility docs={collapsibleDocs} />
+<DocsRelated docs={collapsibleDocs} />
+<DocsForDevelopers docs={collapsibleDocs} />
