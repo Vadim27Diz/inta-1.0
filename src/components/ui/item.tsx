@@ -4,14 +4,21 @@ import { cn } from "cn"
 import { Slot } from "radix-ui"
 import { Separator } from "./separator"
 
+// role="listitem" на Item имеет смысл только рядом с role="list" на ItemGroup — Item вне группы
+// его не получает (невалидный ARIA: listitem без списка-родителя). Сам Item об этом не знает,
+// кроме как через контекст от ItemGroup.
+const ItemGroupContext = React.createContext(false)
+
 function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      role="list"
-      data-slot="item-group"
-      className={cn("group/item-group flex flex-col", className)}
-      {...props}
-    />
+    <ItemGroupContext.Provider value={true}>
+      <div
+        role="list"
+        data-slot="item-group"
+        className={cn("group/item-group flex flex-col", className)}
+        {...props}
+      />
+    </ItemGroupContext.Provider>
   )
 }
 
@@ -60,17 +67,27 @@ function Item({
   ...props
 }: React.ComponentProps<"div"> &
   VariantProps<typeof itemVariants> & { asChild?: boolean }) {
+  const inGroup = React.useContext(ItemGroupContext)
   const Comp = asChild ? Slot.Root : "div"
-  return (
+  const item = (
     <Comp
       data-slot="item"
       data-variant={variant}
       data-size={size}
-      role="listitem"
+      // не-asChild корень — обычный div, role="listitem" ставим прямо на него;
+      // asChild — роль уходит на обёртку ниже, чтобы не перекрыть роль <a>/<button>
+      role={inGroup && !asChild ? "listitem" : undefined}
       className={cn(itemVariants({ variant, size }), className)}
       {...props}
     />
   )
+  if (inGroup && asChild) {
+    // display:contents — обёртка не создаёт свой layout-бокс, Comp остаётся
+    // реальным flex-ребёнком ItemGroup, а role="listitem" достаётся обёртке,
+    // не самому <a>/<button> (иначе их implicit-роль была бы перекрыта)
+    return <div role="listitem" className="contents">{item}</div>
+  }
+  return item
 }
 
 const itemMediaVariants = cva(

@@ -155,7 +155,7 @@ export const Content: Story = {
           <Button size="sm">Принять</Button>
         </ItemFooter>
       </Item>
-      <ItemGroup className="rounded-md border border-border">
+      <ItemGroup className="rounded-md border border-border" id="item-group-content">
         <Item>
           <ItemContent>
             <ItemTitle>Первая строка группы</ItemTitle>
@@ -166,6 +166,15 @@ export const Content: Story = {
           <ItemContent>
             <ItemTitle>Вторая строка группы</ItemTitle>
           </ItemContent>
+        </Item>
+        <ItemSeparator />
+        {/* строка-ссылка внутри группы: роль "listitem" уходит на обёртку, сам <a> остаётся ссылкой */}
+        <Item asChild id="item-group-link">
+          <a href="#interactive">
+            <ItemContent>
+              <ItemTitle>Третья строка группы — кликабельная (asChild)</ItemTitle>
+            </ItemContent>
+          </a>
         </Item>
       </ItemGroup>
     </div>
