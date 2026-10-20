@@ -899,13 +899,13 @@ push/PR в `main` через `chromaui/action@latest`, `CHROMATIC_PROJECT_TOKEN`
 **Список компонентов (31 файл в `src/components/ui`, 1 страница = 1 файл; сабкомпоненты вроде
 `AlertTitle`/`FieldError`/`AvatarBadge` — внутри «Анатомии» родителя, не отдельными страницами):**
 
-Готово (3): Button, Alert, Native Select.
+Готово (11): Button, Alert, Native Select, Input, Textarea, Checkbox, Switch, Radio Group, Select,
+Field, Input Group.
 
-Осталось (28), батчами по ~8 — порядок пойдёт в этом же порядке, PR на каждый батч отдельно:
+Осталось (20), батчами по ~8 — порядок пойдёт в этом же порядке, PR на каждый батч отдельно:
 
 | Батч | Компоненты |
 |---|---|
-| 1 — простые поля форм | Input, Textarea, Checkbox, Switch, RadioGroup, Select, Field, Input Group |
 | 2 — составные/вспомогательные формы | Input OTP, Toggle, Toggle Group, Button Group, Slider, Progress, Label, Kbd |
 | 3 — контент и отображение | Card, Empty, Badge, Avatar, Typography, Separator, Skeleton, Aspect Ratio |
 | 4 — навигация и прочее | Breadcrumb, Collapsible, Item, Spinner |
@@ -915,4 +915,62 @@ push/PR в `main` через `chromaui/action@latest`, `CHROMATIC_PROJECT_TOKEN`
 `button.mdx` как образец — там и `variantGuidance`, и `forDevelopers`, и резолв открытых вопросов
 в тексте, а не в `openQuestions`).
 
-Возвращаемся к плану 3a — дальше Empty.
+## Новый чат — PR #3, батч 1: Input, Textarea, Checkbox, Switch, Radio Group, Select, Field, Input Group
+
+Первый батч «осталось» сдан целиком, по уже утверждённому формату (8 секций, ru/en,
+`variantGuidance`/`forDevelopers` где применимо) — без изменений в `src/docs/*` или
+`.storybook/preview.tsx`, как и было условлено.
+
+Категоризация по секциям решалась по одному правилу, не отдельно для каждого компонента: что
+показывает story **Variants** — идёт в поле `variants` доки, что показывает story **States** — в
+`states`. Для Input/Textarea/Select это совпало с «интуитивным» делением (size → variants;
+default/focus/invalid/disabled → states), но для Checkbox/Switch/Radio Group ни `variant`, ни
+`size` в коде нет — их единственная содержательная ось (unchecked/checked/indeterminate у
+Checkbox, off/on у Switch, unchecked/checked у Radio Group) оформлена как `variants` именно
+потому, что это ровно то, что показывает их story Variants; `states` у всех троих — те же
+default/focus-visible/(invalid)/disabled, что и у текстовых полей, по факту того, что реально есть
+в коде (Switch — без aria-invalid, состояния ошибки для него не предусмотрено, у Checkbox и Radio
+Group — есть).
+
+Отдельные решения по компонентам:
+- **Select** — `variantGuidance` объясняет выбор стороны чекмарка (`indicatorSide`, см. прошлый
+  чат), в `states` добавлены `closed`/`open` как реальные состояния панели (помимо
+  focus/invalid/disabled) — в текущей story States они не демонстрируются через `pseudo`, но
+  управляются по-настоящему через `data-state` в коде. В mdx добавлен лишний `<Canvas>` сверх
+  шаблона — на story `IndicatorSide`, чтобы `variantGuidance` про сторону чекмарка подкреплялась
+  живым примером, а не только текстом.
+- **Field** — самый разветвлённый анатомически (8 subcomponent'ов: `FieldLabel`, `FieldContent`/
+  `FieldTitle`, `FieldDescription`, `FieldError`, `FieldSet`/`FieldLegend`, `FieldGroup`,
+  `FieldSeparator`), `variants` — ось `orientation` (vertical/horizontal/responsive) из
+  `fieldVariants` в коде, не выдумана. Отдельно описана «карточка выбора» (`FieldLabel` оборачивает
+  `Field` с `Checkbox`/`Radio` внутри) — реальный паттерн из `field.stories.tsx`.
+- **Input Group** — `variants` — ось `align` аддона (`inline-start`/`inline-end`/`block-start`/
+  `block-end`) из `inputGroupAddonVariants`, `variantGuidance` объясняет, когда брать inline- (для
+  однострочного поля), когда block- (для textarea со счётчиком).
+
+Находка на сборке (до отчёта, `npm run tokens:check`): в прозе `forDevelopers` Checkbox была фраза
+«data-[state=checked]/data-[state=indeterminate]» — два bracket-выражения, соединённых «/» без
+завершающего `:utility`, линтер токенов прочитал это как один произвольный Tailwind-класс
+(arbitrary value) и справедливо упал, хотя это обычный текст доки, не код компонента. Починил —
+переформулировал каждое выражение с реальным классом на конце (`:bg-primary`), как уже было сделано
+в `switch.docs.ts`/`radio-group.docs.ts` для той же конструкции; `tokens:check` сканирует весь
+`src/components`, а не только `.tsx`, так что прозу в `.docs.ts` он тоже проверяет — держать это в
+уме при следующих батчах, если в тексте неизбежно нужно упомянуть два `data-[state=…]` подряд.
+
+Проверки: `npx tsc -b` — 0 ошибок. `npm run verify` — `tokens:check` 42 файла/2 ошибки → 0 после
+фикса (1 старое предупреждение `progress.tsx`, не наше), `tokens:contrast`/`tailwind:check`/
+`figma:diff`/`figma:layout` без изменений по составу (документация не трогает код компонентов и
+Figma) — все зелёные. `npm run build-storybook` — чисто. Вручную (Playwright, статическая сборка) —
+скриншоты Docs-страниц Input/Select/Field/Input Group на дефолтной локали (ru): все 8 секций на
+месте, `<Canvas>` рендерят живые stories, ничего не обрезано.
+
+**Chromatic**: запушено в ветку `docs/component-guidelines` (PR #3, `509b4df`), CI-воркфлоу
+отработал на `pull_request` автоматически (без ручного `npm run chromatic` — токен есть только в
+GitHub Actions secrets, не локально). Build #8:
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=8 — 137 историй
+опубликовано, **0 визуальных изменений** (ожидаемо: батч добавляет только `.docs.ts`/`.mdx`, ни
+один `.tsx`-компонент не менялся). Storybook-превью сборки:
+https://6ad4a76c23be4704dc8eca20-wtxggonpbs.chromatic.com/
+
+Возвращаемся к плану 3a — дальше Empty (это по-прежнему отдельная, не связанная с документацией
+ветка `feat/group-3`/следующая группа компонентов).
