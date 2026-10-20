@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as ItemStories from "./item.stories"
+import { itemDocs } from "./item.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={ItemStories} />
+
+<Title>{itemDocs.title}</Title>
+
+<DocsPurpose docs={itemDocs} />
+
+<Canvas of={ItemStories.Default} />
+
+<DocsWhenToUse docs={itemDocs} />
+<DocsWhenNotToUse docs={itemDocs} />
+<DocsAnatomy docs={itemDocs} />
+
+<DocsVariants docs={itemDocs} />
+<Canvas of={ItemStories.Variants} />
+
+<DocsStates docs={itemDocs} />
+<Canvas of={ItemStories.States} />
+
+<DocsContentRules docs={itemDocs} />
+<DocsAccessibility docs={itemDocs} />
+<DocsRelated docs={itemDocs} />
+<DocsForDevelopers docs={itemDocs} />

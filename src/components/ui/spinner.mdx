@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as SpinnerStories from "./spinner.stories"
+import { spinnerDocs } from "./spinner.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={SpinnerStories} />
+
+<Title>{spinnerDocs.title}</Title>
+
+<DocsPurpose docs={spinnerDocs} />
+
+<Canvas of={SpinnerStories.Default} />
+
+<DocsWhenToUse docs={spinnerDocs} />
+<DocsWhenNotToUse docs={spinnerDocs} />
+<DocsAnatomy docs={spinnerDocs} />
+
+<DocsVariants docs={spinnerDocs} />
+<Canvas of={SpinnerStories.Variants} />
+
+<DocsStates docs={spinnerDocs} />
+
+<DocsContentRules docs={spinnerDocs} />
+<DocsAccessibility docs={spinnerDocs} />
+<DocsRelated docs={spinnerDocs} />
+<DocsForDevelopers docs={spinnerDocs} />
