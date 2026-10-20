@@ -84,8 +84,8 @@ export const fieldDocs: ComponentDocs = {
       en: "FieldLabel links the label to the field via htmlFor/id — required for every field; Field doesn't create this link on its own.",
     },
     {
-      ru: "FieldError должен быть связан с полем через aria-describedby, чтобы скринридер озвучивал ошибку при фокусе на поле, а не только показывал её визуально.",
-      en: "FieldError must be linked to the field via aria-describedby, so a screen reader announces it on focus rather than only showing it visually.",
+      ru: "Связывайте FieldError с полем через aria-describedby вручную — Field этого не делает сам. Без связи скринридер не озвучивает ошибку при фокусе на поле, только показывает её визуально.",
+      en: "Link FieldError to the field via aria-describedby yourself — Field doesn't do this on its own. Without the link, a screen reader won't announce the error on focus, only show it visually.",
     },
     {
       ru: "FieldSet/FieldLegend озвучиваются скринридером как группа полей с общим заголовком — используйте их для связанных полей (например, адреса), а не для несвязанных друг с другом.",
