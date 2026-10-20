@@ -1,4 +1,4 @@
-# Handoff: документация компонентов (PR #3)
+# Handoff: документация компонентов
 
 Текущее состояние на 2026-10-20. Вся история до этой даты — в `docs/handoff-archive.md`
 (переносится без изменений). **Правило:** этот файл перезаписывается при каждом обновлении, не
@@ -7,8 +7,11 @@
 
 ## Ветка / PR
 
-`docs/component-guidelines` → PR #3 (https://github.com/Vadim27Diz/inta-1.0/pull/3). Чистое рабочее
-дерево, `npm run verify` зелёный.
+PR #3 (`docs/component-guidelines` → `main`) смёржен обычным merge commit
+(https://github.com/Vadim27Diz/inta-1.0/pull/3) — батч 1 в `main`. Ветка `docs/component-guidelines`
+не удалена, но больше не используется для новых батчей.
+
+Каждый следующий батч — новая ветка от `main` (`docs/batch-2`, `docs/batch-3`, …) со своим PR.
 
 ## Готово (11 из 31)
 
