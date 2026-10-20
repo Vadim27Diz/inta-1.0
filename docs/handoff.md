@@ -8,11 +8,31 @@
 ## Ветка / PR
 
 PR #6 (`docs/batch-4` → `main`, https://github.com/Vadim27Diz/inta-1.0/pull/6) открыт — батч 4,
-последний из запланированных. Chromatic build #26 — зелёный, 0 визуальных изменений (см.
-«Chromatic» ниже). В процессе документирования доступности Item/ItemGroup найден реальный пробел
-(`role="list"` без `role="listitem"`) — по решению человека исправлен тут же, в этом PR: `Item`
-теперь сам проставляет `role="listitem"`, отдельным коммитом `Fix: Item — role="listitem"...`.
-Ждём ревью.
+последний из запланированных. Ревью со стороны после первой версии PR нашло 4 пункта, все
+исправлены отдельными коммитами:
+
+1. **Регрессия из первой версии этого же PR**: `role="listitem"` стоял на `Item` безусловно —
+   при `asChild` Slot клал его прямо на `<a>`/`<button>` и перекрывал implicit-роль ссылки/кнопки
+   (скринридер перестаёт объявлять её как ссылку), а `Item` вне `ItemGroup` получал `listitem` без
+   родителя `list` (невалидный ARIA). Исправлено через `ItemGroupContext`: внутри группы без
+   `asChild` — `role="listitem"` на себе; внутри группы с `asChild` — на обёртке `display:contents`
+   вокруг Slot-рендера, сама ссылка/кнопка сохраняет свою роль; вне группы — без роли вовсе.
+   Добавлена демонстрирующая строка (asChild-ссылка внутри `ItemGroup`) в story
+   `Item/Content`. Проверено Playwright'ом по вычисленному accessibility-дереву (10 проверок: роль
+   группы, роль обычного `Item`, тег и роль `<a>` не потеряны, `getByRole("link")` находит ссылку
+   и внутри, и вне группы, обёртка `role="listitem"`+`display:contents`, количество listitem в
+   группе, `Item` вне группы без роли) — все 10 прошли.
+2. `BreadcrumbEllipsis` — `aria-hidden="true"` стоял на всём элементе и глушил вложенный sr-only
+   текст «More»; убрали с контейнера, повесили на декоративную иконку — текст реально озвучивается.
+3. `BreadcrumbLink` — добавлено собственное focus-visible кольцо (`outline-focus-ring`), тот же
+   паттерн, что у Button/Item, вместо нативного браузерного фокуса.
+4. Документация `Spinner`+`Button` (дублирующееся объявление) оставлена как есть по решению
+   человека — не код, а ответственность потребителя (`aria-hidden` на `Spinner`).
+
+`item.docs.ts`/`breadcrumb.docs.ts` обновлены под новое поведение. `npm run verify`, `npx tsc -b`,
+`npm run build-storybook` — чисто. **Chromatic build #29 — ожидает подтверждения человеком**: 1
+визуальное изменение, это ожидаемо — новая demo-строка в story `Item/Content` (пункт 1 выше), не
+регрессия в существующих снимках; принять/отклонить нужно в самом Chromatic UI, не через код.
 
 Ветки `docs/component-guidelines`, `docs/batch-2`, `docs/batch-3` не удаляются, но не используются
 для новых батчей.
@@ -81,18 +101,24 @@ Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Sk
   AspectRatio) и в батче 4 (Collapsible — пробовали `@radix-ui/react-collapsible/dist/index.mjs`:
   trigger — нативный `<button>` с `aria-expanded`/`aria-controls`, content — `hidden` при закрытии).
   Накопленные находки: CardTitle/EmptyTitle/CardDescription/EmptyDescription — `<div>`, не
-  `<h*>`/`<p>` (осознанно); Badge и BreadcrumbLink не имеют своего focus-visible кольца (в отличие
-  от Button/Item) — для интерактивного использования добавлять вручную; Skeleton не проставляет
+  `<h*>`/`<p>` (осознанно); Badge не имеет своего focus-visible кольца (в отличие от Button/Item) —
+  для интерактивного использования добавлять вручную; Skeleton не проставляет
   `aria-busy`/`role="status"` сам; Separator/Avatar — роль `none`/`separator` зависит от
   `decorative`, `AvatarFallback` рендерится немедленно без `delayMs`.
   **Новое в батче 4**: `aria-hidden="true"` на родителе выключает из дерева доступности вообще всех
-  потомков, включая их собственный `sr-only`-текст — у `BreadcrumbEllipsis` это буквально стирает
-  скрытый текст «More» (сам элемент и так `aria-hidden`). Проверять это сочетание отдельно, когда
-  decorative-обёртка (`role="presentation"`/`aria-hidden`) содержит вложенный sr-only-текст «для
-  скринридера» — такой текст в реальности никуда не доходит. Также нашли `role="list"` без
-  `role="listitem"` на детях (`ItemGroup`/`Item`) — наполовину выполненный ARIA-паттерн, в отличие
-  от корректной пары в `ComponentDocsPage.tsx` → `DocsRelated`; в этот раз (в отличие от Progress в
-  батче 2) человек решил чинить сразу в этом же PR — см. «Ветка / PR» выше.
+  потомков, включая их собственный `sr-only`-текст — у `BreadcrumbEllipsis` это буквально стирало
+  скрытый текст «More» (сам элемент и так `aria-hidden`); исправлено (см. «Ветка / PR»). Проверять
+  это сочетание отдельно, когда decorative-обёртка (`role="presentation"`/`aria-hidden`) содержит
+  вложенный sr-only-текст «для скринридера» — такой текст в реальности никуда не доходит.
+- **Фикс половинчатого ARIA-паттерна может сам внести новую регрессию — проверять фикс тем же
+  способом, что и исходную находку, не только глазами.** В батче 4 нашли `role="list"` без
+  `role="listitem"` на детях (`ItemGroup`/`Item`); первая версия фикса просто добавила
+  `role="listitem"` на `Item` безусловно — и тут же сломала asChild (роль `listitem` перекрыла
+  implicit-роль `<a>`/`<button>`) и создала новый невалидный ARIA у `Item` вне `ItemGroup`
+  (`listitem` без родителя `list`). Нашло повторное ревью со стороны. Исправлено через контекст
+  (`ItemGroupContext`, подробности — `item.docs.ts` → «Для разработчиков») и подтверждено
+  Playwright-проверкой вычисленного accessibility-дерева (не только чтением кода) — именно такой
+  тест и должен был быть у первой версии фикса.
 
 ## Бэклог
 
@@ -106,18 +132,22 @@ Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Sk
 - **Badge**: `badgeVariants` не включает `focus-visible` классы — при `asChild` добавлять вручную.
   Возможное решение — добавить `focus-visible:outline-*` в базовые классы (безвредно для
   неинтерактивного `<span>`).
-- **BreadcrumbLink** (найдено в батче 4): нет явного `focus-visible:outline-*`, как у Button/Item —
-  виден только нативный браузерный фокус поверх общего `outline-focus-ring/50`. Решить, нужно ли
-  выравнять с явным кольцом фокуса остальных интерактивных компонентов, или нативного достаточно —
-  неочевидно без проверки в реальном браузере/скринридере, не только по коду.
-- **BreadcrumbEllipsis** (найдено в батче 4): чисто декоративный (`aria-hidden`, без `asChild`).
-  Решить, станет ли он рабочим триггером показа скрытых уровней (например, через DropdownMenu) — и
-  если да, как убрать `aria-hidden`/`role="presentation"` только для интерактивного случая.
+- **BreadcrumbEllipsis** (найдено в батче 4): чисто декоративный (без `asChild`, без `onClick`) —
+  это намеренно не менялось. Решить, станет ли он рабочим триггером показа скрытых уровней
+  (например, через DropdownMenu) — и если да, как убрать `role="presentation"` только для
+  интерактивного случая, не трогая декоративный. (`aria-hidden`, который глушил собственный
+  sr-only-текст, уже исправлен — не часть этого пункта.)
 - **Spinner внутри Button** (найдено в батче 4): когда рядом с Spinner есть видимый текст с тем же
   смыслом («Загрузка…»), его собственный `aria-label` дублирует объявление в вычисляемом accessible
-  name кнопки. Задокументировано решение на стороне потребителя (`aria-hidden="true"` на Spinner в
-  этом случае) — не меняли код; решить, не стоит ли сделать это поведением по умолчанию внутри
-  самого Button, когда Spinner передан как children рядом с текстом.
+  name кнопки. Решение зафиксировано в документации на стороне потребителя (`aria-hidden="true"` на
+  Spinner в этом случае) — человек подтвердил не менять код; решить позже, не стоит ли сделать это
+  поведением по умолчанию внутри самого Button, когда Spinner передан как children рядом с текстом.
+- **Разнобой языка у захардкоженных подписей для скринридера** (найдено в батче 4, зафиксировано
+  человеком после ревью): `Spinner` → `aria-label="Загрузка"` (RU); `Breadcrumb` →
+  `aria-label="breadcrumb"` и `BreadcrumbEllipsis` → sr-only текст «More» (оба EN). После фикса
+  `BreadcrumbEllipsis` текст «More» реально доходит до скринридера — несоответствие языка стало
+  практически заметным, не только в коде. Решить единообразно вместе с i18n (сейчас в проекте нет
+  механизма i18n для строк компонентов — только `Text`/`Locale` в самой документации, `src/docs`).
 - **Link** — отдельного компонента нет; see `button.docs.ts` → анатомия (asChild + `<a>` для
   переходов). **Toast/snackbar** — компонента нет, see `alert.docs.ts` → «Когда не использовать».
 
@@ -142,9 +172,11 @@ https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-priresoeng.chromatic.com/
 
-Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — build #26 (до правки
-`role="listitem"`, 137 историй, 0 изменений), затем build #27 (после коммита
-`Fix: Item — role="listitem"`):
-https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=27 — 137 историй, 0
-визуальных изменений (подтверждено: ARIA-атрибут не влияет на пиксели). Preview:
-https://6ad4a76c23be4704dc8eca20-rguuqchjsi.chromatic.com/
+Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — промежуточные build #26
+(до правки `role="listitem"`, 0 изменений) и #27 (после той правки, тоже 0 — ARIA-атрибут не
+влияет на пиксели). После 4 фиксов второго ревью — **build #29**:
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=29 — **1 визуальное
+изменение, ожидает подтверждения человеком в Chromatic UI**. Изменение ожидаемое: новая
+demo-строка (asChild-ссылка внутри `ItemGroup`) в story `Item/Content`, добавленная как цель
+Playwright-проверки фикса `role="listitem"` — не регрессия в существующих снимках. Preview:
+https://6ad4a76c23be4704dc8eca20-zmdgxmazbv.chromatic.com/
