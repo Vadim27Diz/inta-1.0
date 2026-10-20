@@ -1,0 +1,37 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as CardStories from "./card.stories"
+import { cardDocs } from "./card.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={CardStories} />
+
+<Title>{cardDocs.title}</Title>
+
+<DocsPurpose docs={cardDocs} />
+
+<Canvas of={CardStories.Default} />
+
+<DocsWhenToUse docs={cardDocs} />
+<DocsWhenNotToUse docs={cardDocs} />
+<DocsAnatomy docs={cardDocs} />
+
+<DocsVariants docs={cardDocs} />
+<Canvas of={CardStories.Variants} />
+
+<DocsStates docs={cardDocs} />
+
+<DocsContentRules docs={cardDocs} />
+<DocsAccessibility docs={cardDocs} />
+<DocsRelated docs={cardDocs} />
+<DocsForDevelopers docs={cardDocs} />

@@ -1,0 +1,38 @@
+import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import * as AvatarStories from "./avatar.stories"
+import { avatarDocs } from "./avatar.docs"
+import {
+  DocsPurpose,
+  DocsWhenToUse,
+  DocsWhenNotToUse,
+  DocsAnatomy,
+  DocsVariants,
+  DocsStates,
+  DocsContentRules,
+  DocsAccessibility,
+  DocsRelated,
+  DocsForDevelopers,
+} from "@/docs/ComponentDocsPage"
+
+<Meta of={AvatarStories} />
+
+<Title>{avatarDocs.title}</Title>
+
+<DocsPurpose docs={avatarDocs} />
+
+<Canvas of={AvatarStories.Default} />
+
+<DocsWhenToUse docs={avatarDocs} />
+<DocsWhenNotToUse docs={avatarDocs} />
+<DocsAnatomy docs={avatarDocs} />
+
+<DocsVariants docs={avatarDocs} />
+<Canvas of={AvatarStories.Variants} />
+
+<DocsStates docs={avatarDocs} />
+<Canvas of={AvatarStories.States} />
+
+<DocsContentRules docs={avatarDocs} />
+<DocsAccessibility docs={avatarDocs} />
+<DocsRelated docs={avatarDocs} />
+<DocsForDevelopers docs={avatarDocs} />
