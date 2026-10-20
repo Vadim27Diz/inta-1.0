@@ -143,7 +143,8 @@ https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-priresoeng.chromatic.com/
 
 Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — build #26 (до правки
-`role="listitem"`): https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=26 —
-137 историй, 0 визуальных изменений. После коммита `Fix: Item — role="listitem"` CI пересоберёт
-автоматически — номер следующего build будет выше; ARIA-атрибут не рисуется, визуальных изменений
-не ожидается, но итоговый номер здесь не обновлён задним числом.
+`role="listitem"`, 137 историй, 0 изменений), затем build #27 (после коммита
+`Fix: Item — role="listitem"`):
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=27 — 137 историй, 0
+визуальных изменений (подтверждено: ARIA-атрибут не влияет на пиксели). Preview:
+https://6ad4a76c23be4704dc8eca20-rguuqchjsi.chromatic.com/
