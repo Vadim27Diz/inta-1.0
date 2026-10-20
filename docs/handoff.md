@@ -7,9 +7,9 @@
 
 ## Ветка / PR
 
-PR #6 (`docs/batch-4` → `main`, https://github.com/Vadim27Diz/inta-1.0/pull/6) открыт — батч 4,
-последний из запланированных. Ревью со стороны после первой версии PR нашло 4 пункта, все
-исправлены отдельными коммитами:
+PR #6 (`docs/batch-4` → `main`, https://github.com/Vadim27Diz/inta-1.0/pull/6) смёржен обычным
+merge commit — батч 4, последний из запланированных, в `main`. Ревью со стороны после первой
+версии PR нашло 4 пункта, все исправлены отдельными коммитами перед мёржем:
 
 1. **Регрессия из первой версии этого же PR**: `role="listitem"` стоял на `Item` безусловно —
    при `asChild` Slot клал его прямо на `<a>`/`<button>` и перекрывал implicit-роль ссылки/кнопки
@@ -30,12 +30,11 @@ PR #6 (`docs/batch-4` → `main`, https://github.com/Vadim27Diz/inta-1.0/pull/6)
    человека — не код, а ответственность потребителя (`aria-hidden` на `Spinner`).
 
 `item.docs.ts`/`breadcrumb.docs.ts` обновлены под новое поведение. `npm run verify`, `npx tsc -b`,
-`npm run build-storybook` — чисто. **Chromatic build #29 — ожидает подтверждения человеком**: 1
-визуальное изменение, это ожидаемо — новая demo-строка в story `Item/Content` (пункт 1 выше), не
-регрессия в существующих снимках; принять/отклонить нужно в самом Chromatic UI, не через код.
+`npm run build-storybook` — чисто. Chromatic build #30 — 1 визуальное изменение (новая demo-строка
+в story `Item/Content`, пункт 1 выше) принято человеком как новый baseline. См. «Chromatic» ниже.
 
-Ветки `docs/component-guidelines`, `docs/batch-2`, `docs/batch-3` не удаляются, но не используются
-для новых батчей.
+Ветки `docs/component-guidelines`, `docs/batch-2`, `docs/batch-3`, `docs/batch-4` не удаляются, но
+не используются для новых батчей.
 
 ## Готово (31 из 31) — документация всех текущих компонентов набора завершена
 
@@ -142,6 +141,16 @@ Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Sk
   name кнопки. Решение зафиксировано в документации на стороне потребителя (`aria-hidden="true"` на
   Spinner в этом случае) — человек подтвердил не менять код; решить позже, не стоит ли сделать это
   поведением по умолчанию внутри самого Button, когда Spinner передан как children рядом с текстом.
+- **Item asChild внутри ItemGroup — проверить display:contents в Safari + VoiceOver** (найдено
+  человеком после приёмки батча 4): фикс `role="listitem"` оборачивает asChild-ссылку/кнопку в
+  `<div role="listitem" className="contents">`, чтобы роль не перекрывала `<a>`/`<button>` (см.
+  «Известные грабли» выше). Playwright-проверка (Chromium) подтвердила и роль, и
+  `display:contents`, но старые версии WebKit исторически теряли роль у элементов с
+  `display:contents` целиком (убирали их из дерева доступности, а не просто снимали layout-бокс).
+  Если в реальном Safari + VoiceOver `role="listitem"` на такой обёртке не долетает — заменить её
+  на обёртку с настоящим layout (например, сам `<li>`/обычный `<div>` без `contents`, подобрав
+  классы так, чтобы не плыла раскладка `ItemGroup`), не пытаться сохранить `display:contents` во
+  что бы то ни стало.
 - **Разнобой языка у захардкоженных подписей для скринридера** (найдено в батче 4, зафиксировано
   человеком после ревью): `Spinner` → `aria-label="Загрузка"` (RU); `Breadcrumb` →
   `aria-label="breadcrumb"` и `BreadcrumbEllipsis` → sr-only текст «More» (оба EN). После фикса
@@ -172,12 +181,10 @@ https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=20 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-priresoeng.chromatic.com/
 
-Батч 4 (PR #6, https://github.com/Vadim27Diz/inta-1.0/pull/6, открыт) — промежуточные build #26
+Батч 4 (PR #6, смёржен, https://github.com/Vadim27Diz/inta-1.0/pull/6) — промежуточные build #26
 (до правки `role="listitem"`, 0 изменений) и #27 (после той правки, тоже 0 — ARIA-атрибут не
-влияет на пиксели). После 4 фиксов второго ревью — build #29 (0 принятых изменений, ещё не просмотрен), затем build
-#30 (после коммита с этим файлом — тот же набор историй, то же изменение переносится как
-ожидающее): https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=30 — **1
-визуальное изменение, ожидает подтверждения человеком в Chromatic UI**. Изменение ожидаемое: новая
-demo-строка (asChild-ссылка внутри `ItemGroup`) в story `Item/Content`, добавленная как цель
-Playwright-проверки фикса `role="listitem"` — не регрессия в существующих снимках. Preview:
-https://6ad4a76c23be4704dc8eca20-qbnrkcckqs.chromatic.com/
+влияет на пиксели). После 4 фиксов второго ревью — build #29, затем build #30 (финальный):
+https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=30 — 137 историй, 1
+визуальное изменение (новая demo-строка — asChild-ссылка внутри `ItemGroup` в story
+`Item/Content`, добавленная как цель Playwright-проверки фикса `role="listitem"`), **принято
+человеком как новый baseline**. Preview: https://6ad4a76c23be4704dc8eca20-qbnrkcckqs.chromatic.com/
