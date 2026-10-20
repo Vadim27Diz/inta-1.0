@@ -31,7 +31,16 @@ function BreadcrumbLink({
 }: React.ComponentProps<"a"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot.Root : "a"
   return (
-    <Comp data-slot="breadcrumb-link" className={cn("transition-colors hover:text-on-surface", className)} {...props} />
+    <Comp
+      data-slot="breadcrumb-link"
+      className={cn(
+        "outline-none transition-colors hover:text-on-surface",
+        // то же кольцо фокуса, что у Button/Item — outline, не ring, не обрезается overflow
+        "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
