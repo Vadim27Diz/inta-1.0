@@ -7,37 +7,21 @@
 
 ## Ветка / PR
 
-PR #4 (`docs/batch-2` → `main`) смёржен обычным merge commit
-(https://github.com/Vadim27Diz/inta-1.0/pull/4) — батч 2 в `main`. Перед мёржем ревью сделал
-человек со стороны (напрямую, не в PR-комментариях) и нашёл 3 правки, внесённые отдельными
-коммитами до мёржа:
+Батч 3 — ветка `docs/batch-3` от свежего `main` (после мёржа PR #4). PR открыт, ждём Chromatic и
+ревью. Ветки `docs/component-guidelines`, `docs/batch-2` не удаляются, но не используются для
+новых батчей. Каждый следующий батч — новая ветка от `main` со своим PR.
 
-1. **Баг в коде.** `progress.tsx` не передавал `value` в `ProgressPrimitive.Root` (только в
-   `transform` индикатора) — Radix получал `value=null`, корень был всегда
-   `data-state="indeterminate"` без `aria-valuenow`, независимо от реального значения. Полоса
-   закрашивалась визуально правильно, скринридер — нет. Исправлено; проверено Playwright по DOM
-   собранного Storybook.
-2. **Баг в коде.** `slider.tsx` — у `SliderPrimitive.Thumb` не было способа задать доступное имя.
-   Добавлен проп `thumbLabel` (строка или массив из двух строк для диапазона) → `aria-label` на
-   `Thumb` по индексу.
-3. **Доки.** `input-otp.docs.ts` → «Когда не использовать»: убрана неверная причина (вставка кода
-   целиком штатно поддерживается компонентом).
-
-Ветки `docs/component-guidelines`, `docs/batch-2` не удаляются, но не используются для новых
-батчей. Каждый следующий батч — новая ветка от `main` (`docs/batch-3`, `docs/batch-4`, …) со своим
-PR.
-
-## Готово (19 из 31)
+## Готово (27 из 31)
 
 Button, Alert, Native Select — пилот. Input, Textarea, Checkbox, Switch, Radio Group, Select,
 Field, Input Group — батч 1. Input OTP, Toggle, Toggle Group, Button Group, Slider, Progress,
-Label, Kbd — батч 2.
+Label, Kbd — батч 2. Card, Empty, Badge, Avatar, Typography, Separator, Skeleton, Aspect Ratio —
+батч 3.
 
-## Осталось (12), батчами по ~8 — PR на каждый батч отдельно
+## Осталось (4) — один батч
 
 | Батч | Компоненты |
 |---|---|
-| 3 — контент и отображение | Card, Empty, Badge, Avatar, Typography, Separator, Skeleton, Aspect Ratio |
 | 4 — навигация и прочее | Breadcrumb, Collapsible, Item, Spinner |
 
 ## Формат страницы (образцы: `button.docs.ts`/`.mdx`, `select.docs.ts`, `field.docs.ts`)
@@ -49,10 +33,19 @@ Label, Kbd — батч 2.
   **Variants** → поле `variants`, что показывает **States** → `states`. Если у компонента нет
   `variant`/`size`, но есть содержательная ось (например, checked/unchecked у Checkbox — ровно то,
   что в его story Variants) — она тоже идёт в `variants`.
+- `variants`/`states` не обязаны быть завязаны на `cva()` — источник это то, что показывает story.
+  Прецедент из батча 2 (Kbd: «одна клавиша» / «сочетание», без единого cva) расширен в батче 3 на
+  компоненты без единого prop-а вовсе: у Card нет `variant`, но его story **Variants** показывает
+  4 содержательных композиции слотов (минимальный набор / с Action / с Footer / с Media) — они и
+  стали `variants`. Та же логика для Skeleton («одна плашка» / «составной паттерн»).
 - Если у компонента вообще нет содержательных состояний (например, Kbd — статичный типографский
   элемент без Radix и своего состояния) — `states: []` и секция `<DocsStates>`/`<Canvas>` States в
   `.mdx` просто не рендерятся (компонент возвращает `null` на пустом массиве); это нормально, не
-  ошибка формата.
+  ошибка формата. То же для `variants: []`, если у компонента нет и story Variants (Aspect Ratio —
+  единственный такой случай во всём наборе на сейчас: только story Default).
+- `.mdx` никогда не ссылается на `Canvas of={...Stories.Content}` или `...BrandMatrix` — эти две
+  story не часть стандартного рендера страницы (подтверждено во всех `.mdx` батчей 1–3), только
+  `Default`, `Variants` (+ доп. `Canvas`, если иллюстрирует `variantGuidance`) и `States`.
 - Доп. `<Canvas>` сверх стандартного набора — разрешён, если иллюстрирует правило из
   `variantGuidance` (пример: `select.mdx` → `<Canvas of={SelectStories.IndicatorSide} />` под
   текстом про выбор стороны чекмарка).
@@ -75,10 +68,17 @@ Label, Kbd — батч 2.
   обёртки, а не с документацией Radix/shadcn.** Обёртка может ломать то, что у примитива работает
   из коробки — пример: `progress.docs.ts` утверждал, что скринридер объявляет `aria-valuenow`
   автоматически, но `progress.tsx` не передавал `value` в `ProgressPrimitive.Root`, и у Radix
-  получалось `value=null` (indeterminate) при любом заполнении. Доки были написаны по тому, как
-  *должен* работать примитив, а не по тому, что реально рендерит наш код. Проверка — прочитать сам
-  `<component>.tsx`, в сомнительных случаях — Playwright по DOM собранного Storybook, не полагаться
-  на память о том, как ведёт себя Radix. Найдено в батче 2 (Progress), ревью со стороны.
+  получалось `value=null` (indeterminate) при любом заполнении. Найдено в батче 2 (Progress),
+  ревью со стороны. В батче 3 проверка велась так же — читали сам `.tsx` каждого компонента и (для
+  Radix-примитивов без своей обёртки-логики — Avatar, Separator, AspectRatio) код самого
+  `@radix-ui/*` пакета в `node_modules`, а не по памяти о поведении Radix. Накопленные находки:
+  CardTitle/EmptyTitle/CardDescription/EmptyDescription — `<div>`, не `<h*>`/`<p>` (уровень
+  заголовка карточки зависит от места на странице, решение осознанное, не баг); Badge не имеет
+  своего focus-visible кольца (в отличие от Button) — для интерактивного `asChild` его нужно
+  добавлять вручную; Skeleton не проставляет `aria-busy`/`role="status"` сам; Separator и Avatar
+  проверены прямым чтением `@radix-ui/react-separator`/`react-avatar` в `node_modules` (роль
+  `none`/`separator` у Separator зависит от `decorative`, `AvatarFallback` рендерится немедленно,
+  если `delayMs` не передан).
 
 ## Бэклог
 
@@ -90,6 +90,16 @@ Label, Kbd — батч 2.
 - **Field**: `FieldError` не связывается с полем через `aria-describedby` автоматически — сейчас
   это явно задокументировано как ручная обязанность потребителя. Улучшение кода (автосвязка через
   `useId`) возможно позже, вне этого PR.
+- **Skeleton**: нет встроенного `aria-busy`/`role="status"` — сейчас это задокументировано как
+  обязанность того, кто оборачивает группу Skeleton. Возможное улучшение — необязательный проп
+  (например, `label`), который сам рендерит visually-hidden текст и `role="status"` на обёртке;
+  нужно решить, не усложнит ли это текущий «один div» компонент без веской причины.
+  Найдено в батче 3 при проверке доступности.
+- **Badge**: `badgeVariants` не включает `focus-visible` классы (в отличие от `buttonVariants`) —
+  при интерактивном использовании через `asChild` кольцо фокуса нужно добавлять вручную на вызывающей
+  стороне. Возможное улучшение — добавить `focus-visible:outline-*` прямо в базовые классы (они
+  безвредны для неинтерактивного `<span>`, так как `outline` не появляется без фокуса). Найдено в
+  батче 3 при проверке доступности.
 - **Link** — отдельного компонента нет; see `button.docs.ts` → анатомия (asChild + `<a>` для
   переходов). **Toast/snackbar** — компонента нет, see `alert.docs.ts` → «Когда не использовать».
 
@@ -106,6 +116,8 @@ Area, Resizable, Direction. Это отдельная задача со свои
 Батч 1 — build #8: https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=8 —
 137 историй, 0 визуальных изменений.
 
-Батч 2 (PR #4, смёржен) — build #15 (после 3 правок, см. «Ветка / PR» выше):
+Батч 2 (PR #4, смёржен) — build #15 (после 3 правок, см. архив):
 https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=15 — 137 историй, 0
 визуальных изменений. Preview: https://6ad4a76c23be4704dc8eca20-oevxsxnzmz.chromatic.com/
+
+Батч 3 (PR #5, открыт) — build в процессе, см. ссылку в самом PR после завершения.
