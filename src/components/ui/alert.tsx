@@ -30,11 +30,15 @@ function Alert({
 // где AlertTitle не задаёт свой цвет). 14px/500 у label-md совпадает с тем,
 // что AlertTitle реально получает по каскаду от Alert (text-sm + font-medium),
 // а не typo-heading-4 — тот прецедент для заголовков покрупнее (Card/Empty).
+// break-words обязателен вместе с line-clamp: без него одно длинное слово без
+// пробелов не может перенестись внутри строки, упирается в край колонки и
+// обрезается браузером «вслепую», без добавления многоточия — line-clamp
+// добавляет «…» только когда у него есть реальная точка переноса на границе.
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
-      className={cn("col-start-2 line-clamp-1 min-h-4 typo-label-md tracking-tight", className)}
+      className={cn("col-start-2 line-clamp-3 min-h-4 break-words typo-label-md tracking-tight", className)}
       {...props}
     />
   )
@@ -45,7 +49,12 @@ function AlertDescription({ className, ...props }: React.ComponentProps<"div">) 
     <div
       data-slot="alert-description"
       className={cn(
-        "col-start-2 grid justify-items-start gap-1 typo-body-sm text-on-surface-muted [&_p]:leading-relaxed",
+        // block, не grid/flex: у grid- и flex-item'ов есть свой min-width:auto
+        // (считается по max-content контента), который перебивает ширину трека/
+        // контейнера — неразрывное слово всё равно распирает ячейку изнутри, даже
+        // когда сам трек уже minmax(0,1fr). У обычного блочного потока такого
+        // скрытого пола нет — текст переносится по ширине родителя как есть.
+        "col-start-2 block space-y-1 break-words typo-body-sm text-on-surface-muted [&_p]:leading-relaxed",
         className
       )}
       {...props}
