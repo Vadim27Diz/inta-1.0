@@ -19,8 +19,8 @@ export const inputOtpDocs: ComponentDocs = {
   whenNotToUse: [
     {
       description: {
-        ru: "Код или значение произвольной длины, либо пользователь может вставить значение целиком без разбиения на символы.",
-        en: "The code or value has arbitrary length, or users paste the whole value at once without it being split into characters.",
+        ru: "Значение произвольной длины или это не короткий код, а длинная строка другого рода (токен, ключ доступа, номер карты).",
+        en: "The value has arbitrary length, or it isn't a short code but a longer string of a different kind (a token, an access key, a card number).",
       },
       insteadOf: {
         name: "Input",
