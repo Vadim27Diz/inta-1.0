@@ -101,11 +101,14 @@ export const Badge: Story = {
     <div className="flex items-center gap-6">
       <div className="flex flex-col items-center gap-2">
         {sizes.map((s) => (
-          <Avatar key={s} size={s}>
-            <AvatarImage src={DEMO_IMAGE} alt="Пользователь" />
-            <AvatarFallback>AB</AvatarFallback>
-            <AvatarBadge />
-          </Avatar>
+          <div key={s} className="flex flex-col items-center gap-1">
+            <Avatar size={s}>
+              <AvatarImage src={DEMO_IMAGE} alt="Пользователь" />
+              <AvatarFallback>AB</AvatarFallback>
+              <AvatarBadge />
+            </Avatar>
+            <p className="typo-caption text-on-surface-muted">{s}: круг, не клипуется аватаром</p>
+          </div>
         ))}
       </div>
       <div className="flex flex-col items-center gap-2">
@@ -128,9 +131,11 @@ export const Badge: Story = {
         <Avatar size="lg">
           <AvatarImage src={DEMO_IMAGE} alt="Пользователь" />
           <AvatarFallback>AB</AvatarFallback>
-          <AvatarBadge className="bg-surface-muted" />
+          <AvatarBadge className="border-2 border-on-surface-muted bg-surface-muted" />
         </Avatar>
-        <p className="typo-caption text-on-surface-muted">offline (bg-surface-muted)</p>
+        <p className="typo-caption text-on-surface-muted">
+          offline (bg-surface-muted, border-on-surface-muted — контраст 7:1+ к фону и к заливке)
+        </p>
       </div>
     </div>
   ),

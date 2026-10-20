@@ -3,7 +3,13 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { Avatar as AvatarPrimitive } from "radix-ui"
 
-const avatarVariants = cva("group/avatar relative flex shrink-0 overflow-hidden rounded-full select-none", {
+// rounded-full остаётся на корне (совпадает с радиусом фрейма в Figma), но без
+// overflow-hidden: AvatarBadge — абсолютно спозиционированный ребёнок в правом
+// нижнем углу, и circular-маска на самом Avatar вырезала бы угол под ним
+// (клипались форма и размер бейджа по-разному в зависимости от размера аватара).
+// overflow-hidden переехал на AvatarImage/AvatarFallback — им и положено клипать
+// картинку/фолбэк, а не весь корень с бейджем внутри.
+const avatarVariants = cva("group/avatar relative flex shrink-0 rounded-full select-none", {
   variants: {
     size: {
       sm: "size-8",
@@ -36,7 +42,7 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn("size-full object-cover", className)}
+      className={cn("size-full rounded-full object-cover", className)}
       {...props}
     />
   )
@@ -50,7 +56,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "flex size-full items-center justify-center rounded-full bg-neutral typo-label-sm text-on-neutral uppercase",
+        "flex size-full items-center justify-center overflow-hidden rounded-full bg-neutral typo-label-sm text-on-neutral uppercase",
         className
       )}
       {...props}
