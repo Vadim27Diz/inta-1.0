@@ -1,114 +1,114 @@
-# ds-kit: правила и скилл для Claude в VS Code
+# Inta 1.0 — Design System
 
-## Что внутри
+**Live Storybook:** https://main--6ad4a76c23be4704dc8eca20.chromatic.com
 
+[English](#english) · [Русский](#русский)
+
+<p>
+  <img src="docs/assets/docs-button-main-light.png" width="49%" alt="Storybook Docs page, brand main, light theme" />
+  <img src="docs/assets/docs-button-demo-dark.png" width="49%" alt="Storybook Docs page, brand demo, dark theme" />
+</p>
+
+---
+
+## English
+
+Multi-brand (white-label) design system with light/dark themes. Figma Variables are the single
+source of truth; the pipeline generates CSS tokens consumed by a React + TypeScript + Tailwind CSS
+v4 + shadcn/ui component library, documented in Storybook. 31 components, two brands (`main` /
+`demo`) that swap color, radius and typeface — switching brands with no visual change left over
+means a component is missing a token.
+
+### Key decisions
+
+- **Tokens are the source of truth**, exported from Figma Variables and compiled to CSS — never
+  hand-edited.
+- **Token linter** (`tokens:check`) fails the build on any hex/rgb, Tailwind palette class, or
+  arbitrary value in component code.
+- **Contrast checked automatically** — WCAG and APCA for every surface/content token pair, across
+  all 4 brand × theme combinations (`tokens:contrast`).
+- **Figma ↔ code parity verified numerically**, not by eye — computed styles and page layout are
+  diffed against the Figma file (`figma:diff`, `figma:layout`).
+- **Documentation in two languages** (this README and the component docs) so the system is usable
+  by both Russian- and English-speaking teams.
+- **Accessibility verified in code** — each component's Storybook docs state exactly what's
+  automatic (via Radix/shadcn) versus the consumer's responsibility.
+- **Visual regression testing in Chromatic** on every PR. Each component has a `BrandMatrix` story
+  rendering all 4 brand × theme combinations side by side — Chromatic snapshots each story once,
+  not the same story 4 times per combination.
+
+### Run locally
+
+```bash
+npm ci
+npm run storybook   # :6006, toolbar toggles Brand (main/demo) × Theme (light/dark)
 ```
-CLAUDE.md                              ← правила проекта (Claude читает их всегда)
-.claude/skills/design-tokens/
-├── SKILL.md                           ← главная инструкция (Claude открывает её для UI-задач)
-├── references/
-│   ├── naming.md                      ← логика имён по статье + наши решения
-│   ├── token-catalog.md               ← все токены и значения (сгенерирован)
-│   ├── figma.md                       ← коллекции, режимы, компоненты в Figma
-│   ├── code.md                        ← Tailwind v4, Storybook, структура проекта
-│   └── shadcn-mapping.md              ← shadcn → наши токены, все 64 компонента
-├── examples/button.md                 ← эталон: Figma → код → история
-├── assets/
-│   ├── tokens.seed.json               ← стартовый набор токенов (251 переменная, 11 текстовых стилей)
-│   ├── tokens.css                     ← пример сгенерированного CSS
-│   ├── figma-import.js                ← создаёт переменные и стили в Figma
-│   └── figma-export.js                ← выгружает их обратно в JSON
-└── scripts/
-    ├── build-tokens.mjs               ← JSON → CSS для Tailwind
-    └── check-tokens.mjs               ← линтер: находит цвета и размеры не из токенов
+
+### Key commands
+
+| Command | What it does |
+|---|---|
+| `npm run tokens:build` | `tokens/tokens.json` → `src/styles/tokens.css` |
+| `npm run tokens:check` | Lints components for non-token values — must be 0 errors |
+| `npm run tailwind:check` | Verifies every Tailwind class used in `src/components` exists in the built CSS |
+| `npm run tokens:contrast` | WCAG + APCA for every `X` / `on-X` pair, all states, 4 brand × theme combos |
+| `npm run storybook` | Storybook on :6006 |
+| `npm run visual` | Snapshots every story in 4 combinations → `visual.local/` |
+| `npm run figma:diff` | Numeric Figma ↔ `getComputedStyle` diff, 4 combinations |
+| `npm run figma:layout` | Diffs the Figma `Components` page layout against a saved snapshot |
+| `npm run verify` | Runs `tokens:check` + `tokens:contrast` + `tailwind:check` + `figma:diff` + `figma:layout` |
+
+Internal working notes (task handoffs, roadmap) live in [`docs/internal/`](docs/internal/) — not
+needed to use or evaluate the system, kept for process transparency.
+
+---
+
+## Русский
+
+Мультибрендовая (white-label) дизайн-система со светлой и тёмной темой. Источник правды — Figma
+Variables, из которых генерируются CSS-токены для библиотеки компонентов на React + TypeScript +
+Tailwind CSS v4 + shadcn/ui, документированной в Storybook. 31 компонент, два бренда (`main` /
+`demo`), различающиеся цветом, радиусами и шрифтом — если при переключении бренда что-то не
+перекрасилось, значит в компоненте не хватает токена.
+
+### Ключевые решения
+
+- **Токены — источник правды**: экспортируются из Figma Variables и собираются в CSS, руками не
+  правятся.
+- **Линтер токенов** (`tokens:check`) ловит в коде компонентов hex/rgb, палитру Tailwind
+  (`bg-blue-500`) и произвольные значения (`p-[13px]`).
+- **Проверка контраста** WCAG и APCA для всех пар поверхность/контент, во всех состояниях и всех
+  4 комбинациях бренд × тема (`tokens:contrast`).
+- **Сверка Figma ↔ код — цифровая, не на глаз**: вычисленные стили и раскладка страницы сравниваются
+  с файлом Figma (`figma:diff`, `figma:layout`).
+- **Документация на двух языках** (этот README и истории компонентов), чтобы система была понятна
+  и русско-, и англоязычной команде.
+- **Доступность проверена по коду** — в документации каждого компонента явно сказано, что работает
+  автоматически (через Radix/shadcn), а что остаётся на совести того, кто использует компонент.
+- **Визуальные тесты в Chromatic** на каждый PR. У каждого компонента есть история `BrandMatrix`,
+  показывающая все 4 комбинации бренд × тема рядом — Chromatic снимает каждую историю один раз, а
+  не одну и ту же историю в 4 комбинациях.
+
+### Как запустить локально
+
+```bash
+npm ci
+npm run storybook   # :6006, тулбар переключает Brand (main/demo) × Theme (light/dark)
 ```
 
-## Как установить
+### Основные команды
 
-1. Распакуйте архив **в корень проекта** (там, где будет `package.json`). Папка `.claude` скрытая — проверьте, что она скопировалась.
-2. В VS Code должен быть подключён Figma MCP (официальный сервер Figma), иначе Claude не сможет создавать переменные и компоненты.
-3. Первое сообщение агенту, например:
-   > Прочитай CLAUDE.md и скилл design-tokens. Настрой проект по references/code.md, затем создай токены в новом Figma-файле по references/figma.md. Остановись после smoke-теста и покажи результат.
-4. Дальше — по компоненту или по группе из `shadcn-mapping.md`:
-   > Сделай группу 1 (базовые контролы): Figma → код → истории, проверь tokens:check.
-
-## Проверено здесь
-
-- `build-tokens.mjs` собирает CSS из `tokens.seed.json` (195 CSS-переменных, 11 текстовых стилей).
-- `check-tokens.mjs` находит 13 ошибок в «сырой» shadcn-кнопке и пропускает эталонную.
-- Компиляция Tailwind v4 здесь не запускалась (нет доступа к npm). Первым делом в проекте сделайте smoke-тест из `references/code.md`.
-
-## Шрифты
-
-Подключены self-hosted через `@fontsource` (импорты в начале `src/styles/globals.css`, веса 400/500/600/700):
-
-| Пакет | Семейство | Где используется |
-|---|---|---|
-| `@fontsource/inter` | Inter | `font/sans` и `font/heading` бренда Main |
-| `@fontsource/ibm-plex-sans` | IBM Plex Sans | `font/sans` бренда Demo |
-| `@fontsource/ibm-plex-serif` | IBM Plex Serif | `font/heading` бренда Demo |
-| `@fontsource/jetbrains-mono` | JetBrains Mono | `font/mono` (общий для брендов) |
-
-Имена семейств в пакетах совпадают со значениями токенов из Figma, поэтому `@font-face` ничего не переопределяет — достаточно импорта. Каждый вес приходит с подмножествами latin, latin-ext, cyrillic, greek, vietnamese и `unicode-range`: браузер качает только то, что встретилось на странице. Теперь переключение бренда main ↔ demo меняет и гарнитуру, а не только цвета и радиусы.
-
-## Что готово
-
-**Группа 1 — базовые контролы** (`src/components/ui/`, ветка `feat/group-1-controls`), каждый —
-Figma component set → код на токенах → истории Storybook → числовая сверка:
-
-| Компонент | Варианты / состояния |
+| Команда | Что делает |
 |---|---|
-| Button | primary/secondary/neutral/outline/ghost/danger/danger-subtle/inverse/link/link-danger × sm/md/lg/icon |
-| Icon | `lucide-react` напрямую, 33 глифа в Figma (`li:*`), размеры 12/16/20/24/32/40 |
-| Label | default/required, привязка к полю через `peer`/`group` |
-| Input | sm/md/lg × default/focus/disabled/invalid/invalid-focus × value/placeholder |
-| Textarea | то же без размеров, многострочный, `field-sizing-content` |
-| Checkbox | default/focus/disabled/invalid × unchecked/checked/indeterminate |
-| Radio Group | default/focus/disabled/invalid × checked/unchecked |
-| Switch | default/focus/disabled × off/on, токен слоя Component `switch/thumb` |
-| Badge | primary/secondary/neutral/outline/danger/danger-subtle/success/warning/info |
-| Separator | horizontal/vertical |
-| Kbd | моноширинный `typo-code` |
-| Spinner | `motion-safe:animate-spin`, 5 размеров |
-| Skeleton | `motion-safe:animate-pulse` |
+| `npm run tokens:build` | `tokens/tokens.json` → `src/styles/tokens.css` |
+| `npm run tokens:check` | Линтер компонентов на «не-токены» — должен давать 0 ошибок |
+| `npm run tailwind:check` | Каждый Tailwind-класс из `src/components` реально есть в собранном CSS |
+| `npm run tokens:contrast` | WCAG и APCA для пар `X` / `on-X` во всех состояниях × 4 комбинации |
+| `npm run storybook` | Storybook на :6006 |
+| `npm run visual` | Снимки историй в 4 комбинациях бренд × тема → `visual.local/` |
+| `npm run figma:diff` | Цифровая сверка Figma ↔ `getComputedStyle` в 4 комбинациях |
+| `npm run figma:layout` | Раскладка страницы Components по снимку `figma/layout.json` |
+| `npm run verify` | `tokens:check` + `tokens:contrast` + `tailwind:check` + `figma:diff` + `figma:layout` |
 
-Проверено: `npm run verify` (`tokens:check` + `tokens:contrast` + `figma:diff` + `figma:layout`) —
-0 ошибок; раскладка страницы Components в Figma — 14 секций, 47 компонентов, без нарушений.
-
-**Изменения с v0.1.0:** фокус Input/Textarea приведён к новому стилю полей — кольцо вплотную к
-рамке (было с зазором 2px), толщина 3px (было 2px), скругление повторяет радиус поля, а не на шаг
-больше (образец — Input на ui.shadcn.com). Реализовано через `ring`/box-shadow вместо `outline`.
-Отдельные контролы (Button, Checkbox, Radio, Switch и т.п.) не затронуты — у них фокус по-прежнему
-с зазором 2px.
-
-**Группа 2 — составные контролы** (ветка `feat/group-2`), тот же порядок Figma → код → истории →
-числовая сверка:
-
-| Компонент | Варианты / состояния |
-|---|---|
-| Field | композиция Label+Input+подсказка/ошибка, default/invalid |
-| Input Group | обёртка Input/Textarea с текстовым аддоном, Addon=start/end × State=default/focus |
-| Input OTP | код подтверждения на `input-otp` (новая зависимость, MIT), default/invalid/focus по слотам |
-| Native Select | стилизованный `<select>` без Radix, Size=sm/md/lg × State=default/focus/invalid/disabled |
-| Select | выпадающая поверхность на Radix, State=closed/open/focus; `Select / Item` — Indicator=left/right (по умолчанию right, см. комментарий в `select.tsx`), радиус панели следует размеру триггера |
-| Toggle | variant=default/outline × size=sm/md/lg |
-| Toggle Group | variant/size через React Context, инстансы Toggle |
-| Button Group | orientation=horizontal/vertical, без Radix, `role=group` |
-| Slider | track/range/thumb, orientation=horizontal/vertical |
-| Progress | value 0–100%, не интерактивен |
-
-Отдельно — служебный компонент **`Utility / Focus ring`**, не из `shadcn-mapping.md`: в Figma нет
-кода-аналога, это наша добавка для единообразного кольца фокуса across всех контролов (`Kind` —
-`control`/`field`/`seam`, `Scale` — радиус родителя). В коде ему соответствует просто
-`focus-visible:ring-*`/`outline-*` на каждом компоненте — компонент существует только на стороне
-Figma, как общий источник геометрии кольца для дизайнеров.
-
-Проверено: `npm run verify` — 0 ошибок (`tokens:check` 22 файла, `tailwind:check` 385 классов,
-`tokens:contrast` 152 проверки/9 некритичных APCA-предупреждений, `figma:diff` 864 проверки);
-раскладка страницы Components в Figma — 25 секций, 60 компонентов, без нарушений.
-
-## Бэклог
-
-Группы 3–6 из `shadcn-mapping.md` → «Все компоненты shadcn и порядок переноса»: контент и раскладка
-(Card, Alert, Tabs…), оверлеи (Dialog, Dropdown Menu, Toast…), сложные (Combobox, Calendar, Data
-Table…), чат/AI.
+Внутренние рабочие заметки (хендоффы задач, roadmap) — в [`docs/internal/`](docs/internal/): не
+нужны, чтобы пользоваться системой или оценить её, оставлены для прозрачности процесса.

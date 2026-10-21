@@ -1,14 +1,14 @@
 # Handoff: Storybook UI
 
 Текущее состояние на 2026-10-21. История документации компонентов (батчи 1–4, завершены) —
-`docs/handoff-archive.md`. **Правило:** этот файл перезаписывается при каждом обновлении, не
+`handoff-archive.md`. **Правило:** этот файл перезаписывается при каждом обновлении, не
 дописывается в конец.
 
 ## Статус: завершено, смёржено в main
 
 Задача — оформить интерфейс самого Storybook (manager/sidebar/toolbar + Docs) в токенах Inta 1.0 —
 закрыта на уровне «перекраска темой» (Этап 1). Ревью пройдено, решение человека: глубже не идём
-(подробности и дальнейшие шаги — `docs/roadmap.md` → пункт 1).
+(подробности и дальнейшие шаги — `roadmap.md` → пункт 1).
 
 - Ветка `feat/storybook-ui` → `main` через [PR #7](https://github.com/Vadim27Diz/inta-1.0/pull/7),
   merge commit `e668294`. Ветка и тег `backup/pre-storybook-ui` сохранены (не удалены).
@@ -35,7 +35,7 @@
 - `DocsTitle` в `ComponentDocsPage.tsx` — заменяет `<Title>` во всех 31 `.mdx` (`typo-heading-1`).
 
 Полная история коммитов (от `backup/pre-storybook-ui`) и находки каждого шага —
-`git log backup/pre-storybook-ui..e668294` и `docs/handoff-archive.md`.
+`git log backup/pre-storybook-ui..e668294` и `handoff-archive.md`.
 
 ## Известные грабли
 
@@ -64,7 +64,7 @@
 
 ## Бэклог
 
-Полный список — `docs/roadmap.md` → «Бэклог доступности и компонентов» (Link, Toast, FieldError
+Полный список — `roadmap.md` → «Бэклог доступности и компонентов» (Link, Toast, FieldError
 aria-describedby, Slider aria-labelledby, Badge focus-visible, Skeleton aria-busy, разнобой языка
 встроенных aria-подписей, Item display:contents в Safari/VoiceOver, **отсутствие таблицы
 свойств/Controls на Docs-страницах** — найдено при этом ревью, кандидат в бэклог).
@@ -79,7 +79,7 @@ aria-describedby, Slider aria-labelledby, Badge focus-visible, Skeleton aria-bus
 
 ## Что дальше
 
-Задача закрыта. Следующие шаги по дизайн-системе — `docs/roadmap.md`: логотип sidebar (пункт 2,
+Задача закрыта. Следующие шаги по дизайн-системе — `roadmap.md`: логотип sidebar (пункт 2,
 нужен ассет — не начинать без согласования), бэклог доступности и Controls-таблицы (пункт 3),
 конструктор страниц (пункт 4, заблокирован версией Storybook), остаток группы 3 — Table/Tabs/
 Scroll Area и др. (пункт 5, также нужен для возможной будущей глубокой кастомизации Storybook UI).
