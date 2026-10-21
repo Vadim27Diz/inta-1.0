@@ -1,5 +1,7 @@
 import type { Preview } from "@storybook/react-vite";
+import { create } from "storybook/theming";
 import "../src/styles/globals.css";
+import { docsThemes } from "./theme.generated";
 
 const preview: Preview = {
   globalTypes: {
@@ -37,6 +39,13 @@ const preview: Preview = {
       );
     },
   ],
-  parameters: { layout: "fullscreen", controls: { expanded: true } },
+  parameters: {
+    layout: "fullscreen",
+    controls: { expanded: true },
+    // Статично light — цвета внутри var() следуют data-brand/.dark сами (тот же document,
+    // что и tokens.css), менять объект при переключении тулбара не нужно. dark/light всё же
+    // нужно переключать явно — см. proof-of-concept в docs/roadmap.md.
+    docs: { theme: create(docsThemes.light) },
+  },
 };
 export default preview;
