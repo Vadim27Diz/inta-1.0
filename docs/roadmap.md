@@ -10,7 +10,17 @@
 дизайн-системы. Статус, бэкап и инвентаризация — см. отчёт по «Этапу 0» в PR/коммитах ветки
 `feat/storybook-ui` (или в самом чате, если PR ещё не открыт). Откат — см. «Бэкап и откат» ниже.
 
-## 2. Бэклог доступности и компонентов
+## 2. Логотип Inta 1.0 для sidebar Storybook
+
+Сейчас в sidebar — только текст (`brandTitle: "Inta 1.0"`, без картинки) — осознанное решение для
+Этапа 1 пункта 1, не временная заглушка. Ассета логотипа нет ни в Figma (страница `Cover`
+отсутствует, проверено по остальным трём страницам — ничего похожего не нашлось), ни в
+репозитории (только дефолтный favicon Storybook). Если логотип понадобится — отдельная задача:
+сначала согласовать с человеком сам визуальный логотип (новый бренд-ассет, не токен, но то же
+правило "не выдумывать самостоятельно"), потом завести его в Figma, потом подключить как
+`brandImage` в `managerThemes`/`scripts/build-manager-theme.mjs`.
+
+## 3. Бэклог доступности и компонентов
 
 Перенесено из `handoff.md` → «Бэклог» без изменений:
 
@@ -42,7 +52,7 @@
 Подробности и контекст каждой находки — в `handoff-archive.md` и в самих `.docs.ts` компонентов
 (`forDevelopers`/`accessibility`).
 
-## 3. Конструктор страниц drag-and-drop — заблокирован
+## 4. Конструктор страниц drag-and-drop — заблокирован
 
 `storybook-page-builder` не ставится на Storybook 10: пакет требует `peerDependencies.storybook:
 ^9.0.0`, репозиторий — на `storybook@10.6.2`. Пакет аудирован, не вредоносный (MIT, без install
@@ -53,7 +63,7 @@ script, один мейнтейнер, обёртка над `@puckeditor/core`,
 дождаться релиза `storybook-page-builder` под мажорную версию 10. Не начинать без решения по
 Storybook-версии.
 
-## 4. Остаток группы 3 (компоненты)
+## 5. Остаток группы 3 (компоненты)
 
 Figma + код для компонентов, которых пока нет в наборе: Table, Tabs, Accordion, Pagination, Scroll
 Area, Resizable, Direction. Отдельный трек от документации — ветка `feat/group-3` (часть уже
@@ -67,8 +77,8 @@ Collapsible — но см. замечание ниже).
 трогалось и не чинилось в рамках текущей задачи.
 
 Pagination/Scroll Area/Resizable/Table/Tabs/Accordion — частые зависимости для будущего
-drag-and-drop конструктора страниц (пункт 3) и вообще для сборки реальных экранов, поэтому порядок
-между пунктами 3 и 4 стоит пересмотреть, когда дойдёт очередь.
+drag-and-drop конструктора страниц (пункт 4) и вообще для сборки реальных экранов, поэтому порядок
+между пунктами 4 и 5 стоит пересмотреть, когда дойдёт очередь.
 
 ## Бэкап и откат (для пункта 1)
 
@@ -78,16 +88,24 @@ drag-and-drop конструктора страниц (пункт 3) и вооб
 - Визуальный эталон «до» — Chromatic build #30 (батч 4, принят человеком как baseline):
   https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=30
 - Вся работа по пункту 1 — в ветке `feat/storybook-ui` от `main`, `main` не трогаем до ревью.
-- Файлы, которые задача будет менять (ожидаемо, уточнится на этапе реализации):
-  - `.storybook/main.ts`, `.storybook/preview.tsx` — конфигурация.
-  - `.storybook/manager.ts` (новый файл) — тема manager через `storybook/theming` → `create()`.
-  - Возможный генератор темы manager из `tokens/tokens.json` (по аналогии с `tokens:build`) —
-    новый скрипт в `scripts/` + новая npm-команда.
-  - Возможный кастомный `DocsContainer`/блоки в `src/docs/` — для типографики и цвета самого Docs
-    (не историй) через `parameters.docs.container`.
-  - `package.json` — новая npm-команда для сборки темы manager, если понадобится.
-  - Не трогает: `src/components/ui/*` (сами компоненты и их `.docs.ts`/`.mdx`/`.stories.tsx`),
-    `tokens/tokens.json`, `src/styles/tokens.css`.
+- Файлы, которые меняет пункт 1 (актуально после Этапа 1а/1б/1в):
+  - `scripts/build-manager-theme.mjs` (новый) — генератор тем manager+docs из `tokens/tokens.json`.
+  - `.storybook/theme.generated.ts` (новый, генерируется) — не править руками, пересобирать
+    `npm run storybook:theme`.
+  - `.storybook/manager.ts` (новый) — `addons.setConfig({ theme })` + live-переключение по
+    тулбару Brand/Theme (`addons.register` + `channel.on(GLOBALS_UPDATED)`).
+  - `.storybook/manager-head.html` (новый) — `@font-face` для Inter/IBM Plex (manager — отдельный
+    бандл, без доступа к `@fontsource` из `globals.css`).
+  - `public/fonts/` (новое) — latin-only `.woff2` для manager (кириллица только в Docs/preview).
+  - `.storybook/preview.tsx` — `parameters.docs.theme` (не `docs.container` — в итоге не
+    понадобился свой `DocsContainer`, кроме заголовка, см. ниже).
+  - `src/docs/ComponentDocsPage.tsx` — новый `DocsTitle` (заменяет `<Title>` из
+    `@storybook/addon-docs/blocks` на `typo-heading-1`).
+  - `src/components/ui/*.mdx` — все 31 файл, `<Title>` → `<DocsTitle docs={...} />` (механическая
+    правка, формат `.docs.ts` не менялся).
+  - `package.json` — `storybook:theme` npm-скрипт.
+  - Не менял: `src/components/ui/*.tsx`/`*.docs.ts`/`*.stories.tsx` (сами компоненты и их
+    документация), `tokens/tokens.json`, `src/styles/tokens.css`, `.storybook/main.ts`.
 - Откат к состоянию «до», если что-то пошло не так:
   ```
   git checkout main
