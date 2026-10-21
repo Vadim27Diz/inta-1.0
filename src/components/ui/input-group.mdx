@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as InputGroupStories from "./input-group.stories"
 import { inputGroupDocs } from "./input-group.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={InputGroupStories} />
 
-<Title>{inputGroupDocs.title}</Title>
+<DocsTitle docs={inputGroupDocs} />
 
 <DocsPurpose docs={inputGroupDocs} />
 

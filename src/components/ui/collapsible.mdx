@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as CollapsibleStories from "./collapsible.stories"
 import { collapsibleDocs } from "./collapsible.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={CollapsibleStories} />
 
-<Title>{collapsibleDocs.title}</Title>
+<DocsTitle docs={collapsibleDocs} />
 
 <DocsPurpose docs={collapsibleDocs} />
 

@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as BadgeStories from "./badge.stories"
 import { badgeDocs } from "./badge.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={BadgeStories} />
 
-<Title>{badgeDocs.title}</Title>
+<DocsTitle docs={badgeDocs} />
 
 <DocsPurpose docs={badgeDocs} />
 

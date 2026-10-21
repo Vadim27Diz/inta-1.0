@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as ButtonGroupStories from "./button-group.stories"
 import { buttonGroupDocs } from "./button-group.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={ButtonGroupStories} />
 
-<Title>{buttonGroupDocs.title}</Title>
+<DocsTitle docs={buttonGroupDocs} />
 
 <DocsPurpose docs={buttonGroupDocs} />
 

@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as ToggleGroupStories from "./toggle-group.stories"
 import { toggleGroupDocs } from "./toggle-group.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={ToggleGroupStories} />
 
-<Title>{toggleGroupDocs.title}</Title>
+<DocsTitle docs={toggleGroupDocs} />
 
 <DocsPurpose docs={toggleGroupDocs} />
 

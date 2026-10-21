@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as CheckboxStories from "./checkbox.stories"
 import { checkboxDocs } from "./checkbox.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={CheckboxStories} />
 
-<Title>{checkboxDocs.title}</Title>
+<DocsTitle docs={checkboxDocs} />
 
 <DocsPurpose docs={checkboxDocs} />
 

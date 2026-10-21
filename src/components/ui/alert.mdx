@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as AlertStories from "./alert.stories"
 import { alertDocs } from "./alert.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={AlertStories} />
 
-<Title>{alertDocs.title}</Title>
+<DocsTitle docs={alertDocs} />
 
 <DocsPurpose docs={alertDocs} />
 

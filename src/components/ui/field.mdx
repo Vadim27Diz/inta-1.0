@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as FieldStories from "./field.stories"
 import { fieldDocs } from "./field.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={FieldStories} />
 
-<Title>{fieldDocs.title}</Title>
+<DocsTitle docs={fieldDocs} />
 
 <DocsPurpose docs={fieldDocs} />
 

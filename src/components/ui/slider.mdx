@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as SliderStories from "./slider.stories"
 import { sliderDocs } from "./slider.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={SliderStories} />
 
-<Title>{sliderDocs.title}</Title>
+<DocsTitle docs={sliderDocs} />
 
 <DocsPurpose docs={sliderDocs} />
 
