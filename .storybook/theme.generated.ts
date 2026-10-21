@@ -4,11 +4,12 @@
  * addons.setConfig({ theme }) — manager рендерится в отдельном бандле без доступа к нашим
  * CSS-переменным, поэтому значения зашиты как литералы на момент сборки темы.
  *
- * docsThemes — для parameters.docs.theme в .storybook/preview.tsx: цвета — var(--ds-...),
- * resolve-ятся браузером внутри preview-iframe (тот же документ, что и tokens.css) — бренд/тема
- * переключаются тулбаром сами, без смены объекта темы. Числовые поля (appBorderRadius,
- * inputBorderRadius) — не CSS-значения, var() для них невозможен: зафиксированы на бренд Main
- * (см. docs/roadmap.md — известное ограничение до отдельной доработки).
+ * docsThemes — 4 набора (main-light/main-dark/demo-light/demo-dark), ключи как у managerThemes.
+ * Для parameters.docs.theme в .storybook/preview.tsx: большинство цветов — var(--ds-...),
+ * resolve-ятся браузером внутри preview-iframe сами по data-brand/.dark; 8 полей (DOCS_LITERAL_
+ * COLOR_FIELDS в этом файле) и числовые поля (appBorderRadius, inputBorderRadius, шрифты) — не
+ * CSS, зашиты литералом под свою пару бренд×тема. Между самими 4 наборами переключает preview.tsx
+ * (DocsContainer с живым globals через useGlobals, без перезагрузки iframe).
  */
 
 export const managerThemes = {
@@ -131,7 +132,7 @@ export const managerThemes = {
 } as const;
 
 export const docsThemes = {
-  "light": {
+  "main-light": {
     "base": "light",
     "colorPrimary": "var(--ds-color-primary)",
     "colorSecondary": "#7F22FE",
@@ -160,7 +161,7 @@ export const docsThemes = {
     "fontCode": "\"JetBrains Mono\", ui-monospace, monospace",
     "brandTitle": "Inta 1.0"
   },
-  "dark": {
+  "main-dark": {
     "base": "dark",
     "colorPrimary": "var(--ds-color-primary)",
     "colorSecondary": "#7F22FE",
@@ -186,6 +187,64 @@ export const docsThemes = {
     "appBorderRadius": 6,
     "inputBorderRadius": 4,
     "fontBase": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+    "fontCode": "\"JetBrains Mono\", ui-monospace, monospace",
+    "brandTitle": "Inta 1.0"
+  },
+  "demo-light": {
+    "base": "light",
+    "colorPrimary": "var(--ds-color-primary)",
+    "colorSecondary": "#CA3500",
+    "appBg": "#FFFFFF",
+    "appContentBg": "#FFFFFF",
+    "appHoverBg": "var(--ds-color-surface-hover)",
+    "appPreviewBg": "var(--ds-color-surface)",
+    "appBorderColor": "#E4E4E7",
+    "textColor": "#09090B",
+    "textInverseColor": "var(--ds-color-on-inverse)",
+    "textMutedColor": "#52525C",
+    "barTextColor": "var(--ds-color-on-surface-muted)",
+    "barHoverColor": "var(--ds-color-on-surface)",
+    "barSelectedColor": "#00786F",
+    "barBg": "var(--ds-color-surface-raised)",
+    "buttonBg": "var(--ds-color-surface-raised)",
+    "buttonBorder": "var(--ds-color-border)",
+    "booleanBg": "var(--ds-color-surface-muted)",
+    "booleanSelectedBg": "var(--ds-color-primary)",
+    "inputBg": "#FFFFFF",
+    "inputBorder": "var(--ds-color-border-input)",
+    "inputTextColor": "var(--ds-color-on-surface)",
+    "appBorderRadius": 3,
+    "inputBorderRadius": 2,
+    "fontBase": "\"IBM Plex Sans\", ui-sans-serif, system-ui, sans-serif",
+    "fontCode": "\"JetBrains Mono\", ui-monospace, monospace",
+    "brandTitle": "Inta 1.0"
+  },
+  "demo-dark": {
+    "base": "dark",
+    "colorPrimary": "var(--ds-color-primary)",
+    "colorSecondary": "#CA3500",
+    "appBg": "#09090B",
+    "appContentBg": "#09090B",
+    "appHoverBg": "var(--ds-color-surface-hover)",
+    "appPreviewBg": "var(--ds-color-surface)",
+    "appBorderColor": "#27272A",
+    "textColor": "#FAFAFA",
+    "textInverseColor": "var(--ds-color-on-inverse)",
+    "textMutedColor": "#9F9FA9",
+    "barTextColor": "var(--ds-color-on-surface-muted)",
+    "barHoverColor": "var(--ds-color-on-surface)",
+    "barSelectedColor": "#00786F",
+    "barBg": "var(--ds-color-surface-raised)",
+    "buttonBg": "var(--ds-color-surface-raised)",
+    "buttonBorder": "var(--ds-color-border)",
+    "booleanBg": "var(--ds-color-surface-muted)",
+    "booleanSelectedBg": "var(--ds-color-primary)",
+    "inputBg": "#09090B",
+    "inputBorder": "var(--ds-color-border-input)",
+    "inputTextColor": "var(--ds-color-on-surface)",
+    "appBorderRadius": 3,
+    "inputBorderRadius": 2,
+    "fontBase": "\"IBM Plex Sans\", ui-sans-serif, system-ui, sans-serif",
     "fontCode": "\"JetBrains Mono\", ui-monospace, monospace",
     "brandTitle": "Inta 1.0"
   }
