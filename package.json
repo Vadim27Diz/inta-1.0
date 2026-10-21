@@ -14,6 +14,7 @@
     "tokens:check": "node .claude/skills/design-tokens/scripts/check-tokens.mjs src/components",
     "tokens:contrast": "node .claude/skills/design-tokens/scripts/check-contrast.mjs tokens/tokens.json",
     "storybook": "storybook dev -p 6006",
+    "storybook:theme": "node scripts/build-manager-theme.mjs tokens/tokens.json .storybook/theme.generated.ts src/styles/tokens.css",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
     "visual": "node scripts/visual.mjs",
