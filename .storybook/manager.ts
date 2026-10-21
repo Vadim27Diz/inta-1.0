@@ -2,6 +2,7 @@ import { addons } from "storybook/manager-api"
 import { create } from "storybook/theming"
 import { GLOBALS_UPDATED } from "storybook/internal/core-events"
 import { managerThemes } from "./theme.generated"
+import { parseGlobalsParam, brandThemeKey } from "./globals-from-url"
 
 // Первая загрузка должна сразу отрисовать тему под сохранённые globals (например, URL с
 // ?globals=brand:demo;theme:dark) — не мигать main-light до первого GLOBALS_UPDATED, который
@@ -9,14 +10,7 @@ import { managerThemes } from "./theme.generated"
 // channel. Manager — отдельный top-level документ и сам владеет window.location, поэтому может
 // прочитать тот же query-параметр синхронно, до похода в channel.
 function managerThemeKeyFromLocation(): keyof typeof managerThemes {
-  const globalsParam = new URLSearchParams(window.location.search).get("globals") ?? ""
-  const pairs = Object.fromEntries(
-    globalsParam
-      .split(";")
-      .filter(Boolean)
-      .map((pair) => pair.split(":") as [string, string])
-  )
-  const key = `${pairs.brand ?? "main"}-${pairs.theme ?? "light"}`
+  const key = brandThemeKey(parseGlobalsParam(window.location.search))
   return key in managerThemes ? (key as keyof typeof managerThemes) : "main-light"
 }
 

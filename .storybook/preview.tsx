@@ -6,15 +6,36 @@ import { GLOBALS_UPDATED } from "storybook/internal/core-events";
 import { DocsContainer } from "@storybook/addon-docs/blocks";
 import "../src/styles/globals.css";
 import { docsThemes } from "./theme.generated";
+import { parseGlobalsParam, brandThemeKey } from "./globals-from-url";
 
 // DocsContainer рендерится вне декоратора/истории — Storybook-хук useGlobals там падает
 // ("hooks can only be called inside decorators and story functions"), поэтому читаем globals
 // через context.channel (как manager.ts: тот же канал, обычные React-хуки, не Storybook'овские).
+//
+// Начальное значение не может быть константой "main-light": DocsContainer пересоздаётся на
+// каждый переход между Docs-страницами (Button → Alert) без нового GLOBALS_UPDATED, потому что
+// globals не менялись — с константой компонент на каждой новой странице откатывался к
+// main-light, пока тулбар не дёрнут вручную. Вместо этого читаем уже применённое состояние
+// документа: декоратор в этом же файле выставляет data-brand/.dark на документе при рендере
+// любой истории (в том числе внутри Canvas на предыдущей Docs-странице) — при переходе между
+// страницами эти атрибуты никуда не делись, globals те же. Пусто (самая первая отрисовка
+// iframe, ни одна история ещё не успела отрендериться) — тогда берём ?globals= из URL, как
+// manager.ts для своей темы.
+function initialDocsThemeKey(): keyof typeof docsThemes {
+  const root = document.documentElement;
+  if (root.dataset.brand) {
+    const key = brandThemeKey({ brand: root.dataset.brand, theme: root.classList.contains("dark") ? "dark" : "light" });
+    if (key in docsThemes) return key as keyof typeof docsThemes;
+  }
+  const key = brandThemeKey(parseGlobalsParam(window.location.search));
+  return key in docsThemes ? (key as keyof typeof docsThemes) : "main-light";
+}
+
 function ThemedDocsContainer({ context, ...rest }: ComponentProps<typeof DocsContainer>) {
-  const [key, setKey] = useState<keyof typeof docsThemes>("main-light");
+  const [key, setKey] = useState<keyof typeof docsThemes>(initialDocsThemeKey);
   useEffect(() => {
     const onGlobalsUpdated = ({ globals }: { globals?: { brand?: string; theme?: string } }) => {
-      const next = `${globals?.brand ?? "main"}-${globals?.theme ?? "light"}` as keyof typeof docsThemes
+      const next = brandThemeKey(globals ?? {}) as keyof typeof docsThemes
       if (docsThemes[next]) setKey(next)
     }
     context.channel.on(GLOBALS_UPDATED, onGlobalsUpdated)
