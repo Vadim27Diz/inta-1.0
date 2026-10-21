@@ -3,8 +3,25 @@ import { create } from "storybook/theming"
 import { GLOBALS_UPDATED } from "storybook/internal/core-events"
 import { managerThemes } from "./theme.generated"
 
+// Первая загрузка должна сразу отрисовать тему под сохранённые globals (например, URL с
+// ?globals=brand:demo;theme:dark) — не мигать main-light до первого GLOBALS_UPDATED, который
+// приходит только после того, как preview-iframe успеет смёржить globals и отдать их по
+// channel. Manager — отдельный top-level документ и сам владеет window.location, поэтому может
+// прочитать тот же query-параметр синхронно, до похода в channel.
+function managerThemeKeyFromLocation(): keyof typeof managerThemes {
+  const globalsParam = new URLSearchParams(window.location.search).get("globals") ?? ""
+  const pairs = Object.fromEntries(
+    globalsParam
+      .split(";")
+      .filter(Boolean)
+      .map((pair) => pair.split(":") as [string, string])
+  )
+  const key = `${pairs.brand ?? "main"}-${pairs.theme ?? "light"}`
+  return key in managerThemes ? (key as keyof typeof managerThemes) : "main-light"
+}
+
 addons.setConfig({
-  theme: create(managerThemes["main-light"]),
+  theme: create(managerThemes[managerThemeKeyFromLocation()]),
 })
 
 // Proof-of-concept: живое переключение темы manager вслед за тулбаром Brand/Theme. Manager и
