@@ -33,7 +33,9 @@ means a component is missing a token.
   by both Russian- and English-speaking teams.
 - **Accessibility verified in code** — each component's Storybook docs state exactly what's
   automatic (via Radix/shadcn) versus the consumer's responsibility.
-- **Visual regression testing in Chromatic**, across all 4 brand × theme combinations, on every PR.
+- **Visual regression testing in Chromatic** on every PR. Each component has a `BrandMatrix` story
+  rendering all 4 brand × theme combinations side by side — Chromatic snapshots each story once,
+  not the same story 4 times per combination.
 
 ### Run locally
 
@@ -83,7 +85,9 @@ Tailwind CSS v4 + shadcn/ui, документированной в Storybook. 31
   и русско-, и англоязычной команде.
 - **Доступность проверена по коду** — в документации каждого компонента явно сказано, что работает
   автоматически (через Radix/shadcn), а что остаётся на совести того, кто использует компонент.
-- **Визуальные тесты в Chromatic** по всем 4 комбинациям бренд × тема на каждый PR.
+- **Визуальные тесты в Chromatic** на каждый PR. У каждого компонента есть история `BrandMatrix`,
+  показывающая все 4 комбинации бренд × тема рядом — Chromatic снимает каждую историю один раз, а
+  не одну и ту же историю в 4 комбинациях.
 
 ### Как запустить локально
 
