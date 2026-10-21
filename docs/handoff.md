@@ -4,52 +4,38 @@
 `docs/handoff-archive.md`. **Правило:** этот файл перезаписывается при каждом обновлении, не
 дописывается в конец.
 
-## Задача
+## Статус: завершено, смёржено в main
 
-Оформить интерфейс самого Storybook (manager/sidebar/toolbar + Docs) в токенах Inta 1.0. Ветка
-`feat/storybook-ui`, в `main` не мёржим до ревью. Бэкап — тег `backup/pre-storybook-ui` на
-`b80ae96`; как откатиться и что именно меняется — `docs/roadmap.md` → «Бэкап и откат».
+Задача — оформить интерфейс самого Storybook (manager/sidebar/toolbar + Docs) в токенах Inta 1.0 —
+закрыта на уровне «перекраска темой» (Этап 1). Ревью пройдено, решение человека: глубже не идём
+(подробности и дальнейшие шаги — `docs/roadmap.md` → пункт 1).
 
-## Что сделано (Этап 1)
+- Ветка `feat/storybook-ui` → `main` через [PR #7](https://github.com/Vadim27Diz/inta-1.0/pull/7),
+  merge commit `e668294`. Ветка и тег `backup/pre-storybook-ui` сохранены (не удалены).
+- Chromatic build #35 проверен человеком: 1 изменение (`Item:Content`) — ожидаемое, принятое до
+  этого PR, не регрессия от него.
+- После мёржа на опубликованной (не локальной) сборке Chromatic проверено: шрифты без 404, прямая
+  ссылка с `?globals=brand:demo;theme:dark` открывается сразу в нужной теме и в manager, и в Docs.
+
+## Что сделано
 
 - `scripts/build-manager-theme.mjs` — резолвит `tokens.json` (Theme→Brand→Primitives) в 4
-  буквальные темы manager + var()-темы для Docs; `npm run storybook:theme` пересобирает.
-- `.storybook/manager.ts` — `addons.setConfig({ theme: create(...) })`; шрифты Inter/IBM Plex
-  через `.storybook/manager-head.html` + `public/fonts/` (latin-only).
-- `.storybook/preview.tsx` — `parameters.docs.theme`.
-- `DocsTitle` в `ComponentDocsPage.tsx`, заменяет `<Title>` во всех 31 `.mdx` (typo-heading-1).
-- Живое переключение manager-темы по тулбару Brand/Theme (`addons.register` +
-  `channel.on(GLOBALS_UPDATED)`).
+  буквальные темы manager **и** 4 темы Docs (`main/demo` × `light/dark` — не только manager, как
+  было на раннем этапе); `npm run storybook:theme` пересобирает.
+- `.storybook/manager.ts` — `addons.setConfig({ theme: create(...) })`, живое переключение по
+  тулбару без перезагрузки (`addons.register` + `channel.on(GLOBALS_UPDATED)`), тема первой
+  отрисовки читается из `?globals=` в URL — без мигания `main-light`. Шрифты Inter/IBM Plex через
+  `.storybook/manager-head.html` + `public/fonts/` (latin-only, свой бандл без `@fontsource`).
+- `.storybook/preview.tsx` — `docs.container` (`ThemedDocsContainer`, обёртка над `DocsContainer`),
+  живое переключение Docs-темы по тулбару; начальное значение читается лениво из уже применённого
+  состояния документа (`data-brand`/`.dark`), чтобы не откатываться к `main-light` при переходе
+  между Docs-страницами без смены globals.
+- `.storybook/globals-from-url.ts` — общий парсинг `?globals=` для manager.ts и preview.tsx.
+- `.storybook/main.ts` — `staticDirs: ["../public"]`, чтобы шрифты не давали 404 в проде.
+- `DocsTitle` в `ComponentDocsPage.tsx` — заменяет `<Title>` во всех 31 `.mdx` (`typo-heading-1`).
 
-## Что сделано (доработки после ревью)
-
-Все 4 пункта из прошлого «Что осталось» — закрыты, каждый отдельным коммитом (от
-`backup/pre-storybook-ui`): генератор темы → manager.ts+шрифты → preview.tsx → live-switch →
-DocsTitle → roadmap → **staticDirs (`d78ed34`) → Docs-тема 4 комбинации (`7aced15`) → manager
-без мигания (`cbad2bb`)**. После каждого шага — `npm run verify` и `npm run build-storybook`,
-оба зелёные.
-
-1. **Шрифты в проде**: `.storybook/main.ts` → `staticDirs: ["../public"]`. Проверено
-   `build-storybook` + локальный static-сервер (`http-server storybook-static`) — оба шрифта
-   (`inter-400.woff2`, `ibm-plex-sans-400.woff2`) отдают 200 по `/fonts/*.woff2`, не 404.
-2. **Docs-тема — все 4 комбинации**: `buildDocsTheme(brandMode, themeMode)` в
-   `build-manager-theme.mjs` теперь принимает бренд (раньше 8 литеральных полей всегда
-   резолвились под `Main`) — `docsThemes` содержит `main-light`/`main-dark`/`demo-light`/
-   `demo-dark`, те же ключи, что `managerThemes`. В `preview.tsx` — `ThemedDocsContainer`
-   (обёртка над `DocsContainer` из `@storybook/addon-docs/blocks`, параметр `docs.container`),
-   подставляет нужный набор по `GLOBALS_UPDATED` без перезагрузки iframe. Подробности и причина,
-   почему не через `useGlobals` — «Известные грабли» ниже.
-3. **Manager без мигания на первой загрузке**: `managerThemeKeyFromLocation()` в `manager.ts`
-   читает `window.location.search` (`?globals=brand:demo;theme:dark`) синхронно при загрузке
-   модуля, до прихода первого `GLOBALS_UPDATED` из preview-iframe — `addons.setConfig` сразу
-   получает правильную тему. Проверено Playwright: скриншот через 150мс после `goto` (ещё идёт
-   спиннер) уже тёмный/demo, не `main-light`.
-4. **Скриншоты для ревью**: пересняты (Playwright, dev-сервер) под итоговое состояние всех трёх
-   доработок — `after-docs-{main,demo}-{light,dark}.png` (4 шт, полная Docs-страница Button),
-   `after-controls-main-light.png` (панель Controls под canvas истории), `after-codeblock-main-
-   light.png` (блок кода, раскрыт «Show code»). Лежат в `visual.local/storybook-ui/` (в
-   `.gitignore`, не часть кода) вместе с нетронутыми `before-*` (дефолтный Storybook, снято до
-   начала задачи — не зависит от доработок этой сессии). Присланы файлами в этом же сообщении.
+Полная история коммитов (от `backup/pre-storybook-ui`) и находки каждого шага —
+`git log backup/pre-storybook-ui..e668294` и `docs/handoff-archive.md`.
 
 ## Известные грабли
 
@@ -62,9 +48,14 @@ DocsTitle → roadmap → **staticDirs (`d78ed34`) → Docs-тема 4 комб�
   по собранным чанкам `theming-*.js`/`blocks-*.js`.
 - **`useGlobals` (Storybook-хук) нельзя вызвать внутри `DocsContainer`** — он рендерится вне
   декоратора/истории, падает с «Storybook preview hooks can only be called inside decorators and
-  story functions». Рабочий вариант — обычные React-хуки (`useState`/`useEffect`) + подписка на
-  `context.channel.on(GLOBALS_UPDATED, …)`, тот же канал, что слушает `manager.ts`, но без
-  Storybook-обёртки над хуками. См. `ThemedDocsContainer` в `preview.tsx`.
+  story functions». Рабочий вариант — обычные React-хуки + подписка на
+  `context.channel.on(GLOBALS_UPDATED, …)`, тот же канал, что слушает `manager.ts`.
+- **`ThemedDocsContainer` с константным начальным `useState` откатывается к `main-light`** при
+  переходе между Docs-страницами: компонент пересоздаётся на каждый переход, а `GLOBALS_UPDATED`
+  не приходит, если globals не менялись. Фикс — ленивый инициализатор, читающий уже применённые
+  `data-brand`/`.dark` на `document.documentElement` (их выставляет декоратор при рендере любой
+  истории, в том числе на предыдущей странице), с fallback на `?globals=` из URL для самой первой
+  отрисовки.
 - `npm run tokens:check` сканирует и прозу `.docs.ts`/`.mdx`, не только `.tsx` — два
   `data-[state=…]` подряд без завершающего `:utility` читаются как один произвольный класс и
   падают (см. архив, батч 1).
@@ -75,17 +66,20 @@ DocsTitle → roadmap → **staticDirs (`d78ed34`) → Docs-тема 4 комб�
 
 Полный список — `docs/roadmap.md` → «Бэклог доступности и компонентов» (Link, Toast, FieldError
 aria-describedby, Slider aria-labelledby, Badge focus-visible, Skeleton aria-busy, разнобой языка
-встроенных aria-подписей, Item display:contents в Safari/VoiceOver).
+встроенных aria-подписей, Item display:contents в Safari/VoiceOver, **отсутствие таблицы
+свойств/Controls на Docs-страницах** — найдено при этом ревью, кандидат в бэклог).
 
 ## Правила
 
 - Каждый шаг Storybook UI — отдельный коммит.
-- Figma не менять без согласования (и вообще без необходимости — эта задача Figma не трогает).
+- Figma не менять без согласования (эта задача Figma не трогала).
 - Новая npm-зависимость — можно, но в отчёте указывать название/лицензию/зачем.
 - Chromatic не снимает интерфейс Storybook (только истории внутри preview) — ревью manager/Docs
-  делается по скриншотам (см. «Что сделано» → п.4), не по Chromatic diff.
+  делается по скриншотам, не по Chromatic diff.
 
 ## Что дальше
 
-Все 4 доработки из прошлого ревью закрыты. Ждёт решения человека: ревью скриншотов (приложены) и
-решение про мёрж `feat/storybook-ui` → `main` (см. `docs/roadmap.md` → «Бэкап и откат»).
+Задача закрыта. Следующие шаги по дизайн-системе — `docs/roadmap.md`: логотип sidebar (пункт 2,
+нужен ассет — не начинать без согласования), бэклог доступности и Controls-таблицы (пункт 3),
+конструктор страниц (пункт 4, заблокирован версией Storybook), остаток группы 3 — Table/Tabs/
+Scroll Area и др. (пункт 5, также нужен для возможной будущей глубокой кастомизации Storybook UI).

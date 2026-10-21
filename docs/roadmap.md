@@ -4,11 +4,21 @@
 (документация компонентов) и сами PR/коммиты. Этот файл обновляется по мере появления новых задач
 или смены приоритета, старые пункты не копятся как лог.
 
-## 1. Storybook UI в стиле Inta 1.0 — в работе
+## 1. Storybook UI в стиле Inta 1.0 — этап 1 завершён, в main
 
-Оформить интерфейс самого Storybook (не истории, а manager/sidebar/toolbar + Docs) в токенах
-дизайн-системы. Статус, бэкап и инвентаризация — см. отчёт по «Этапу 0» в PR/коммитах ветки
-`feat/storybook-ui` (или в самом чате, если PR ещё не открыт). Откат — см. «Бэкап и откат» ниже.
+Интерфейс самого Storybook (manager/sidebar/toolbar + Docs, не истории компонентов) оформлен в
+токенах дизайн-системы: перекраска темой (4 комбинации бренд×тема, live-переключение по тулбару
+без перезагрузки, шрифты Inter/IBM Plex, без мигания main-light на прямых ссылках с `?globals=`).
+Смёржено в `main` — [PR #7](https://github.com/Vadim27Diz/inta-1.0/pull/7) (merge commit
+`e668294`), Chromatic build #35 проверен (1 изменение — `Item:Content`, ожидаемое, принятое до
+этого PR, не регрессия от него). Детали реализации, найденные грабли и история коммитов —
+`docs/handoff-archive.md`. Откат — см. «Бэкап и откат» ниже (тег и ветка сохранены).
+
+**Дальше вглубь не идём.** Решено человеком: перекраска темой — предел этой задачи. Более глубокая
+кастомизация (свои панели/аддоны в manager, или отдельный сайт дизайн-системы на наших же
+компонентах вместо штатного Storybook UI) — отложена, не начата. Для второго варианта в любом
+случае нужны компоненты, которых пока нет: Tabs, Table, Scroll Area (см. «Остаток группы 3» ниже) —
+без них собрать такой сайт на своих компонентах не из чего.
 
 ## 2. Логотип Inta 1.0 для sidebar Storybook
 
@@ -48,6 +58,14 @@
   Playwright/Chromium подтвердил и роль, и `display:contents`, но старые версии WebKit исторически
   теряли роль у элементов с `display:contents` целиком. Если в реальном Safari + VoiceOver роль не
   долетает — заменить обёртку на одну с настоящим layout, не держаться за `display:contents`.
+- **На Docs-страницах нет таблицы свойств компонентов** — ни один из 31 `.mdx` не использует
+  `<Controls/>`/`<ArgTypes/>` из `@storybook/addon-docs/blocks`, только `<Canvas/>` + текстовые
+  блоки `ComponentDocsPage.tsx`. Найдено при ревью Storybook UI (задача 1): единственное, что
+  addon-docs вставляет сам — скрытый `aria-hidden` skeleton-плейсхолдер `table.sb-argstableBlock`
+  из `base-preview-body.html`, не связанный с реальными пропсами и никогда не видимый. Решить,
+  нужна ли таблица пропсов на Docs-странице вообще (сейчас документация текстовая, вручную
+  описывает варианты/состояния через `*.docs.ts`) и если да — добавлять ли `<Controls/>` во все
+  31 файл разом или по компоненту.
 
 Подробности и контекст каждой находки — в `handoff-archive.md` и в самих `.docs.ts` компонентов
 (`forDevelopers`/`accessibility`).
@@ -87,30 +105,33 @@ drag-and-drop конструктора страниц (пункт 4) и вооб
   `origin`.
 - Визуальный эталон «до» — Chromatic build #30 (батч 4, принят человеком как baseline):
   https://www.chromatic.com/build?appId=6ad4a76c23be4704dc8eca20&number=30
-- Вся работа по пункту 1 — в ветке `feat/storybook-ui` от `main`, `main` не трогаем до ревью.
-- Файлы, которые меняет пункт 1 (актуально после Этапа 1а/1б/1в):
-  - `scripts/build-manager-theme.mjs` (новый) — генератор тем manager+docs из `tokens/tokens.json`.
+- Пункт 1 смёржен в `main` через `feat/storybook-ui` → [PR #7](https://github.com/Vadim27Diz/inta-1.0/pull/7)
+  (merge commit `e668294`); ветка и тег сохранены (не удалены по мёржу).
+- Файлы, которые меняет пункт 1 (финальное состояние после мёржа):
+  - `scripts/build-manager-theme.mjs` (новый) — генератор тем manager+docs из `tokens/tokens.json`,
+    все 4 комбинации бренд×тема для обеих тем.
   - `.storybook/theme.generated.ts` (новый, генерируется) — не править руками, пересобирать
     `npm run storybook:theme`.
-  - `.storybook/manager.ts` (новый) — `addons.setConfig({ theme })` + live-переключение по
-    тулбару Brand/Theme (`addons.register` + `channel.on(GLOBALS_UPDATED)`).
+  - `.storybook/manager.ts` (новый) — `addons.setConfig({ theme })`, live-переключение по тулбару
+    (`addons.register` + `channel.on(GLOBALS_UPDATED)`), тема первой отрисовки — из `?globals=`.
   - `.storybook/manager-head.html` (новый) — `@font-face` для Inter/IBM Plex (manager — отдельный
     бандл, без доступа к `@fontsource` из `globals.css`).
   - `public/fonts/` (новое) — latin-only `.woff2` для manager (кириллица только в Docs/preview).
-  - `.storybook/preview.tsx` — `parameters.docs.theme` (не `docs.container` — в итоге не
-    понадобился свой `DocsContainer`, кроме заголовка, см. ниже).
+  - `.storybook/globals-from-url.ts` (новый) — общий парсинг `?globals=` для manager.ts и preview.tsx.
+  - `.storybook/preview.tsx` — `docs.container` (`ThemedDocsContainer`, обёртка над
+    `DocsContainer` из `@storybook/addon-docs/blocks`) вместо статичного `docs.theme`: нужен, чтобы
+    8 литеральных полей docs-темы следовали за тулбаром живьём и не откатывались к `main-light` при
+    переходе между Docs-страницами.
   - `src/docs/ComponentDocsPage.tsx` — новый `DocsTitle` (заменяет `<Title>` из
     `@storybook/addon-docs/blocks` на `typo-heading-1`).
   - `src/components/ui/*.mdx` — все 31 файл, `<Title>` → `<DocsTitle docs={...} />` (механическая
     правка, формат `.docs.ts` не менялся).
   - `package.json` — `storybook:theme` npm-скрипт.
+  - `.storybook/main.ts` — `staticDirs: ["../public"]` (шрифты manager-темы в проде).
   - Не менял: `src/components/ui/*.tsx`/`*.docs.ts`/`*.stories.tsx` (сами компоненты и их
-    документация), `tokens/tokens.json`, `src/styles/tokens.css`, `.storybook/main.ts`.
-- Откат к состоянию «до», если что-то пошло не так:
+    документация), `tokens/tokens.json`, `src/styles/tokens.css`.
+- Откат к состоянию «до», если что-то пошло не так (main уже продвинулся после мёржа):
   ```
   git checkout main
-  git reset --hard backup/pre-storybook-ui   # ИЛИ, мягче: git revert <коммиты ветки> по одному
+  git reset --hard backup/pre-storybook-ui   # ИЛИ, мягче: git revert e668294 (merge commit)
   ```
-  (`reset --hard` — только если ветка `feat/storybook-ui` ещё не смёржена и откатываем сам `main`;
-  обычно достаточно просто не мёржить ветку и/или закрыть PR без мёржа — тег нужен как
-  подтверждённая точка отсчёта на случай, если `main` всё же продвинется до ревью).
