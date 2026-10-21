@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as AspectRatioStories from "./aspect-ratio.stories"
 import { aspectRatioDocs } from "./aspect-ratio.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={AspectRatioStories} />
 
-<Title>{aspectRatioDocs.title}</Title>
+<DocsTitle docs={aspectRatioDocs} />
 
 <DocsPurpose docs={aspectRatioDocs} />
 

@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as SeparatorStories from "./separator.stories"
 import { separatorDocs } from "./separator.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={SeparatorStories} />
 
-<Title>{separatorDocs.title}</Title>
+<DocsTitle docs={separatorDocs} />
 
 <DocsPurpose docs={separatorDocs} />
 

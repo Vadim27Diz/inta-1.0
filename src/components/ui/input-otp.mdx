@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as InputOTPStories from "./input-otp.stories"
 import { inputOtpDocs } from "./input-otp.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={InputOTPStories} />
 
-<Title>{inputOtpDocs.title}</Title>
+<DocsTitle docs={inputOtpDocs} />
 
 <DocsPurpose docs={inputOtpDocs} />
 

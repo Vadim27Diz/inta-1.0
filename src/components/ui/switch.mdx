@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as SwitchStories from "./switch.stories"
 import { switchDocs } from "./switch.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={SwitchStories} />
 
-<Title>{switchDocs.title}</Title>
+<DocsTitle docs={switchDocs} />
 
 <DocsPurpose docs={switchDocs} />
 

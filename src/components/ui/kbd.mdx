@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as KbdStories from "./kbd.stories"
 import { kbdDocs } from "./kbd.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={KbdStories} />
 
-<Title>{kbdDocs.title}</Title>
+<DocsTitle docs={kbdDocs} />
 
 <DocsPurpose docs={kbdDocs} />
 

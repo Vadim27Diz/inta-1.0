@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as NativeSelectStories from "./native-select.stories"
 import { nativeSelectDocs } from "./native-select.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={NativeSelectStories} />
 
-<Title>{nativeSelectDocs.title}</Title>
+<DocsTitle docs={nativeSelectDocs} />
 
 <DocsPurpose docs={nativeSelectDocs} />
 

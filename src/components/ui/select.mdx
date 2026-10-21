@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as SelectStories from "./select.stories"
 import { selectDocs } from "./select.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={SelectStories} />
 
-<Title>{selectDocs.title}</Title>
+<DocsTitle docs={selectDocs} />
 
 <DocsPurpose docs={selectDocs} />
 

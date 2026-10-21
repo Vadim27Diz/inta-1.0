@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as CardStories from "./card.stories"
 import { cardDocs } from "./card.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={CardStories} />
 
-<Title>{cardDocs.title}</Title>
+<DocsTitle docs={cardDocs} />
 
 <DocsPurpose docs={cardDocs} />
 

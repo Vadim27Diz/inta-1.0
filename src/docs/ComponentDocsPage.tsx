@@ -30,6 +30,12 @@ function List({ items }: { items: string[] }) {
   )
 }
 
+// Заменяет <Title> из @storybook/addon-docs/blocks — тот рендерится шрифтом/размером Storybook,
+// не нашим typo-*. Один компонент на все 31 .mdx вместо повторения разметки в каждом файле.
+export function DocsTitle({ docs }: { docs: ComponentDocs }) {
+  return <h1 className="typo-heading-1 text-on-surface">{docs.title}</h1>
+}
+
 export function DocsPurpose({ docs }: { docs: ComponentDocs }) {
   const locale = useLocale()
   return (

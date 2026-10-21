@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as RadioGroupStories from "./radio-group.stories"
 import { radioGroupDocs } from "./radio-group.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={RadioGroupStories} />
 
-<Title>{radioGroupDocs.title}</Title>
+<DocsTitle docs={radioGroupDocs} />
 
 <DocsPurpose docs={radioGroupDocs} />
 

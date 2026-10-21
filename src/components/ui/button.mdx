@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as ButtonStories from "./button.stories"
 import { buttonDocs } from "./button.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={ButtonStories} />
 
-<Title>{buttonDocs.title}</Title>
+<DocsTitle docs={buttonDocs} />
 
 <DocsPurpose docs={buttonDocs} />
 

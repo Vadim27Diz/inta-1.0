@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as SpinnerStories from "./spinner.stories"
 import { spinnerDocs } from "./spinner.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={SpinnerStories} />
 
-<Title>{spinnerDocs.title}</Title>
+<DocsTitle docs={spinnerDocs} />
 
 <DocsPurpose docs={spinnerDocs} />
 

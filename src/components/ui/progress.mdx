@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as ProgressStories from "./progress.stories"
 import { progressDocs } from "./progress.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={ProgressStories} />
 
-<Title>{progressDocs.title}</Title>
+<DocsTitle docs={progressDocs} />
 
 <DocsPurpose docs={progressDocs} />
 

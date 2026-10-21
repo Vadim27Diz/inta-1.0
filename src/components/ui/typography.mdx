@@ -1,7 +1,8 @@
-import { Meta, Title, Canvas } from "@storybook/addon-docs/blocks"
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
 import * as TypographyStories from "./typography.stories"
 import { typographyDocs } from "./typography.docs"
 import {
+  DocsTitle,
   DocsPurpose,
   DocsWhenToUse,
   DocsWhenNotToUse,
@@ -16,7 +17,7 @@ import {
 
 <Meta of={TypographyStories} />
 
-<Title>{typographyDocs.title}</Title>
+<DocsTitle docs={typographyDocs} />
 
 <DocsPurpose docs={typographyDocs} />
 
