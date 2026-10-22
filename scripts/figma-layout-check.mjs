@@ -45,8 +45,21 @@ if (fs.existsSync(EXPORTER_PATH)) {
   }
 }
 
-const ORDER = ["Button", "Icon", "Icon / Glyphs", "Label", "Input", "Textarea", "Checkbox", "Radio Group", "Switch", "Badge", "Separator", "Kbd", "Spinner", "Skeleton", "Field", "Input Group", "Input OTP", "Native Select", "Select", "Toggle", "Toggle Group", "Button Group", "Slider", "Progress", "Utility", "Typography", "Avatar", "Item", "Avatar Group", "Empty", "Card", "Alert"];
-const PAD = 64, GAP = 160, PITCH = 64;
+// 9 колонок слева направо (x — реальный якорь колонки в Figma), в каждой — порядок секций сверху
+// вниз. Раскладка-грид принята решением человека 2026-10-22 (см. handoff.md), сменила прежнюю
+// «одна колонка».
+const COLUMNS = [
+  { x: -2236, order: ["Typography", "Utility"] },
+  { x: -1222, order: ["Icon", "Icon / Glyphs"] },
+  { x: -64, order: ["Button", "Toggle", "Toggle Group", "Button Group"] },
+  { x: 1204, order: ["Label", "Input", "Textarea", "Field", "Input Group", "Input OTP", "Native Select", "Select"] },
+  { x: 2598, order: ["Checkbox", "Radio Group", "Switch", "Slider", "Progress"] },
+  { x: 3656, order: ["Separator", "Kbd", "Spinner", "Skeleton"] },
+  { x: 4714, order: ["Badge"] },
+  { x: 5772, order: ["Avatar", "Avatar Group"] },
+  { x: 6830, order: ["Item", "Empty", "Card", "Alert"] },
+];
+const PAD = 64, GAP = 160, GAP_TOLERANCE = 2, PITCH = 64;
 const box = (a) => ({ name: a[0], type: a[1], x: a[2], y: a[3], w: a[4], h: a[5] });
 
 const errors = [];
@@ -85,16 +98,19 @@ for (let i = 0; i < sections.length; i++) for (let j = i + 1; j < sections.lengt
   if (o) fail(`секции пересекаются: ${sections[i].name} ↔ ${sections[j].name} (${o})`);
 }
 
-// 5. одна колонка, порядок сверху вниз, зазор 160
-const byY = [...sections].sort((a, b) => a.y - b.y);
-const names = byY.map((s) => s.name);
-if (names.join(" | ") !== ORDER.join(" | ")) fail(`порядок секций: ${names.join(" | ")} ≠ ${ORDER.join(" | ")}`);
-const xs = [...new Set(byY.map((s) => s.x))];
-if (xs.length > 1) fail(`секции не в одну колонку: x = ${xs.join(", ")}`);
-byY.slice(1).forEach((s, i) => {
-  const gap = s.y - (byY[i].y + byY[i].h);
-  if (Math.abs(gap - GAP) > 0.5) fail(`зазор ${byY[i].name} → ${s.name}: ${gap} ≠ ${GAP}`);
-});
+// 5. 9 колонок слева направо, в каждой — порядок сверху вниз и зазор 160 (±2)
+const actualXs = [...new Set(sections.map((s) => s.x))].sort((a, b) => a - b);
+const expectedXs = COLUMNS.map((c) => c.x);
+if (actualXs.join(",") !== expectedXs.join(",")) fail(`колонки по x: ${actualXs.join(", ")} ≠ ${expectedXs.join(", ")}`);
+for (const col of COLUMNS) {
+  const inCol = sections.filter((s) => s.x === col.x).sort((a, b) => a.y - b.y);
+  const names = inCol.map((s) => s.name);
+  if (names.join(" | ") !== col.order.join(" | ")) fail(`колонка x=${col.x}: ${names.join(" | ")} ≠ ${col.order.join(" | ")}`);
+  inCol.slice(1).forEach((s, i) => {
+    const gap = s.y - (inCol[i].y + inCol[i].h);
+    if (Math.abs(gap - GAP) > GAP_TOLERANCE) fail(`зазор ${inCol[i].name} → ${s.name}: ${gap} ≠ ${GAP} (±${GAP_TOLERANCE})`);
+  });
+}
 
 // 6. у каждой секции заголовок, описание и хотя бы один компонент
 for (const s of sections) {
@@ -184,7 +200,7 @@ for (const row of data.focusRingShape || []) {
 }
 
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · одна колонка, шаг 160 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше)\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · 9 колонок, шаг 160±2 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше)\n");
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
 }
