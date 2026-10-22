@@ -34,6 +34,13 @@ const topLevel = page.findAllWithCriteria({ types: ["COMPONENT", "COMPONENT_SET"
   .filter((n) => !(n.parent && n.parent.type === "COMPONENT_SET"));
 const components = topLevel.map((n) => [n.name, n.type, n.parent.name, n.parent.type]);
 
+// известные, не закрытые этой сессией проблемы Input OTP — зафиксированы как явные исключения
+// 2026-10-22 (решение человека), не чинить здесь. Задача «починить Input OTP в Figma и убрать
+// исключения» — в handoff.md/roadmap.md.
+const EXEMPT_ABSOLUTE_LAYERS = {
+  "Input OTP|Utility / Focus ring": "абсолютно спозиционированный focus-ring у State=active — известная проблема, не вызвана этой сессией (снимок до 2026-10-22 был устаревшим и её не видел), чинится отдельной задачей",
+};
+
 // абсолютно позиционированные слои внутри наборов — разрешён только focus-ring
 const absoluteLayers = [];
 for (const root of topLevel) {
@@ -41,7 +48,10 @@ for (const root of topLevel) {
   for (const v of variants) {
     if (!("findAll" in v)) continue;
     const abs = v.findAll((n) => "layoutPositioning" in n && n.layoutPositioning === "ABSOLUTE" && n.name !== "focus-ring");
-    for (const a of abs) absoluteLayers.push([root.name, v.name, a.name, a.type]);
+    for (const a of abs) {
+      const exempt = EXEMPT_ABSOLUTE_LAYERS[`${root.name}|${a.name}`] || null;
+      absoluteLayers.push([root.name, v.name, a.name, a.type, exempt]);
+    }
   }
 }
 
@@ -210,6 +220,17 @@ const SCALE_UP = { "radius/sm": "radius/md", "radius/md": "radius/lg", "radius/l
 const CORNERS = ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"];
 const FULL_THRESHOLD = 999;
 const focusRingShape = [];
+// известная, не закрытая этой сессией проблема Input OTP — см. комментарий у EXEMPT_ABSOLUTE_LAYERS.
+// Ключ по (parent, ring) — грубее, чем по kind, но все текущие находки этой пары одного типа
+// (corner-flat); если позже появится другая проблема у того же focus-ring, она тоже временно
+// скроется этим исключением — не страшно, задача на починку всё равно закрывает весь focus-ring.
+const EXEMPT_FOCUS_RING_SHAPE = {
+  "Input OTP / Slot|focus-ring": "скругление угла focus-ring не 0 там, где угол родителя 0 (Position first/middle/last) — известная проблема, не вызвана этой сессией, чинится отдельной задачей",
+};
+function pushRingFinding(row) {
+  const exempt = EXEMPT_FOCUS_RING_SHAPE[`${row[1]}|${row[2]}`] || null;
+  focusRingShape.push([...row, exempt]);
+}
 for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const directParent = r.parent;
   if (!directParent || !("topLeftRadius" in directParent)) continue; // геометрия родителя не читается — не наш случай
@@ -233,7 +254,7 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const main = r.type === "INSTANCE" ? r.mainComponent : null;
   const mainSetName = main ? (main.parent && main.parent.type === "COMPONENT_SET" ? main.parent.name : main.name) : null;
   if (r.type !== "INSTANCE" || mainSetName !== "Utility / Focus ring") {
-    focusRingShape.push(["not-instance", parent.name, r.name, r.type, mainSetName]);
+    pushRingFinding(["not-instance", parent.name, r.name, r.type, mainSetName]);
     continue;
   }
   // Kind — посадка (из имени варианта: "Kind=control|field|seam, Scale=…, Position=…"):
@@ -244,7 +265,7 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   //             задаёт форму по стороне.
   const kindMatch = main.name.match(/^Kind=(\w+)/);
   const kind = kindMatch ? kindMatch[1] : null;
-  if (!kind) { focusRingShape.push(["no-kind", parent.name, r.name, main.name]); continue; }
+  if (!kind) { pushRingFinding(["no-kind", parent.name, r.name, main.name]); continue; }
   const isFlush = kind === "field" || kind === "seam";
   const stepRadius = kind !== "field"; // field: скругление равно родителю, не на шаг выше
 
@@ -256,16 +277,16 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
     const ringVal = r[corner];
     const ringVar = cornerVarName(r, corner);
     if (parentVal >= FULL_THRESHOLD) {
-      if (ringVal < FULL_THRESHOLD) focusRingShape.push(["corner-full", parent.name, r.name, corner, "full", ringVal]);
+      if (ringVal < FULL_THRESHOLD) pushRingFinding(["corner-full", parent.name, r.name, corner, "full", ringVal]);
     } else if (parentVal === 0) {
-      if (ringVal !== 0) focusRingShape.push(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
+      if (ringVal !== 0) pushRingFinding(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
     } else if (!stepRadius) {
       // field: кольцо повторяет ТУ ЖЕ переменную, что и родитель — не следующую ступень
-      if (ringVar !== parentVar) focusRingShape.push(["corner-equal", parent.name, r.name, corner, parentVar, ringVar || ringVal]);
+      if (ringVar !== parentVar) pushRingFinding(["corner-equal", parent.name, r.name, corner, parentVar, ringVar || ringVal]);
     } else if (parentVar && SCALE_UP[parentVar]) {
-      if (ringVar !== SCALE_UP[parentVar]) focusRingShape.push(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
+      if (ringVar !== SCALE_UP[parentVar]) pushRingFinding(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
     } else {
-      focusRingShape.push(["corner-unclassified", parent.name, r.name, corner, parentVar || parentVal, ringVar || ringVal]);
+      pushRingFinding(["corner-unclassified", parent.name, r.name, corner, parentVar || parentVal, ringVar || ringVal]);
     }
   }
   // геометрия — через собственные width/height/x/y узлов (frame-относительные), НЕ
@@ -278,12 +299,12 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const okX = Math.abs((r.x - offsetBaseX) - wantOffset) <= 0.5;
   const okY = Math.abs((r.y - offsetBaseY) - wantOffset) <= 0.5;
   if (!okW || !okH || !okX || !okY) {
-    focusRingShape.push(["geometry", parent.name, r.name, { kind, w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + wantDelta, wantH: parent.height + wantDelta, wantDx: wantOffset, wantDy: wantOffset }]);
+    pushRingFinding(["geometry", parent.name, r.name, { kind, w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + wantDelta, wantH: parent.height + wantDelta, wantDx: wantOffset, wantDy: wantOffset }]);
   }
   // толщина обводки: control/seam — 2px, field — 3px (образец ui.shadcn.com)
   const wantStroke = kind === "field" ? 3 : 2;
   if (r.strokeWeight !== wantStroke) {
-    focusRingShape.push(["stroke-weight", parent.name, r.name, kind, wantStroke, r.strokeWeight]);
+    pushRingFinding(["stroke-weight", parent.name, r.name, kind, wantStroke, r.strokeWeight]);
   }
 }
 

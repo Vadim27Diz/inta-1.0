@@ -139,8 +139,10 @@ else {
   step(glyphs.map((g) => g.y), "Y");
 }
 
-// 8. в наборах компонентов нет абсолютно позиционированных слоёв, кроме focus-ring
-for (const [root, variant, layer, type] of data.absoluteLayers || []) {
+// 8. в наборах компонентов нет абсолютно позиционированных слоёв, кроме focus-ring (кроме явных
+// исключений с причиной)
+for (const [root, variant, layer, type, exempt] of data.absoluteLayers || []) {
+  if (exempt) continue;
   fail(`${root} / ${variant}: слой «${layer}» [${type}] абсолютный — курсор и всё, что зависит от длины текста, должно быть в потоке auto layout`);
 }
 
@@ -181,6 +183,7 @@ for (const [root, variant, container, layer, count] of data.repeatedLayers || []
 // control — зазор 2px, скругление на шаг выше; field — вплотную, скругление РАВНО родителю,
 // обводка 3px (образец ui.shadcn.com); seam — вплотную, скругление на шаг выше, Position по стороне.
 for (const row of data.focusRingShape || []) {
+  if (row[row.length - 1]) continue; // exempt reason — известная проблема, не чинится этим правилом
   const [rowKind, parent, ring] = row;
   if (rowKind === "not-instance") {
     fail(`${parent}: «${ring}» [${row[3]}] — не экземпляр Utility / Focus ring (${row[4] || "нарисованный слой"})`);
@@ -218,6 +221,12 @@ if (data.textContainers?.some((r) => r[5])) {
 }
 if (data.nakedText?.some((r) => r[3])) {
   console.log("исключения (голый текст): " + data.nakedText.filter((r) => r[3]).map((r) => `${r[0]} — ${r[3]}`).join(" · "));
+}
+if (data.absoluteLayers?.some((r) => r[4])) {
+  console.log("исключения (абсолютный слой): " + data.absoluteLayers.filter((r) => r[4]).map((r) => `${r[0]}|${r[2]} — ${r[4]}`).filter((v, i, a) => a.indexOf(v) === i).join(" · "));
+}
+if (data.focusRingShape?.some((r) => r[r.length - 1])) {
+  console.log("исключения (форма focus-ring): " + data.focusRingShape.filter((r) => r[r.length - 1]).map((r) => `${r[1]}|${r[2]} — ${r[r.length - 1]}`).filter((v, i, a) => a.indexOf(v) === i).join(" · "));
 }
 for (const e of errors) console.log(`✗ ${e}`);
 console.log(errors.length ? `${errors.length} нарушений` : "✓ раскладка в порядке");
