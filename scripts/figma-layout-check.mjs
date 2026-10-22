@@ -199,8 +199,20 @@ for (const row of data.focusRingShape || []) {
   }
 }
 
+// 15. слот-иконка (прямой инстанс Icon base с isExposedInstance=true, ИЛИ componentPropertyReferences
+// на INSTANCE_SWAP-свойство — см. комментарий в figma-layout-export.js) реально переключаем из
+// панели Properties, кроме явных исключений с причиной.
+for (const [root, variant, layer, isExposedInstance, mainComponent, hasPropertyRef, exempt] of data.iconSlots || []) {
+  if (exempt) continue;
+  const compliant = (mainComponent === "Icon base" && isExposedInstance) || hasPropertyRef;
+  if (!compliant) fail(`${root} / ${variant}: слот «${layer}» (${mainComponent || "?"}) не переключается из панели Properties — не isExposedInstance+Icon base и не componentPropertyReferences`);
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · 9 колонок, шаг 160±2 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше)\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · 9 колонок, шаг 160±2 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше) · слот-иконка — isExposedInstance+Icon base или componentPropertyReferences\n");
+if (data.iconSlots?.some((r) => r[6])) {
+  console.log("исключения (слот-иконка): " + data.iconSlots.filter((r) => r[6]).map((r) => `${r[0]}|${r[2]} — ${r[6]}`).filter((v, i, a) => a.indexOf(v) === i).join(" · "));
+}
 if (data.textContainers?.some((r) => r[5])) {
   console.log("исключения (ширина): " + data.textContainers.filter((r) => r[5]).map((r) => `${r[0]} — ${r[5]}`).join(" · "));
 }

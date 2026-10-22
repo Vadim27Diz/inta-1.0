@@ -21,6 +21,9 @@ const PAGE = "Components";
 const page = figma.root.children.find((p) => p.name === PAGE);
 if (!page) throw new Error(`нет страницы ${PAGE}`);
 await figma.setCurrentPageAsync(page);
+// скрытые слоты (visible=false, напр. Icon left/right у Button по умолчанию) иначе отдают пустой
+// .children в findAll-обходах — см. «Ограничения Figma API» в SKILL.md figma-icon-slots.
+figma.skipInvisibleInstanceChildren = false;
 
 const A = (n) => { const b = n.absoluteBoundingBox; return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)]; };
 const node = (n) => [n.name, n.type, ...A(n)];
@@ -284,12 +287,117 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   }
 }
 
+// ---- правило: слот-иконка (прямой путь из топ-уровневого компонента до инстанса Icon/Icon base/
+// li:* через FRAME/GROUP, без пересечения границы ДРУГОГО топ-уровневого компонента) должен быть
+// реально переключаем из панели Properties — двумя равноправными способами, оба реально
+// встречаются в файле:
+//   (а) сам кандидат — прямой инстанс Icon base с isExposedInstance=true (Button, Avatar, Item,
+//       Empty, Alert — слот либо прямой ребёнок варианта, либо вложен через чистые FRAME-обёртки
+//       типа media/header, но НЕ через другой INSTANCE — isExposedInstance работает только у
+//       первичного инстанса, не у вложенного в вложенный, см. «Ограничения Figma API» в
+//       SKILL.md figma-icon-slots);
+//   (б) у кандидата componentPropertyReferences.mainComponent указывает на INSTANCE_SWAP-свойство,
+//       объявленное где-то выше по дереву (Toggle T2 — свойство `Icon#518:0` на наборе, 33
+//       preferredValues, привязано к li:*-инстансу напрямую, без обёртки через Icon base).
+// Кандидат — инстанс, resolved-имя которого (через родительский COMPONENT_SET, если это вариант)
+// это "Icon", "Icon base" или "li:*"; граница — инстанс ДРУГОГО топ-уровневого компонента (его
+// собственные иконочные слоты уже проверяются отдельно, когда он сам top-level root — без этой
+// границы Button внутри Card/Empty и т.п. давал бы ложные находки); инстанс без совпадения ни по
+// одному из двух — кандидат, только если внутри него (рекурсивно) всё же нашёлся Icon/Icon
+// base/li:* (как Checkbox/mark, Select/Item/indicator — отдельный локальный компонент-обёртка,
+// не топ-уровневый и не сам Icon/Icon base).
+const ICON_SLOT_EXCLUDE_ROOTS = new Set(["Icon", "Icon base", "Utility / Focus ring"]);
+const iconScanRoots = topLevel.filter((n) => !ICON_SLOT_EXCLUDE_ROOTS.has(n.name) && !/^li:/.test(n.name));
+const topLevelNames = new Set(iconScanRoots.map((n) => n.name));
+
+function resolvedMainName(inst) {
+  const m = inst.mainComponent;
+  if (!m) return null;
+  return m.parent && m.parent.type === "COMPONENT_SET" ? m.parent.name : m.name;
+}
+function isIconPrimitive(name) {
+  return name === "Icon" || name === "Icon base" || /^li:/.test(name);
+}
+function containsIconPrimitive(node) {
+  if (!("findAll" in node)) return false;
+  return node.findAll((n) => n.type === "INSTANCE" && n.mainComponent && isIconPrimitive(resolvedMainName(n))).length > 0;
+}
+
+// минимум один вариант на каждое значение каждой VARIANT-оси (не только variants[0] — разные
+// значения структурной оси иногда меняют структуру слота, см. «Пробелы» в handoff.md), жадный
+// проход: первое появление нового значения любой оси добавляет вариант в выборку.
+function structuralAxes(root) {
+  if (root.type !== "COMPONENT_SET") return [];
+  return Object.entries(root.componentPropertyDefinitions)
+    .filter(([, d]) => d.type === "VARIANT")
+    .map(([k]) => k);
+}
+function parseVariantProps(name) {
+  const out = {};
+  for (const part of name.split(", ")) {
+    const eq = part.indexOf("=");
+    if (eq !== -1) out[part.slice(0, eq)] = part.slice(eq + 1);
+  }
+  return out;
+}
+function representativeVariants(root) {
+  if (root.type !== "COMPONENT_SET") return [root];
+  const axes = structuralAxes(root);
+  if (!axes.length) return [root.children[0]];
+  const covered = {};
+  for (const a of axes) covered[a] = new Set();
+  const selected = [];
+  for (const child of root.children) {
+    const props = parseVariantProps(child.name);
+    let addsNew = selected.length === 0;
+    for (const a of axes) if (props[a] !== undefined && !covered[a].has(props[a])) addsNew = true;
+    if (addsNew) {
+      selected.push(child);
+      for (const a of axes) if (props[a] !== undefined) covered[a].add(props[a]);
+    }
+  }
+  return selected;
+}
+
+// подтверждено живым чтением 2026-10-22 — зашитые глифы по дизайну, решение человека, см.
+// handoff.md «Решения человека по остальным компонентам с иконками».
+const EXEMPT_ICON_SLOTS = {
+  "Checkbox|mark": "чекмарк — зашитый глиф по дизайну; вложен в компонент mark, глубже одного уровня instance-в-instance isExposedInstance не работает",
+  "Select|Icon": "шеврон триггера — зашитый глиф по дизайну, миграция Select-триггера решением человека не нужна",
+  "Native Select|Icon": "шеврон — зашитый глиф по дизайну, тот же случай, что Select",
+  "Select / Item|Icon": "чекмарк пункта — зашитый глиф по дизайну, та же причина, что Checkbox/mark",
+  "Spinner|li:loader-circle": "глиф спиннера — зашитый по дизайну, смена на другую иконку не имеет смысла (как чекмарк Checkbox)",
+};
+
+const iconSlots = [];
+function recordIconSlot(root, variant, inst, mainName) {
+  const hasPropertyRef = !!(inst.componentPropertyReferences && inst.componentPropertyReferences.mainComponent);
+  const exempt = EXEMPT_ICON_SLOTS[`${root.name}|${inst.name}`] || null;
+  iconSlots.push([root.name, variant.name, inst.name, inst.isExposedInstance, mainName, hasPropertyRef, exempt]);
+}
+function findIconSlots(root, variant, node) {
+  if (!("children" in node)) return;
+  for (const child of node.children) {
+    if (child.type === "INSTANCE") {
+      const main = resolvedMainName(child);
+      if (main && isIconPrimitive(main)) { recordIconSlot(root, variant, child, main); continue; }
+      if (main && topLevelNames.has(main)) continue; // граница другого топ-уровневого компонента
+      if (containsIconPrimitive(child)) recordIconSlot(root, variant, child, main);
+      continue; // внутрь инстанса не идём в любом случае — см. комментарий выше про isExposedInstance
+    }
+    findIconSlots(root, variant, child);
+  }
+}
+for (const root of iconScanRoots) {
+  for (const v of representativeVariants(root)) findIconSlots(root, v, v);
+}
+
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
-  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape,
+  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape, iconSlots,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };
