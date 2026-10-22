@@ -21,6 +21,9 @@ const PAGE = "Components";
 const page = figma.root.children.find((p) => p.name === PAGE);
 if (!page) throw new Error(`нет страницы ${PAGE}`);
 await figma.setCurrentPageAsync(page);
+// скрытые слоты (visible=false, напр. Icon left/right у Button по умолчанию) иначе отдают пустой
+// .children в findAll-обходах — см. «Ограничения Figma API» в SKILL.md figma-icon-slots.
+figma.skipInvisibleInstanceChildren = false;
 
 const A = (n) => { const b = n.absoluteBoundingBox; return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)]; };
 const node = (n) => [n.name, n.type, ...A(n)];
@@ -31,6 +34,13 @@ const topLevel = page.findAllWithCriteria({ types: ["COMPONENT", "COMPONENT_SET"
   .filter((n) => !(n.parent && n.parent.type === "COMPONENT_SET"));
 const components = topLevel.map((n) => [n.name, n.type, n.parent.name, n.parent.type]);
 
+// известные, не закрытые этой сессией проблемы Input OTP — зафиксированы как явные исключения
+// 2026-10-22 (решение человека), не чинить здесь. Задача «починить Input OTP в Figma и убрать
+// исключения» — в handoff.md/roadmap.md.
+const EXEMPT_ABSOLUTE_LAYERS = {
+  "Input OTP|Utility / Focus ring": "абсолютно спозиционированный focus-ring у State=active — известная проблема, не вызвана этой сессией (снимок до 2026-10-22 был устаревшим и её не видел), чинится отдельной задачей",
+};
+
 // абсолютно позиционированные слои внутри наборов — разрешён только focus-ring
 const absoluteLayers = [];
 for (const root of topLevel) {
@@ -38,7 +48,10 @@ for (const root of topLevel) {
   for (const v of variants) {
     if (!("findAll" in v)) continue;
     const abs = v.findAll((n) => "layoutPositioning" in n && n.layoutPositioning === "ABSOLUTE" && n.name !== "focus-ring");
-    for (const a of abs) absoluteLayers.push([root.name, v.name, a.name, a.type]);
+    for (const a of abs) {
+      const exempt = EXEMPT_ABSOLUTE_LAYERS[`${root.name}|${a.name}`] || null;
+      absoluteLayers.push([root.name, v.name, a.name, a.type, exempt]);
+    }
   }
 }
 
@@ -207,6 +220,17 @@ const SCALE_UP = { "radius/sm": "radius/md", "radius/md": "radius/lg", "radius/l
 const CORNERS = ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"];
 const FULL_THRESHOLD = 999;
 const focusRingShape = [];
+// известная, не закрытая этой сессией проблема Input OTP — см. комментарий у EXEMPT_ABSOLUTE_LAYERS.
+// Ключ по (parent, ring) — грубее, чем по kind, но все текущие находки этой пары одного типа
+// (corner-flat); если позже появится другая проблема у того же focus-ring, она тоже временно
+// скроется этим исключением — не страшно, задача на починку всё равно закрывает весь focus-ring.
+const EXEMPT_FOCUS_RING_SHAPE = {
+  "Input OTP / Slot|focus-ring": "скругление угла focus-ring не 0 там, где угол родителя 0 (Position first/middle/last) — известная проблема, не вызвана этой сессией, чинится отдельной задачей",
+};
+function pushRingFinding(row) {
+  const exempt = EXEMPT_FOCUS_RING_SHAPE[`${row[1]}|${row[2]}`] || null;
+  focusRingShape.push([...row, exempt]);
+}
 for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const directParent = r.parent;
   if (!directParent || !("topLeftRadius" in directParent)) continue; // геометрия родителя не читается — не наш случай
@@ -230,7 +254,7 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const main = r.type === "INSTANCE" ? r.mainComponent : null;
   const mainSetName = main ? (main.parent && main.parent.type === "COMPONENT_SET" ? main.parent.name : main.name) : null;
   if (r.type !== "INSTANCE" || mainSetName !== "Utility / Focus ring") {
-    focusRingShape.push(["not-instance", parent.name, r.name, r.type, mainSetName]);
+    pushRingFinding(["not-instance", parent.name, r.name, r.type, mainSetName]);
     continue;
   }
   // Kind — посадка (из имени варианта: "Kind=control|field|seam, Scale=…, Position=…"):
@@ -241,7 +265,7 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   //             задаёт форму по стороне.
   const kindMatch = main.name.match(/^Kind=(\w+)/);
   const kind = kindMatch ? kindMatch[1] : null;
-  if (!kind) { focusRingShape.push(["no-kind", parent.name, r.name, main.name]); continue; }
+  if (!kind) { pushRingFinding(["no-kind", parent.name, r.name, main.name]); continue; }
   const isFlush = kind === "field" || kind === "seam";
   const stepRadius = kind !== "field"; // field: скругление равно родителю, не на шаг выше
 
@@ -253,16 +277,16 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
     const ringVal = r[corner];
     const ringVar = cornerVarName(r, corner);
     if (parentVal >= FULL_THRESHOLD) {
-      if (ringVal < FULL_THRESHOLD) focusRingShape.push(["corner-full", parent.name, r.name, corner, "full", ringVal]);
+      if (ringVal < FULL_THRESHOLD) pushRingFinding(["corner-full", parent.name, r.name, corner, "full", ringVal]);
     } else if (parentVal === 0) {
-      if (ringVal !== 0) focusRingShape.push(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
+      if (ringVal !== 0) pushRingFinding(["corner-flat", parent.name, r.name, corner, 0, ringVal]);
     } else if (!stepRadius) {
       // field: кольцо повторяет ТУ ЖЕ переменную, что и родитель — не следующую ступень
-      if (ringVar !== parentVar) focusRingShape.push(["corner-equal", parent.name, r.name, corner, parentVar, ringVar || ringVal]);
+      if (ringVar !== parentVar) pushRingFinding(["corner-equal", parent.name, r.name, corner, parentVar, ringVar || ringVal]);
     } else if (parentVar && SCALE_UP[parentVar]) {
-      if (ringVar !== SCALE_UP[parentVar]) focusRingShape.push(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
+      if (ringVar !== SCALE_UP[parentVar]) pushRingFinding(["corner-step", parent.name, r.name, corner, SCALE_UP[parentVar], ringVar || ringVal]);
     } else {
-      focusRingShape.push(["corner-unclassified", parent.name, r.name, corner, parentVar || parentVal, ringVar || ringVal]);
+      pushRingFinding(["corner-unclassified", parent.name, r.name, corner, parentVar || parentVal, ringVar || ringVal]);
     }
   }
   // геометрия — через собственные width/height/x/y узлов (frame-относительные), НЕ
@@ -275,13 +299,118 @@ for (const r of page.findAll((n) => n.name === "focus-ring")) {
   const okX = Math.abs((r.x - offsetBaseX) - wantOffset) <= 0.5;
   const okY = Math.abs((r.y - offsetBaseY) - wantOffset) <= 0.5;
   if (!okW || !okH || !okX || !okY) {
-    focusRingShape.push(["geometry", parent.name, r.name, { kind, w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + wantDelta, wantH: parent.height + wantDelta, wantDx: wantOffset, wantDy: wantOffset }]);
+    pushRingFinding(["geometry", parent.name, r.name, { kind, w: r.width, h: r.height, dx: r.x - offsetBaseX, dy: r.y - offsetBaseY }, { wantW: parent.width + wantDelta, wantH: parent.height + wantDelta, wantDx: wantOffset, wantDy: wantOffset }]);
   }
   // толщина обводки: control/seam — 2px, field — 3px (образец ui.shadcn.com)
   const wantStroke = kind === "field" ? 3 : 2;
   if (r.strokeWeight !== wantStroke) {
-    focusRingShape.push(["stroke-weight", parent.name, r.name, kind, wantStroke, r.strokeWeight]);
+    pushRingFinding(["stroke-weight", parent.name, r.name, kind, wantStroke, r.strokeWeight]);
   }
+}
+
+// ---- правило: слот-иконка (прямой путь из топ-уровневого компонента до инстанса Icon/Icon base/
+// li:* через FRAME/GROUP, без пересечения границы ДРУГОГО топ-уровневого компонента) должен быть
+// реально переключаем из панели Properties — двумя равноправными способами, оба реально
+// встречаются в файле:
+//   (а) сам кандидат — прямой инстанс Icon base с isExposedInstance=true (Button, Avatar, Item,
+//       Empty, Alert — слот либо прямой ребёнок варианта, либо вложен через чистые FRAME-обёртки
+//       типа media/header, но НЕ через другой INSTANCE — isExposedInstance работает только у
+//       первичного инстанса, не у вложенного в вложенный, см. «Ограничения Figma API» в
+//       SKILL.md figma-icon-slots);
+//   (б) у кандидата componentPropertyReferences.mainComponent указывает на INSTANCE_SWAP-свойство,
+//       объявленное где-то выше по дереву (Toggle T2 — свойство `Icon#518:0` на наборе, 33
+//       preferredValues, привязано к li:*-инстансу напрямую, без обёртки через Icon base).
+// Кандидат — инстанс, resolved-имя которого (через родительский COMPONENT_SET, если это вариант)
+// это "Icon", "Icon base" или "li:*"; граница — инстанс ДРУГОГО топ-уровневого компонента (его
+// собственные иконочные слоты уже проверяются отдельно, когда он сам top-level root — без этой
+// границы Button внутри Card/Empty и т.п. давал бы ложные находки); инстанс без совпадения ни по
+// одному из двух — кандидат, только если внутри него (рекурсивно) всё же нашёлся Icon/Icon
+// base/li:* (как Checkbox/mark, Select/Item/indicator — отдельный локальный компонент-обёртка,
+// не топ-уровневый и не сам Icon/Icon base).
+const ICON_SLOT_EXCLUDE_ROOTS = new Set(["Icon", "Icon base", "Utility / Focus ring"]);
+const iconScanRoots = topLevel.filter((n) => !ICON_SLOT_EXCLUDE_ROOTS.has(n.name) && !/^li:/.test(n.name));
+const topLevelNames = new Set(iconScanRoots.map((n) => n.name));
+
+function resolvedMainName(inst) {
+  const m = inst.mainComponent;
+  if (!m) return null;
+  return m.parent && m.parent.type === "COMPONENT_SET" ? m.parent.name : m.name;
+}
+function isIconPrimitive(name) {
+  return name === "Icon" || name === "Icon base" || /^li:/.test(name);
+}
+function containsIconPrimitive(node) {
+  if (!("findAll" in node)) return false;
+  return node.findAll((n) => n.type === "INSTANCE" && n.mainComponent && isIconPrimitive(resolvedMainName(n))).length > 0;
+}
+
+// минимум один вариант на каждое значение каждой VARIANT-оси (не только variants[0] — разные
+// значения структурной оси иногда меняют структуру слота, см. «Пробелы» в handoff.md), жадный
+// проход: первое появление нового значения любой оси добавляет вариант в выборку.
+function structuralAxes(root) {
+  if (root.type !== "COMPONENT_SET") return [];
+  return Object.entries(root.componentPropertyDefinitions)
+    .filter(([, d]) => d.type === "VARIANT")
+    .map(([k]) => k);
+}
+function parseVariantProps(name) {
+  const out = {};
+  for (const part of name.split(", ")) {
+    const eq = part.indexOf("=");
+    if (eq !== -1) out[part.slice(0, eq)] = part.slice(eq + 1);
+  }
+  return out;
+}
+function representativeVariants(root) {
+  if (root.type !== "COMPONENT_SET") return [root];
+  const axes = structuralAxes(root);
+  if (!axes.length) return [root.children[0]];
+  const covered = {};
+  for (const a of axes) covered[a] = new Set();
+  const selected = [];
+  for (const child of root.children) {
+    const props = parseVariantProps(child.name);
+    let addsNew = selected.length === 0;
+    for (const a of axes) if (props[a] !== undefined && !covered[a].has(props[a])) addsNew = true;
+    if (addsNew) {
+      selected.push(child);
+      for (const a of axes) if (props[a] !== undefined) covered[a].add(props[a]);
+    }
+  }
+  return selected;
+}
+
+// подтверждено живым чтением 2026-10-22 — зашитые глифы по дизайну, решение человека, см.
+// handoff.md «Решения человека по остальным компонентам с иконками».
+const EXEMPT_ICON_SLOTS = {
+  "Checkbox|mark": "чекмарк — зашитый глиф по дизайну; вложен в компонент mark, глубже одного уровня instance-в-instance isExposedInstance не работает",
+  "Select|Icon": "шеврон триггера — зашитый глиф по дизайну, миграция Select-триггера решением человека не нужна",
+  "Native Select|Icon": "шеврон — зашитый глиф по дизайну, тот же случай, что Select",
+  "Select / Item|Icon": "чекмарк пункта — зашитый глиф по дизайну, та же причина, что Checkbox/mark",
+  "Spinner|li:loader-circle": "глиф спиннера — зашитый по дизайну, смена на другую иконку не имеет смысла (как чекмарк Checkbox)",
+};
+
+const iconSlots = [];
+function recordIconSlot(root, variant, inst, mainName) {
+  const hasPropertyRef = !!(inst.componentPropertyReferences && inst.componentPropertyReferences.mainComponent);
+  const exempt = EXEMPT_ICON_SLOTS[`${root.name}|${inst.name}`] || null;
+  iconSlots.push([root.name, variant.name, inst.name, inst.isExposedInstance, mainName, hasPropertyRef, exempt]);
+}
+function findIconSlots(root, variant, node) {
+  if (!("children" in node)) return;
+  for (const child of node.children) {
+    if (child.type === "INSTANCE") {
+      const main = resolvedMainName(child);
+      if (main && isIconPrimitive(main)) { recordIconSlot(root, variant, child, main); continue; }
+      if (main && topLevelNames.has(main)) continue; // граница другого топ-уровневого компонента
+      if (containsIconPrimitive(child)) recordIconSlot(root, variant, child, main);
+      continue; // внутрь инстанса не идём в любом случае — см. комментарий выше про isExposedInstance
+    }
+    findIconSlots(root, variant, child);
+  }
+}
+for (const root of iconScanRoots) {
+  for (const v of representativeVariants(root)) findIconSlots(root, v, v);
 }
 
 const data = {
@@ -289,7 +418,7 @@ const data = {
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
-  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape,
+  ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape, iconSlots,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };
