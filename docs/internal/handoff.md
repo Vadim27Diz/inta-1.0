@@ -56,6 +56,12 @@
 Все 200 вариантов (`87:298`). Код: `src/components/ui/button.tsx`, иконка `lg` 16→20px. Подробности
 — в самом PR и в `figma-icon-audit.md`.
 
+Баги миграции и их механизм (delete+recreate рвёт даунстрим-оверрайды, `createInstance`+
+INSTANCE_SWAP не наследует заливку слота, drill-in может заморозить заливку как персональный
+оверрайд, скрытые слои требуют `skipInvisibleInstanceChildren=false`) — полный разбор в
+`docs/internal/figma-icon-audit.md` → «Баги, найденные и исправленные по ходу», не пересказывается
+здесь построчно.
+
 ### Avatar — 3 из 6 вариантов (`Content=photo`; `Content=initials` не имеет слоя-иконки)
 
 `Icon` (бывший `Icon/Size=16|20|24` → `Icon base` → глиф, 3 уровня) → прямой `Icon base`, глиф
