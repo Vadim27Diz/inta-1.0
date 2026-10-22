@@ -1,0 +1,3184 @@
+{
+  "meta": {
+    "capturedAt": "2026-10-22",
+    "source": "Figma file uUb84csG4wOfbUjB38ODiz, all pages except Button's own COMPONENT_SET 87:298",
+    "purpose": "Inventory of every Button instance OUTSIDE the component set (Playground, Card, Button Group, Empty, etc.) with its current icon-left/icon-right glyph and fill state, captured before step 3 batch migration. Used to verify after migration that none of these per-instance overrides were lost.",
+    "method": "page.findAll(n => n.type==='INSTANCE' && n.mainComponent.parent.id==='87:298'), read via figma.skipInvisibleInstanceChildren=false",
+    "pagesScanned": [
+      "Components (38:2)",
+      "Playground (52:2)",
+      "Foundations (94:2) - 0 matches",
+      "Page 4 (233:851) - empty page"
+    ],
+    "instanceCount": 110,
+    "overridesFoundCount": 1
+  },
+  "overridesFound": [
+    {
+      "id": "410:451",
+      "page": "Components",
+      "slot": "icon-left",
+      "variant": "Variant=ghost, Size=icon, State=default",
+      "reasons": [
+        "glyph li:plus -> li:settings"
+      ],
+      "glyph": "li:settings",
+      "glyphKey": "7e8bde43440ad1a0b72f6dd48e8b1a6a0f404e1a",
+      "fillVariable": "VariableID:7:4",
+      "fillColor": "#09090b"
+    }
+  ],
+  "instances": [
+    {
+      "id": "274:364",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "274:368",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "274:372",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "274:401",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "274:405",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "274:409",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "396:445",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "396:456",
+      "page": "Components",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "410:451",
+      "page": "Components",
+      "layerName": "action",
+      "variant": "Variant=ghost, Size=icon, State=default",
+      "iconLeft": {
+        "visible": true,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:settings",
+        "glyphKey": "7e8bde43440ad1a0b72f6dd48e8b1a6a0f404e1a",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "override",
+        "reasons": [
+          "glyph li:plus -> li:settings"
+        ]
+      },
+      "iconRight": null,
+      "iconRightCheck": null
+    },
+    {
+      "id": "410:459",
+      "page": "Components",
+      "layerName": "save-button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "height": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:771",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:775",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=secondary, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#1c398e"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#1c398e"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:779",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=neutral, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#18181b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#18181b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:783",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:787",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:791",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:795",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger-subtle, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#9f0712"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#9f0712"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:799",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=inverse, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:803",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#1447e6"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#1447e6"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:807",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link-danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#c10007"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#c10007"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:812",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:816",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=hover",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:820",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=pressed",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:824",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:829",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=disabled",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#9f9fa9"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#9f9fa9"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:834",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:838",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:842",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=lg, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:846",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=icon, State=default",
+      "iconLeft": {
+        "visible": true,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": null,
+      "iconRightCheck": null
+    },
+    {
+      "id": "310:854",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:859",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:864",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#1447e6"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#1447e6"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1012;274:364",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1012;274:368",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1012;274:372",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1102",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1106",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=secondary, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#dbeafe"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#dbeafe"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1110",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=neutral, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1114",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1118",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1122",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1126",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger-subtle, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#ffc9c9"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#ffc9c9"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1130",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=inverse, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1134",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#51a2ff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#51a2ff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1138",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link-danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#ff6467"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#ff6467"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1143",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1147",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=hover",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1151",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=pressed",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1155",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1160",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=disabled",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#71717b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#71717b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1165",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1169",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1173",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=lg, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1177",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=icon, State=default",
+      "iconLeft": {
+        "visible": true,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": null,
+      "iconRightCheck": null
+    },
+    {
+      "id": "310:1185",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1190",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1195",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#51a2ff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#51a2ff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1335;274:364",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1335;274:368",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1335;274:372",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1416",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1420",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=secondary, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#022f2e"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#022f2e"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1424",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=neutral, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#18181b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#18181b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1428",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1432",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1436",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1440",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger-subtle, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#9f0712"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#9f0712"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1444",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=inverse, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1448",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#005f5a"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#005f5a"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1452",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link-danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#c10007"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#c10007"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1457",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1461",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=hover",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1465",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=pressed",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1469",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1474",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=disabled",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#9f9fa9"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#9f9fa9"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1479",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1483",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1487",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=lg, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1491",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=icon, State=default",
+      "iconLeft": {
+        "visible": true,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": null,
+      "iconRightCheck": null
+    },
+    {
+      "id": "310:1499",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1504",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1509",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#005f5a"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#005f5a"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1649;274:364",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1649;274:368",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1649;274:372",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1730",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1734",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=secondary, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#96f7e4"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:83:5",
+        "fillColor": "#96f7e4"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1738",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=neutral, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:25",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1742",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1746",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1750",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:29",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1754",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=danger-subtle, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#ffc9c9"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:50",
+        "fillColor": "#ffc9c9"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1758",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=inverse, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#09090b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:7",
+        "fillColor": "#09090b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1762",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#00bba7"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#00bba7"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1766",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link-danger, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#ff6467"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:67:2",
+        "fillColor": "#ff6467"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1771",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1775",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=hover",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1779",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=pressed",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1783",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1788",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=disabled",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#71717b"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:33",
+        "fillColor": "#71717b"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1793",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=sm, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1797",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=md, State=default",
+      "iconLeft": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconLeftCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      },
+      "iconRight": {
+        "raw": "v=false;w=16;NOBASE"
+      },
+      "iconRightCheck": {
+        "status": "already-migrated-structure",
+        "note": "v=false;w=16;NOBASE"
+      }
+    },
+    {
+      "id": "310:1801",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=lg, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1805",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=primary, Size=icon, State=default",
+      "iconLeft": {
+        "visible": true,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:17",
+        "fillColor": "#ffffff"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": null,
+      "iconRightCheck": null
+    },
+    {
+      "id": "310:1813",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1818",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=ghost, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "310:1823",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=link, Size=md, State=focus",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#00bba7"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:30",
+        "fillColor": "#00bba7"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1963;274:364",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1963;274:368",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    },
+    {
+      "id": "I310:1963;274:372",
+      "page": "Playground",
+      "layerName": "Button",
+      "variant": "Variant=outline, Size=md, State=default",
+      "iconLeft": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:plus",
+        "glyphKey": "82b116e82f9daeda1ff39c93468ffebf1db715da",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconLeftCheck": {
+        "status": "default",
+        "reasons": []
+      },
+      "iconRight": {
+        "visible": false,
+        "width": 16,
+        "glyph": "li:arrow-right",
+        "glyphKey": "68101108cd922b1862fd177e222138538be35368",
+        "fillVariable": "VariableID:7:4",
+        "fillColor": "#fafafa"
+      },
+      "iconRightCheck": {
+        "status": "default",
+        "reasons": []
+      }
+    }
+  ]
+}
