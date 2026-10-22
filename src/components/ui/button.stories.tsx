@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Plus } from "lucide-react";
 import { Button } from "./button";
 
 const variants = [
@@ -13,7 +14,7 @@ const variants = [
   "link",
   "link-danger",
 ] as const;
-const sizes = ["sm", "md", "lg", "icon"] as const;
+const sizes = ["sm", "md", "lg", "icon", "icon-sm", "icon-lg"] as const;
 
 const meta = {
   title: "Components/Button",
@@ -37,6 +38,25 @@ export const Variants: Story = {
           {v}
         </Button>
       ))}
+    </div>
+  ),
+};
+
+export const Sizes: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-end gap-3">
+      {sizes.map((s) =>
+        s.startsWith("icon") ? (
+          <Button key={s} {...args} size={s} aria-label={`size ${s}`}>
+            <Plus />
+          </Button>
+        ) : (
+          <Button key={s} {...args} size={s}>
+            <Plus />
+            {s}
+          </Button>
+        ),
+      )}
     </div>
   ),
 };

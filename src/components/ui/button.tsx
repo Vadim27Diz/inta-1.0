@@ -36,6 +36,8 @@ const buttonVariants = cva(
         md: "h-9 px-4 py-2 typo-label-md [&_svg]:size-4",
         lg: "h-10 px-6 typo-label-lg [&_svg]:size-5",
         icon: "size-9 typo-label-md [&_svg]:size-4",
+        "icon-sm": "size-8 typo-label-md [&_svg]:size-4",
+        "icon-lg": "size-10 typo-label-md [&_svg]:size-5",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
