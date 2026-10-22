@@ -11,7 +11,7 @@ const buttonVariants = cva(
     // поэтому кнопка одинаково выглядит на surface и на surface-raised.
     "focus-visible:outline-solid focus-visible:outline-2 outline-offset-2 outline-focus-ring",
     "disabled:pointer-events-none disabled:bg-disabled disabled:text-on-disabled disabled:border-transparent",
-    "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "[&_svg]:pointer-events-none [&_svg]:shrink-0",
   ],
   {
     variants: {
@@ -32,10 +32,10 @@ const buttonVariants = cva(
       // one typo-* per size, never on the base: custom utilities have equal specificity,
       // so two of them on one element would be decided by CSS order, not by class order
       size: {
-        sm: "h-8 px-3 typo-label-sm",
-        md: "h-9 px-4 py-2 typo-label-md",
-        lg: "h-10 px-6 typo-label-lg",
-        icon: "size-9 typo-label-md",
+        sm: "h-8 px-3 typo-label-sm [&_svg]:size-4",
+        md: "h-9 px-4 py-2 typo-label-md [&_svg]:size-4",
+        lg: "h-10 px-6 typo-label-lg [&_svg]:size-5",
+        icon: "size-9 typo-label-md [&_svg]:size-4",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
