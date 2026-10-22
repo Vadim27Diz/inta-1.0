@@ -1,0 +1,101 @@
+{
+  "component": "Toggle",
+  "exportedAt": "2026-10-22",
+  "componentSetId": "265:411",
+  "props": {
+    "Variant": { "type": "VARIANT", "defaultValue": "default", "variantOptions": ["default", "outline"] },
+    "Size": { "type": "VARIANT", "defaultValue": "sm", "variantOptions": ["sm", "md", "lg"] },
+    "State": { "type": "VARIANT", "defaultValue": "default", "variantOptions": ["default", "focus", "disabled"] },
+    "Pressed": { "type": "VARIANT", "defaultValue": "off", "variantOptions": ["off", "on"] }
+  },
+  "structuralNote": "icon — прямой ребёнок каждого варианта (не обёрнут в Icon/Icon base), type INSTANCE, mainComponent = li:star (id 114:201, key 228dd3db03247dad23f6b4a8292b9ecbf7f111a9) во всех 36 вариантах без исключения. componentPropertyReferences = {} везде — на 2026-10-22 ни один вариант не привязан ни к какому component property (поле Icon ещё не создано). Размер инстанса icon фиксирован 16x16 во всех Size (sm/md/lg) — Size на иконку не влияет.",
+  "fillByStateAndPressed": {
+    "default/off": "VariableID:7:4",
+    "default/on": "VariableID:7:12",
+    "focus/off": "VariableID:7:4",
+    "focus/on": "VariableID:7:12",
+    "disabled/off": "VariableID:7:33",
+    "disabled/on": "VariableID:7:33"
+  },
+  "fillRule": "Заливка вектора внутри icon зависит только от State×Pressed, не зависит от Variant (default/outline) или Size — подтверждено по всем 36 вариантам.",
+  "variants": [
+    {"id":"265:291","name":"Variant=default, Size=sm, State=default, Pressed=off","iconId":"265:292","vectorId":"I265:292;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:294","name":"Variant=default, Size=sm, State=default, Pressed=on","iconId":"265:295","vectorId":"I265:295;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:297","name":"Variant=default, Size=sm, State=focus, Pressed=off","iconId":"265:298","vectorId":"I265:298;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:301","name":"Variant=default, Size=sm, State=focus, Pressed=on","iconId":"265:302","vectorId":"I265:302;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:305","name":"Variant=default, Size=sm, State=disabled, Pressed=off","iconId":"265:306","vectorId":"I265:306;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:308","name":"Variant=default, Size=sm, State=disabled, Pressed=on","iconId":"265:309","vectorId":"I265:309;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:311","name":"Variant=default, Size=md, State=default, Pressed=off","iconId":"265:312","vectorId":"I265:312;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:314","name":"Variant=default, Size=md, State=default, Pressed=on","iconId":"265:315","vectorId":"I265:315;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:317","name":"Variant=default, Size=md, State=focus, Pressed=off","iconId":"265:318","vectorId":"I265:318;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:321","name":"Variant=default, Size=md, State=focus, Pressed=on","iconId":"265:322","vectorId":"I265:322;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:325","name":"Variant=default, Size=md, State=disabled, Pressed=off","iconId":"265:326","vectorId":"I265:326;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:328","name":"Variant=default, Size=md, State=disabled, Pressed=on","iconId":"265:329","vectorId":"I265:329;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:331","name":"Variant=default, Size=lg, State=default, Pressed=off","iconId":"265:332","vectorId":"I265:332;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:334","name":"Variant=default, Size=lg, State=default, Pressed=on","iconId":"265:335","vectorId":"I265:335;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:337","name":"Variant=default, Size=lg, State=focus, Pressed=off","iconId":"265:338","vectorId":"I265:338;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:341","name":"Variant=default, Size=lg, State=focus, Pressed=on","iconId":"265:342","vectorId":"I265:342;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:345","name":"Variant=default, Size=lg, State=disabled, Pressed=off","iconId":"265:346","vectorId":"I265:346;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:348","name":"Variant=default, Size=lg, State=disabled, Pressed=on","iconId":"265:349","vectorId":"I265:349;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:351","name":"Variant=outline, Size=sm, State=default, Pressed=off","iconId":"265:352","vectorId":"I265:352;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:354","name":"Variant=outline, Size=sm, State=default, Pressed=on","iconId":"265:355","vectorId":"I265:355;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:357","name":"Variant=outline, Size=sm, State=focus, Pressed=off","iconId":"265:358","vectorId":"I265:358;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:361","name":"Variant=outline, Size=sm, State=focus, Pressed=on","iconId":"265:362","vectorId":"I265:362;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:365","name":"Variant=outline, Size=sm, State=disabled, Pressed=off","iconId":"265:366","vectorId":"I265:366;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:368","name":"Variant=outline, Size=sm, State=disabled, Pressed=on","iconId":"265:369","vectorId":"I265:369;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:371","name":"Variant=outline, Size=md, State=default, Pressed=off","iconId":"265:372","vectorId":"I265:372;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:374","name":"Variant=outline, Size=md, State=default, Pressed=on","iconId":"265:375","vectorId":"I265:375;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:377","name":"Variant=outline, Size=md, State=focus, Pressed=off","iconId":"265:378","vectorId":"I265:378;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:381","name":"Variant=outline, Size=md, State=focus, Pressed=on","iconId":"265:382","vectorId":"I265:382;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:385","name":"Variant=outline, Size=md, State=disabled, Pressed=off","iconId":"265:386","vectorId":"I265:386;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:388","name":"Variant=outline, Size=md, State=disabled, Pressed=on","iconId":"265:389","vectorId":"I265:389;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:391","name":"Variant=outline, Size=lg, State=default, Pressed=off","iconId":"265:392","vectorId":"I265:392;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:394","name":"Variant=outline, Size=lg, State=default, Pressed=on","iconId":"265:395","vectorId":"I265:395;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:397","name":"Variant=outline, Size=lg, State=focus, Pressed=off","iconId":"265:398","vectorId":"I265:398;114:200","fillVar":"VariableID:7:4"},
+    {"id":"265:401","name":"Variant=outline, Size=lg, State=focus, Pressed=on","iconId":"265:402","vectorId":"I265:402;114:200","fillVar":"VariableID:7:12"},
+    {"id":"265:405","name":"Variant=outline, Size=lg, State=disabled, Pressed=off","iconId":"265:406","vectorId":"I265:406;114:200","fillVar":"VariableID:7:33"},
+    {"id":"265:408","name":"Variant=outline, Size=lg, State=disabled, Pressed=on","iconId":"265:409","vectorId":"I265:409;114:200","fillVar":"VariableID:7:33"}
+  ],
+  "pilotVariant": {
+    "id": "265:291",
+    "name": "Variant=default, Size=sm, State=default, Pressed=off",
+    "note": "Левая верхняя ячейка набора — дефолтный вариант по всем 4 осям (Variant=default, Size=sm, State=default, Pressed=off)."
+  },
+  "downstreamToggleGroup": {
+    "sectionId": "271:388",
+    "frameId": "271:387",
+    "toggleInstanceCount": 18,
+    "overridesOnIcon": "0 — ни один из 18 инстансов icon внутри Toggle Group не имеет оверрайдов (overrides: [])",
+    "overridesOnToggle": "Только геометрия скругления углов и связанные boundVariables у крайних элементов сегментированных групп (bottomLeftRadius/topLeftRadius/bottomRightRadius/topRightRadius/strokeLeftWeight) — не относится к иконке, не задевается миграцией.",
+    "sampleIds": ["271:328", "271:331", "271:334", "271:338", "271:341", "271:344", "271:348", "271:351", "271:354", "271:358", "271:361", "271:364", "271:368", "271:371", "271:374", "271:378", "271:381", "271:384"]
+  },
+  "downstreamPlayground": {
+    "pageId": "52:2",
+    "toggleInstanceCount": 16,
+    "overrides": "0 — все 16 инстансов Toggle на Playground без оверрайдов, все Variant=default, Size=md",
+    "sampleIds": ["310:991", "I310:995;271:338", "I310:995;271:341", "I310:995;271:344", "310:1322", "I310:1325;271:338", "I310:1325;271:341", "I310:1325;271:344", "310:1636", "I310:1639;271:338", "I310:1639;271:341", "I310:1639;271:344", "310:1950", "I310:1953;271:338", "I310:1953;271:341", "I310:1953;271:344"]
+  },
+  "liCatalogForPreferredValues": {
+    "note": "Собрано сканированием страницы Components по инстансам с именем слоя li:* (используются как экспонированные глифы в других компонентах). li:star сюда не попал, так как его слой называется icon, а не li:star — добавлен вручную. Список не исчерпывающий: это каталог уже использованных в файле глифов, а не полный список доступной библиотеки иконок.",
+    "items": [
+      {"name": "li:star", "key": "228dd3db03247dad23f6b4a8292b9ecbf7f111a9", "mainComponentId": "114:201"},
+      {"name": "li:arrow-right", "key": "68101108cd922b1862fd177e222138538be35368", "mainComponentId": "114:17"},
+      {"name": "li:plus", "key": "82b116e82f9daeda1ff39c93468ffebf1db715da", "mainComponentId": "114:187"},
+      {"name": "li:lock", "key": "2011461ba3a690e60f4d416cf9b2dd68994369cc", "mainComponentId": "114:163"},
+      {"name": "li:image", "key": "ec86cca2161de2d8674f5d9da30d745d68b5396a", "mainComponentId": "113:18"},
+      {"name": "li:check", "key": "679406b81d80421022f4fdc0b75a58315e649943", "mainComponentId": "114:35"},
+      {"name": "li:minus", "key": "7a72d4a8bcdc7d19be90377dbbaea7a2337e17ae", "mainComponentId": "113:8"},
+      {"name": "li:loader-circle", "key": "d2f6c6e4e6a13da49956a885fe48e947e7acb373", "mainComponentId": "114:155"},
+      {"name": "li:chevron-down", "key": "74df3538db761c2bd0e6f2b5434de46daa14540c", "mainComponentId": "114:41"},
+      {"name": "li:user", "key": "c5d2273438322adfa03faac314cb5f622a1974b7", "mainComponentId": "114:243"},
+      {"name": "li:mail", "key": "9be514071f113cfb91ec041109ca6787f3a9a1bf", "mainComponentId": "114:171"},
+      {"name": "li:search", "key": "281f36428f6b3f7630e76fbf86951c14938a297d", "mainComponentId": "114:195"},
+      {"name": "li:settings", "key": "7e8bde43440ad1a0b72f6dd48e8b1a6a0f404e1a", "mainComponentId": "113:34"},
+      {"name": "li:circle", "key": "72757ee1839540ed71a2546b69ff01cd5e666075", "mainComponentId": "114:65"},
+      {"name": "li:info", "key": "5bf36da16b61a5938aef966cc945c09485495bbd", "mainComponentId": "114:149"},
+      {"name": "li:circle-check", "key": "c22b2f02230c4057e3a21309e25ebc8cf73e4f8b", "mainComponentId": "114:83"},
+      {"name": "li:triangle-alert", "key": "909d19fbd0eab76e7a106ec363465210d3276797", "mainComponentId": "114:225"},
+      {"name": "li:circle-alert", "key": "f7ebd8d64413620cc9033fab8837440dc2c30d25", "mainComponentId": "114:75"}
+    ]
+  }
+}
