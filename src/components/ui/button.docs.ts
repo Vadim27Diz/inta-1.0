@@ -112,7 +112,7 @@ export const buttonDocs: ComponentDocs = {
     { name: "link", description: { ru: "действие в виде текстовой ссылки, без фона кнопки", en: "an action styled as a text link, no button fill" } },
     { name: "link-danger", description: { ru: "разрушительное действие в виде ссылки", en: "a link-styled destructive action" } },
     { name: "size: sm / md / lg", description: { ru: "три размера под плотность интерфейса: sm — компактные панели, md — размер по умолчанию, lg — заметные одиночные призывы к действию", en: "three sizes for interface density: sm for compact panels, md is the default, lg for prominent standalone calls to action" } },
-    { name: "size: icon", description: { ru: "квадратная кнопка под одну иконку без подписи", en: "a square button for a single icon with no label" } },
+    { name: "size: icon-sm / icon / icon-lg", description: { ru: "три квадратных размера под одну иконку без подписи — icon-sm и icon для компактных тулбаров и панелей, icon-lg для заметных одиночных действий", en: "three square sizes for a single icon with no label — icon-sm and icon for compact toolbars and panels, icon-lg for prominent standalone actions" } },
   ],
   states: [
     { name: "hover", description: { ru: "фон чуть меняется при наведении курсора — подсказывает, что элемент интерактивен", en: "the fill shifts slightly on hover — signals that the element is interactive" } },
@@ -159,8 +159,8 @@ export const buttonDocs: ComponentDocs = {
   ],
   forDevelopers: [
     {
-      ru: "Иконка и текст — обычные children, порядок задаётся порядком передачи. Размер SVG фиксирован классом ([&_svg]:size-4).",
-      en: "Icon and text are plain children; order follows the order they're passed in. SVG size is fixed via a class ([&_svg]:size-4).",
+      ru: "Иконка и текст — обычные children, порядок задаётся порядком передачи. Размер SVG задаёт класс самого size-варианта: 16px ([&_svg]:size-4) у sm/md/icon/icon-sm, 20px ([&_svg]:size-5) у lg/icon-lg.",
+      en: "Icon and text are plain children; order follows the order they're passed in. SVG size follows the size variant's own class: 16px ([&_svg]:size-4) for sm/md/icon/icon-sm, 20px ([&_svg]:size-5) for lg/icon-lg.",
     },
     {
       ru: "asChild — полиморфный рендер через Radix Slot: вместо <button> рендерится переданный элемент (например <a>), с теми же классами и обработчиками.",
@@ -171,8 +171,8 @@ export const buttonDocs: ComponentDocs = {
       en: "Long text doesn't truncate or wrap: whitespace-nowrap, the button grows with its content (inline-flex, no max-width).",
     },
     {
-      ru: "size=\"icon\" без доступного имени: добавляйте aria-label на сам <button>, компонент его не проставляет.",
-      en: "size=\"icon\" has no accessible name by default: add aria-label on the <button> itself, the component doesn't set one.",
+      ru: "size=\"icon\" / \"icon-sm\" / \"icon-lg\" без доступного имени: добавляйте aria-label на сам <button>, компонент его не проставляет.",
+      en: "size=\"icon\" / \"icon-sm\" / \"icon-lg\" have no accessible name by default: add aria-label on the <button> itself, the component doesn't set one.",
     },
     {
       ru: "disabled — нативный атрибут <button>: pointer-events-none, выпадает из tab-order, свои токены bg-disabled/text-on-disabled.",
