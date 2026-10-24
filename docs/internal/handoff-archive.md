@@ -1,3 +1,39 @@
+# Handoff: Input OTP focus-ring закрыт (PR #15), следующая задача — решение человека
+
+Текущее состояние на 2026-10-24. История предыдущих задач — ниже в этом же файле. **Правило:** этот
+файл перезаписывается при каждом обновлении, не дописывается в конец.
+
+## Статус
+
+- **PR #9–#15 смёржены в `main`**, порядок 9→10→11→12→13→14→15, без конфликтов кроме `handoff.md`
+  между #9/#10 (разрешён версией #10). PR #15 смёржен этой сессией — merge commit `02057c1`
+  (`gh pr merge 15 --merge`, проверено: все 3 чек-рана зелёные — Storybook Publish/UI Tests/
+  chromatic, `mergeStateStatus: CLEAN`, `reviewDecision` пустой, `latestReviews: []`).
+- **Input OTP focus-ring (roadmap.md п.3) — закрыт полностью.** 27 строк нарушений (3
+  `absoluteLayers` + 24 `focusRingShape`) → 0. Ход работы: пилот (1 инстанс) → 3 пакета по
+  состоянию (`default`/`invalid`/`disabled`) → переименование 3 слоёв → сверка имён → сверка
+  Playground (16 физических колец, правка подхватилась каскадом, без застывших оверрайдов) —
+  расхождений не было ни на одном шаге. `figma/layout.json` пересобран, оба `EXEMPT_*` сняты из
+  `figma-layout-export.js`. `npm run figma:layout`/`verify` и `tsc -b` — зелёные. Снимок «до» всех
+  затронутых колец — `docs/internal/figma-input-otp-focus-ring-before.json`. Детали хода работы,
+  id инстансов, сведение чисел — ниже в этом файле.
+- **`scripts/figma-code-diff.mjs` теперь проверяет Button** (тот же PR #15) — 492 среза · 1816
+  проверок · 0 расхождений.
+
+## Открытый вопрос — не закрыт на момент этой записи
+
+**Kind=seam (вплотную, без зазора) у кольца Input OTP против `outline-offset-2` в коде.**
+`src/components/ui/input-otp.tsx` → `InputOTPSlot` красит активный слот control-стилем (зазор 2px,
+как у Button), а Figma-кольцо — `Kind=seam` (вплотную). Два варианта: привести код к `ring`/вплотную
+(как Input/Textarea/Select, `Kind=field`) или признать Input OTP легитимным исключением с зазором.
+Зафиксировано в `roadmap.md` п.3.
+
+## Проверки на момент этой записи
+
+`npm run verify`, `tsc -b`, `npm run build-storybook` — все зелёные на `main` после мёржа #15.
+
+---
+
 # Handoff: Input OTP focus-ring — план готов и сверен, жду «версия сохранена» на первую запись
 
 Текущее состояние на 2026-10-24. Предыдущая запись (PR #14, Button в figma:diff) — см. ниже в этом
