@@ -71,9 +71,16 @@ const EXPECT = [
     { sel: "label", at: 0, name: "default",  height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4 },
     { sel: "label", at: 1, name: "required", height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4, markColor: "--ds-color-on-surface-danger" },
   ] },
+  // Вертикальный паддинг у Figma-вариантов Button 2026-10-24 стал ненулевым (spacing/2=8,
+  // spacing/2-5=10) у ВСЕХ размеров — но padY здесь проверяется через getComputedStyle().paddingTop,
+  // а в коде py-* класс есть только у md (py-2). sm/lg/icon* центрируют контент фиксированной
+  // высотой/квадратом + items-center, без литерального CSS padding — computed paddingTop там 0px
+  // независимо от Figma. Добавлять им padY было бы ложным расхождением (0 ≠ 8/10), не настоящим
+  // багом: проверка явно НЕ добавлена для sm/lg/icon* по этой причине, только для md, где это
+  // литеральный CSS.
   { story: "components-button--sizes", title: "Button sizes", probes: [
     { sel: "[data-slot=button]", at: 0, name: "sm",      height: 32, padX: 12, radius: "--ds-radius-md" },
-    { sel: "[data-slot=button]", at: 1, name: "md",      height: 36, padX: 16, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 1, name: "md",      height: 36, padX: 16, padY: 8, radius: "--ds-radius-md" },
     { sel: "[data-slot=button]", at: 2, name: "lg",      height: 40, padX: 24, radius: "--ds-radius-md" },
     { sel: "[data-slot=button]", at: 3, name: "icon",    height: 36, width: 36, radius: "--ds-radius-md" },
     { sel: "[data-slot=button]", at: 4, name: "icon-sm", height: 32, width: 32, radius: "--ds-radius-md" },
