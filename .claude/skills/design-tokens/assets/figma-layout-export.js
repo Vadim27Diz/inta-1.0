@@ -402,12 +402,55 @@ for (const root of iconScanRoots) {
   for (const v of representativeVariants(root)) findIconSlots(root, v, v);
 }
 
+// геометрия не должна зависеть от Variant/State — только от свойств, перечисленных здесь (у Button
+// это Type×Size). Выброс значит «кнопка на глаз меняет размер при переключении варианта». Найдено
+// 2026-10-24: strokesIncludedInLayout=true у Button/outline добавлял +2px к ширине относительно
+// вариантов без обводки того же Type×Size — не входило ни в один чек. Правило человека тогда же:
+// паддинг не может быть 0 (центрирование — явным паддингом на spacing/*, не пустой Fixed-рамкой).
+const SIZE_CONSISTENCY_TARGETS = { Button: ["Type", "Size"] };
+const PADDING_FIELDS = ["paddingLeft", "paddingRight", "paddingTop", "paddingBottom"];
+const GEOMETRY_FIELDS = ["width", "height", ...PADDING_FIELDS];
+
+const sizeConsistency = [];
+for (const setName in SIZE_CONSISTENCY_TARGETS) {
+  const set = topLevel.find((n) => n.type === "COMPONENT_SET" && n.name === setName);
+  if (!set) continue;
+  const groupByProps = SIZE_CONSISTENCY_TARGETS[setName];
+  const groups = {};
+  for (const child of set.children) {
+    const key = groupByProps.map((p) => child.variantProperties[p]).join(", ");
+    (groups[key] ??= []).push(child);
+  }
+  for (const key in groups) {
+    const group = groups[key];
+    for (const f of GEOMETRY_FIELDS) {
+      const counts = new Map();
+      for (const c of group) counts.set(c[f], (counts.get(c[f]) || 0) + 1);
+      let mode = null, modeCount = -1;
+      for (const [v, n] of counts) if (n > modeCount) { mode = v; modeCount = n; }
+      for (const c of group) if (c[f] !== mode) sizeConsistency.push([setName, key, c.name, f, c[f], mode, null]);
+    }
+    for (const c of group) {
+      for (const f of PADDING_FIELDS) {
+        if (c[f] === 0) sizeConsistency.push([setName, key, c.name, "zeroPadding", f, null, null]);
+      }
+      // strokesIncludedInLayout стоит true на ВСЕХ вариантах Button (не только с видимой обводкой) —
+      // проверено живым чтением 2026-10-24. Безвреден без страницы paint (strokes.length===0), но
+      // раздувает hug-ширину там, где обводка реально есть — флагуем только это сочетание.
+      if (c.strokesIncludedInLayout && (c.strokes || []).length > 0) {
+        sizeConsistency.push([setName, key, c.name, "strokesIncludedInLayout", true, false, null]);
+      }
+    }
+  }
+}
+
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
   ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape, iconSlots,
+  sizeConsistency,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };

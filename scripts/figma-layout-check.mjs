@@ -211,8 +211,17 @@ for (const [root, variant, layer, isExposedInstance, mainComponent, hasPropertyR
   if (!compliant) fail(`${root} / ${variant}: слот «${layer}» (${mainComponent || "?"}) не переключается из панели Properties — не isExposedInstance+Icon base и не componentPropertyReferences`);
 }
 
+// 16. геометрия (ширина/высота/паддинги) не зависит от Variant/State внутри набора — только от
+// свойств, по которым сгруппировано (у Button — Type×Size); и ни один паддинг не равен 0.
+for (const [setName, groupKey, childName, field, actual, expected, exempt] of data.sizeConsistency || []) {
+  if (exempt) continue;
+  if (field === "zeroPadding") fail(`${setName} [${groupKey}] «${childName}»: паддинг «${actual}» = 0 — запрещено правилом (только через spacing/*, не 0)`);
+  else if (field === "strokesIncludedInLayout") fail(`${setName} [${groupKey}] «${childName}»: strokesIncludedInLayout=true — обводка раздувает hug-ширину относительно вариантов того же Type×Size без обводки`);
+  else fail(`${setName} [${groupKey}] «${childName}»: ${field}=${actual} ≠ ${expected} (остальные Variant/State в этой группе Type×Size)`);
+}
+
 console.log(`Раскладка ${data.page} · снимок ${data.exportedAt} · секций ${sections.length} · компонентов ${data.components.length} · хеш ${djb2(JSON.stringify(dataWithoutExporterHash))}`);
-console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · 9 колонок, шаг 160±2 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше) · слот-иконка — isExposedInstance+Icon base или componentPropertyReferences\n");
+console.log("правила: только секции · компоненты в секциях · отступ 64 · без пересечений · 9 колонок, шаг 160±2 · заголовок и описание · сетка глифов 64 · без абсолютных слоёв кроме focus-ring · кольцо фокуса не обрезано (Components/Playground/Foundations) · текстовый контейнер Hug/Fill · текст — через property · пункты списков — Fill · повторы — экземпляры, не слои · focus-ring — экземпляр Utility / Focus ring по Kind (control: зазор 2px, скругление на шаг выше · field: вплотную, скругление = родителю, 3px · seam: вплотную, скругление на шаг выше) · слот-иконка — isExposedInstance+Icon base или componentPropertyReferences · геометрия Button одинакова внутри Type×Size, паддинг никогда 0\n");
 if (data.iconSlots?.some((r) => r[6])) {
   console.log("исключения (слот-иконка): " + data.iconSlots.filter((r) => r[6]).map((r) => `${r[0]}|${r[2]} — ${r[6]}`).filter((v, i, a) => a.indexOf(v) === i).join(" · "));
 }
