@@ -58,6 +58,7 @@ export const fieldDocs: ComponentDocs = {
     { name: "orientation: vertical", description: { ru: "подпись над полем — по умолчанию", en: "label above the field — the default" } },
     { name: "orientation: horizontal", description: { ru: "подпись слева от поля", en: "label to the left of the field" } },
     { name: "orientation: responsive", description: { ru: "vertical на узком экране, horizontal — на широком", en: "vertical on a narrow screen, horizontal on a wide one" } },
+    { name: "size: lg / md / sm", description: { ru: "размер подписи (FieldLabel) через контекст; по умолчанию md, как и раньше. Контрол внутри (Input и т.п.) размер не наследует — выставляйте тот же size вручную, иначе подпись и поле визуально разойдутся.", en: "the label's (FieldLabel) size, via context; md by default, unchanged from before. The control inside (Input, etc.) doesn't inherit it — set the same size by hand, or the label and field will visually drift apart." } },
   ],
   states: [
     { name: "default", description: { ru: "обычное состояние — видна FieldDescription, если есть", en: "the default state — FieldDescription shows, if present" } },
@@ -109,6 +110,12 @@ export const fieldDocs: ComponentDocs = {
     {
       ru: "FieldError принимает children напрямую или errors (массив { message }) — с несколькими уникальными сообщениями рендерится список, с одним — строка.",
       en: "FieldError accepts either children directly or errors (an array of { message }) — with several unique messages it renders a list, with one it renders a plain string.",
+    },
+  ],
+  openQuestions: [
+    {
+      ru: "size синхронизирован только с Input. У Textarea своего size вовсе нет — довести её до sm/md/lg паритета с Input отдельной задачей? У Select в Figma нет свойства Size и своя шкала высот в коде (sm/md на 7/8px против 8/9/10px у Input/Native Select) — расхождение внутри системы, требует решения до паритета.",
+      en: "size is kept in sync only with Input. Textarea has no size of its own yet — bring it to sm/md/lg parity with Input as a separate task? Select has no Size property in Figma and uses its own height scale in code (sm/md at 7/8px vs. 8/9/10px for Input/Native Select) — an inconsistency within the system that needs a decision before parity.",
     },
   ],
 }

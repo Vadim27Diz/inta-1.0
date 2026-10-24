@@ -444,13 +444,36 @@ for (const setName in SIZE_CONSISTENCY_TARGETS) {
   }
 }
 
+// ---- правило: Label, Field и Input держат один и тот же набор И порядок значений Size — иначе
+// будущий рассинхрон (кто-то переставил Size в одном наборе и забыл остальные) останется
+// незамеченным. На момент написания Input ещё не переставлен человеком (md,sm,lg вместо lg,md,sm,
+// см. handoff.md) — проверка намеренно красная до этой ручной правки, это не баг экспортёра.
+const SIZE_ORDER_TARGETS = ["Label", "Field", "Input"];
+const sizeOrderConsistency = [];
+{
+  const orders = {};
+  for (const name of SIZE_ORDER_TARGETS) {
+    const set = topLevel.find((n) => n.type === "COMPONENT_SET" && n.name === name);
+    const def = set && set.componentPropertyDefinitions["Size"];
+    orders[name] = def ? def.variantOptions : null;
+  }
+  const present = SIZE_ORDER_TARGETS.filter((n) => orders[n]);
+  const reference = orders[present[0]];
+  for (const name of present.slice(1)) {
+    const actual = orders[name];
+    if (JSON.stringify(actual) !== JSON.stringify(reference)) {
+      sizeOrderConsistency.push([name, actual.join(","), present[0], reference.join(","), null]);
+    }
+  }
+}
+
 const data = {
   schema: "ds layout v1: [name, type, x, y, w, h]",
   page: PAGE,
   exportedAt: new Date().toISOString().slice(0, 10),
   sections, loose, components, absoluteLayers,
   ringClipping, textContainers, nakedText, listItemSizing, repeatedLayers, focusRingShape, iconSlots,
-  sizeConsistency,
+  sizeConsistency, sizeOrderConsistency,
 };
 const djb2 = (x) => { let h = 5381; for (let i = 0; i < x.length; i++) h = ((h * 33) ^ x.charCodeAt(i)) >>> 0; return h.toString(16); };
 return { hash: djb2(JSON.stringify(data)), json: JSON.stringify(data) };

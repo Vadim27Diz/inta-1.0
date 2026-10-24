@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-10-24",
+  "fileKey": "uUb84csG4wOfbUjB38ODiz",
+  "page": "Components",
+  "note": "Снимок «до» добавления свойства Size (lg/md/sm) в наборы Label и Field. Собран из живого чтения use_figma непосредственно перед первой записью в этой сессии (не отдельным вызовом figma-layout-export.js, как для Button — здесь сняты только Label/Field/Input, не вся раскладка страницы). schema ниже описывает смысл каждого блока.",
+  "label": {
+    "componentSetId": "120:171",
+    "defaultVariantBefore": "State=default",
+    "propertyDefinitionsBefore": ["Text#120:0", "Required#120:3", "State(default,disabled)"],
+    "children": [
+      { "name": "State=default", "id": "120:165", "w": 37, "h": 20, "textStyleId": "S:f38572cf444b9efcaf791880674f197ae96bb086, (label/md)" },
+      { "name": "State=disabled", "id": "120:168", "w": 37, "h": 20, "textStyleId": "S:f38572cf444b9efcaf791880674f197ae96bb086, (label/md)" }
+    ]
+  },
+  "field": {
+    "componentSetId": "207:213",
+    "defaultVariantBefore": "State=default",
+    "propertyDefinitionsBefore": ["Hint#208:8", "Error#208:12", "State(default,invalid,disabled)"],
+    "children": [
+      {
+        "name": "State=default", "id": "207:192", "w": 240, "h": 92,
+        "nestedLabel": { "instanceId": "207:193", "mainComponentId": "120:165", "mainComponentName": "State=default" },
+        "nestedInput": { "instanceId": "207:196", "mainComponentName": "Size=md, State=default, Content=placeholder" }
+      },
+      {
+        "name": "State=invalid", "id": "207:199", "w": 240, "h": 92,
+        "nestedLabel": { "instanceId": "207:200", "mainComponentId": "120:165", "mainComponentName": "State=default" },
+        "nestedInput": { "instanceId": "207:203", "mainComponentName": "Size=md, State=invalid, Content=value" }
+      },
+      {
+        "name": "State=disabled", "id": "207:206", "w": 240, "h": 64,
+        "nestedLabel": { "instanceId": "207:207", "mainComponentId": "120:168", "mainComponentName": "State=disabled" },
+        "nestedInput": { "instanceId": "207:210", "mainComponentName": "Size=md, State=disabled, Content=placeholder" }
+      }
+    ]
+  },
+  "inputSetId": "121:237",
+  "inputSizeOrderBefore": ["md", "sm", "lg"],
+  "playgroundInstancesVerifiedUnaffected": {
+    "label": ["310:870", "310:1201", "310:1515", "310:1829"],
+    "field": ["310:923", "310:931", "310:1254", "310:1262", "310:1568", "310:1576", "310:1882", "310:1890"]
+  }
+}

@@ -1,9 +1,13 @@
-import { useMemo } from "react"
+import { createContext, useContext, useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+
+// FieldLabel читает размер из контекста, если сам не получил явный size — тот же паттерн,
+// что у SelectSizeContext в select.tsx (родитель сообщает размер вниз потомку).
+const FieldSizeContext = createContext<"sm" | "md" | "lg">("md")
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -70,16 +74,24 @@ const fieldVariants = cva(
 function Field({
   className,
   orientation = "vertical",
+  size = "md",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof fieldVariants> & {
+    /** Прокидывается в FieldLabel через контекст; сам контрол (Input и т.п.) размер не наследует — выставляйте тот же size вручную. */
+    size?: "sm" | "md" | "lg"
+  }) {
   return (
-    <div
-      role="group"
-      data-slot="field"
-      data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
-      {...props}
-    />
+    <FieldSizeContext.Provider value={size}>
+      <div
+        role="group"
+        data-slot="field"
+        data-orientation={orientation}
+        data-size={size}
+        className={cn(fieldVariants({ orientation }), className)}
+        {...props}
+      />
+    </FieldSizeContext.Provider>
   )
 }
 
@@ -98,11 +110,14 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
 
 function FieldLabel({
   className,
+  size,
   ...props
 }: React.ComponentProps<typeof Label>) {
+  const contextSize = useContext(FieldSizeContext)
   return (
     <Label
       data-slot="field-label"
+      size={size ?? contextSize}
       className={cn(
         "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:text-on-disabled",
         // карточка выбора (Field с Checkbox/Radio внутри Label): data-state, не data-checked —
