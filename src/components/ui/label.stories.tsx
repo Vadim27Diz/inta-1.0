@@ -5,8 +5,11 @@ import { Input } from "./input";
 const meta = {
   title: "Components/Label",
   component: Label,
-  args: { children: "Электронная почта", required: false },
-  argTypes: { required: { control: "boolean" } },
+  args: { children: "Электронная почта", required: false, size: "md" },
+  argTypes: {
+    required: { control: "boolean" },
+    size: { control: "inline-radio", options: ["lg", "md", "sm"] },
+  },
 } satisfies Meta<typeof Label>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -20,6 +23,23 @@ export const Variants: Story = {
       <Label {...args} required>
         Обязательное поле
       </Label>
+    </div>
+  ),
+};
+
+const sizes = ["lg", "md", "sm"] as const;
+
+export const Sizes: Story = {
+  render: (args) => (
+    <div className="flex flex-col items-start gap-4">
+      {sizes.map((s) => (
+        <div key={s} className="flex items-center gap-4">
+          <span className="typo-caption w-8 text-on-surface-muted">{s}</span>
+          <Label {...args} size={s} required>
+            Электронная почта
+          </Label>
+        </div>
+      ))}
     </div>
   ),
 };

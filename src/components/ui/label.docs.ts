@@ -47,6 +47,7 @@ export const labelDocs: ComponentDocs = {
   variants: [
     { name: "обычная подпись", description: { ru: "без звёздочки — поле не обязательно", en: "no asterisk — the field isn't required" } },
     { name: "required", description: { ru: "со звёздочкой рядом с текстом — поле обязательно", en: "with an asterisk next to the text — the field is required" } },
+    { name: "size: lg / md / sm", description: { ru: "типографика подписи — typo-label-lg/md/sm; по умолчанию md, как и раньше. Выбирайте тот же размер, что у связанного поля (Input и т.п.), вручную — Label сам его не знает.", en: "the label's typography — typo-label-lg/md/sm; md by default, unchanged from before. Pick the same size as the linked field (Input, etc.) by hand — Label doesn't know it on its own." } },
   ],
   states: [
     {
@@ -86,6 +87,10 @@ export const labelDocs: ComponentDocs = {
     {
       ru: "Обёртка над Radix Label.Root — рендерится как <label>, клик по тексту переводит фокус на связанный через htmlFor контрол.",
       en: "A wrapper around Radix Label.Root — renders as <label>; clicking the text moves focus to the control linked via htmlFor.",
+    },
+    {
+      ru: "size не наследуется от связанного контрола и не передаётся ему — внутри Field это решает FieldLabel через контекст, сам Label вне Field size не угадывает.",
+      en: "size isn't inherited from the linked control and isn't passed to it — inside Field this is handled by FieldLabel via context; Label on its own doesn't guess it outside Field.",
     },
     {
       ru: "peer-disabled:* читает disabled соседнего элемента с классом peer; group-data-[disabled=true]:* читает data-disabled=\"true\" с родителя-обёртки с классом group — нужен, когда Label и контрол не прямые соседи.",

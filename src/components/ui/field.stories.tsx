@@ -61,6 +61,23 @@ export const Variants: Story = {
   ),
 }
 
+const sizes = ["lg", "md", "sm"] as const
+
+// Field.size прокидывается в FieldLabel через контекст; Input своего size не наследует —
+// тот же size выставлен здесь на Input вручную, как и задокументировано у Field.
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6">
+      {sizes.map((s) => (
+        <Field key={s} size={s} className="w-72">
+          <FieldLabel htmlFor={`size-${s}`}>{s} — Электронная почта</FieldLabel>
+          <Input id={`size-${s}`} size={s} placeholder="you@example.com" />
+        </Field>
+      ))}
+    </div>
+  ),
+}
+
 export const States: Story = {
   render: () => (
     <div className="flex w-72 flex-col gap-6">
