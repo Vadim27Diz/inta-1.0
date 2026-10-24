@@ -111,9 +111,11 @@ export const fieldDocs: ComponentDocs = {
       ru: "FieldError принимает children напрямую или errors (массив { message }) — с несколькими уникальными сообщениями рендерится список, с одним — строка.",
       en: "FieldError accepts either children directly or errors (an array of { message }) — with several unique messages it renders a list, with one it renders a plain string.",
     },
+  ],
+  openQuestions: [
     {
-      ru: "size синхронизирован только с Input — у Textarea своего size вовсе нет, у Select в Figma нет свойства Size и своя шкала высот в коде (sm/md на 7/8px против 8/9/10px у Input/Native Select). Доводить их до паритета — отдельные задачи.",
-      en: "size is kept in sync only with Input — Textarea has no size of its own yet, and Select has no Size property in Figma and uses its own height scale in code (sm/md at 7/8px vs. 8/9/10px for Input/Native Select). Bringing them to parity is separate, future work.",
+      ru: "size синхронизирован только с Input. У Textarea своего size вовсе нет — довести её до sm/md/lg паритета с Input отдельной задачей? У Select в Figma нет свойства Size и своя шкала высот в коде (sm/md на 7/8px против 8/9/10px у Input/Native Select) — расхождение внутри системы, требует решения до паритета.",
+      en: "size is kept in sync only with Input. Textarea has no size of its own yet — bring it to sm/md/lg parity with Input as a separate task? Select has no Size property in Figma and uses its own height scale in code (sm/md at 7/8px vs. 8/9/10px for Input/Native Select) — an inconsistency within the system that needs a decision before parity.",
     },
   ],
 }
