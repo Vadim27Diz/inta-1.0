@@ -30,26 +30,19 @@
 правило "не выдумывать самостоятельно"), потом завести его в Figma, потом подключить как
 `brandImage` в `managerThemes`/`scripts/build-manager-theme.mjs`.
 
-## 3. Input OTP — починить focus-ring, убрать исключения из figma:layout
+## 3. Input OTP focus-ring — закрыто
 
-Два структурных нарушения в `Input OTP` на странице `Components`, найденные 2026-10-22 при
-пересъёмке `figma/layout.json` (прежний снимок был от 2026-10-18 и устарел — валидировал сам себя,
-не живую Figma). Не чинились в задаче про 9-колоночную сетку/правило слотов-иконок — временно
-занесены как явные исключения в `.claude/skills/design-tokens/assets/figma-layout-export.js`
-(`EXEMPT_ABSOLUTE_LAYERS`, `EXEMPT_FOCUS_RING_SHAPE`), чтобы `npm run verify` оставался зелёным:
+[PR #15](https://github.com/Vadim27Diz/inta-1.0/pull/15) (merge commit `02057c1`, 2026-10-24): оба
+структурных нарушения устранены — 3 слоя `Utility / Focus ring` переименованы в `focus-ring`
+(Position уже был верный), 12 колец получили `Position: all → first/last` по роли слота в ряду.
+`EXEMPT_ABSOLUTE_LAYERS`/`EXEMPT_FOCUS_RING_SHAPE` сняты из `figma-layout-export.js`, `npm run
+figma:layout` проходит без единого исключения по Input OTP. Снимок «до» всех затронутых колец —
+`docs/internal/figma-input-otp-focus-ring-before.json`. Детали хода работы — `handoff-archive.md`.
 
-1. **`Input OTP`, вариант `State=active`: слой `Utility / Focus ring` — абсолютно спозиционирован**
-   (нарушает «в наборах компонентов нет абсолютно позиционированных слоёв, кроме самого focus-ring
-   в потоке auto layout»).
-2. **`Input OTP / Slot`: скругление угла `focus-ring` не 0 там, где угол родителя-слота 0**
-   (Position=first/middle/last — прямой угол родителя-слота должен давать прямой угол и у кольца на
-   той же стороне; сейчас кольцо показывает 12 вместо 0 на всех 4 углах, во всех 6 просканированных
-   вариантах).
-
-Чинить в Figma (структуру/биндинги, не переставлять числа в самом снимке), затем пересобрать
-`figma/layout.json` через `figma-layout-export.js` → `scripts/figma-layout-save.mjs`, удалить обе
-записи из `EXEMPT_ABSOLUTE_LAYERS`/`EXEMPT_FOCUS_RING_SHAPE` и пересобрать снимок ещё раз — правило
-`figma:layout` должно пройти уже без исключений.
+**Открытый побочный вопрос, не закрыт этим PR**: код `input-otp.tsx` красит активный слот через
+`outline-offset-2` (control-стиль, с зазором), а Figma-кольцо — `Kind=seam` (вплотную, без зазора).
+Решить отдельно: привести код к `ring`/вплотную (как Input/Textarea/Select, `Kind=field`) или
+признать Input OTP легитимным исключением с зазором.
 
 ## 4. Бэклог доступности и компонентов
 
