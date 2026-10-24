@@ -1,87 +1,148 @@
-# Handoff: иконки-слоты мигрированы, сетка Components — 9 колонок, правило figma:layout готово
+# Handoff: Input OTP focus-ring — план готов и сверен, жду «версия сохранена» на первую запись
+
+Текущее состояние на 2026-10-24. Предыдущая запись (PR #14, Button в figma:diff) — см. ниже в этом
+же файле (ещё не унесена в архив, следующее обновление перенесёт). **Правило:** этот файл
+перезаписывается при каждом обновлении, не дописывается в конец.
+
+## Статус
+
+- **Input OTP focus-ring (roadmap.md п.3)**: расследование закончено, только чтение, **ни одной
+  записи в Figma не было**. План согласован с человеком (вариант «г» из предыдущего обсуждения),
+  со сверкой чисел и снимком «до» — `docs/internal/figma-input-otp-focus-ring-before.json`.
+- **Сведение чисел (п.1 условий)**: сохранённый `figma/layout.json` — `absoluteLayers: 3`,
+  `focusRingShape: 24` (все с исключением), итого **27** — совпадает с живым пересчётом по тем же
+  правилам (`absoluteLayers` 3 / `focusRingShape corner-flat` 24). Снимок **не разошёлся** с живой
+  Figma (первая гипотеза сессии — что разошёлся — была ошибочной, из-за своего же упущения
+  `figma.skipInvisibleInstanceChildren=false`; поймано и исправлено до отчёта человеку).
+  27 строк = 15 инстансов: 3 инстанса → 3 строки `absoluteLayers` (по 1 строке/инстанс, имя слоя);
+  12 инстансов → 24 строки `focusRingShape` (по 2 строки/инстанс — верхний+нижний угол на стороне
+  стыка). Ничего не потеряно.
+- **3 инстанса (`Input OTP`, `State=active`, не-активные слоты того же ряда)**: слой до сих пор
+  называется дефолтным `"Utility / Focus ring"`, не `"focus-ring"`. **Их `Position` и форма углов
+  уже корректны** (`first`/`first`/`last`, совпадают с ролью слота) — нужно только переименовать
+  слой. ID: `I246:288;296:382`, `I246:294;296:382`, `I246:297;296:382`.
+- **12 инстансов (`State=default`/`invalid`/`disabled`, 2 группы × first/last)**: слой правильно
+  называется `"focus-ring"`, но `Position` зашит на `all` (компонентный дефолт) — должен быть
+  `first` (slotX=0) или `last` (slotX=36). Полный список ID с `wantPosition` —
+  в `figma-input-otp-focus-ring-before.json` → `componentsPage.rings[].role === "position-swap"`.
+- **Middle не нужен**: ни в демо на странице Components, ни в 4 инстансах на Playground нет слота
+  с ролью `middle` — везде группы по 2 (first+last). `Position=middle` существует как вариант у
+  `Utility / Focus ring` на будущее (группа из 3+ слотов), этой задачей не трогается.
+- **1 уже корректный образец**: `I301:381;296:382` (`Input OTP`, `State=active`, второй слот
+  второй группы) — переименован, `Position=last`, `visible=true`. Служит эталоном при сверке после
+  правки. Другой префикс id (`301:381` вместо `246:xxx`) — похоже, пересобран отдельно в прошлой
+  сессии.
+- **Playground**: 4 инстанса `Input OTP` (все `State=default`, других состояний там нет), 16
+  физических колец, все наследуют `Position=all` без локального оверрайда — после правки мастера
+  должны подхватить `first`/`last` автоматически (нет оверрайда, который бы это блокировал). 2 из 4
+  рендерятся под demo-брендом (радиус 6 = `radius/xl` демо вместо 12 у main — ожидаемо, не баг).
+  **Проверить после каждой правки** — тот же риск заморозки оверрайда, что был у drill-in в
+  миграции иконок (`figma-icon-audit.md`).
+- **Foundations**: 0 инстансов Input OTP. **`Page 4`**: пустая страница (0 детей), не входит в
+  список страниц CLAUDE.md (Cover/Foundations/Components/Playground) — увидел, не трогал, не
+  исследовал (не в скоупе).
+
+## Открытый вопрос — не чинить без отдельного решения человека
+
+**Kind=seam (вплотную, без зазора) у кольца Input OTP против `outline-offset-2` в коде.**
+`src/components/ui/input-otp.tsx` → `InputOTPSlot` красит активный слот через
+`outline-solid outline-2 outline-offset-2 outline-focus-ring` — тот же класс, что у Button
+(«control»-стиль, зазор 2px). Но в Figma кольцо Input OTP — `Kind=seam` («вплотную, скругление на
+шаг выше», по описанию `handoff-archive.md`). Расхождение код↔Figma по категории Kind, отдельное от
+двух нарушений выше. Не трогал, ждёт решения человека: привести код к `ring`/вплотную (как
+Input/Textarea/Select, `Kind=field`) или признать Input OTP легитимным исключением с зазором.
+
+## Порядок правки (согласован, ничего не записано)
+
+1. **Пилот**: один инстанс из 12 (`I246:276;296:381`, `State=default`, slotX=0 → `Position: all→
+   first`), сверка со снимком «до».
+2. Остальные 11 из 12 — пакетами по состоянию (`State=default` остаток → `State=invalid` (4) →
+   `State=disabled` (4)), сверка после каждого пакета.
+3. Переименование 3 инстансов `Utility / Focus ring` → `focus-ring` (только после всех 12 Position,
+   чтобы смена варианта не затронула уже переименованные слои) — проверить, что имя не слетело
+   (смена `Position` — variant-свойство компонент-сета, потенциально переприсваивает
+   `mainComponent`; имя инстанса должно быть независимым, но проверяем, не предполагаем).
+4. Сверка Playground (4 инстанса, 16 колец) — должны подхватить `first`/`last` без оверрайда.
+5. Любое расхождение на любом шаге — стоп, отчёт, не чинить дальше молча.
+6. После всех правок: пересобрать `figma/layout.json`, убрать оба `EXEMPT_ABSOLUTE_LAYERS`/
+   `EXEMPT_FOCUS_RING_SHAPE`, `npm run verify`, `tsc -b`, отдельный PR. **Не мёржить без ОК
+   человека.**
+
+## Правила
+
+- Перед **первой** записью в Figma — ждать «версия сохранена» от человека. Эта сессия пока не
+  писала в Figma вообще (только чтение, включая самопроверку/исправление ошибочного первого вывода).
+- Чужие объекты не трогать без вопроса — не возникало (все 15+1 инстанса — часть системного Input
+  OTP, не чужое).
+
+---
+
+# Handoff: PR #14 смёржен, Button закрыт в figma:diff, дальше — Input OTP focus-ring
 
 Текущее состояние на 2026-10-22. История предыдущих задач — `handoff-archive.md`. **Правило:** этот
 файл перезаписывается при каждом обновлении, не дописывается в конец.
 
 ## Статус
 
-- **PR #9–#13 смёржены в `main`**, порядок 9 → 10 → 11 → 12 → 13, без конфликтов (кроме `handoff.md`
-  между #9/#10 — разрешён версией PR #10). Button icon glyph, Avatar/Item/Empty/Alert icon glyph,
-  навыки `figma-icon-slots`/`inta-handoff`/`inta-component-docs`, Toggle T2 (icon glyph, другая
-  схема — см. ниже), Button icon-sm/icon-lg (код + Figma).
-- **Сетка Button** (`87:298`, 300 вариантов: `sm/md/lg/icon/icon-sm/icon-lg` × 10 `Variant` × 5
-  `State`) переставлена в порядок строк `lg, md, sm, icon-lg, icon, icon-sm`. Порядок значений
-  `Size` в панели Properties **не подтянулся** за порядком `children` (проверено, API не
-  позволяет переставить программно) — пользователь поправит вручную в UI или оставит как есть.
-- **Раскладка страницы `Components`: 9 колонок слева направо** (x = `-2236, -1222, -64, 1204, 2598,
-  3656, 4714, 5772, 6830`), зазоры внутри каждой колонки выровнены ровно до 160. Решение человека,
-  зафиксировано в `scripts/figma-layout-check.mjs` → `COLUMNS` (список секций по колонкам — там же,
-  не дублируется здесь).
-- **Правило `figma:layout` для слотов-иконок реализовано** (`iconSlots` в снимке) — `npm run
-  figma:layout`/`npm run verify` зелёные. `figma/layout.json` пересобран 2026-10-22 (прежний снимок
-  был от 2026-10-18 и не видел реальное состояние Figma).
-- **Toggle мигрирован полностью**, но другой схемой, чем остальные: `componentPropertyReferences`
-  на `li:star`-инстансе указывает на свойство `Icon#518:0` набора (INSTANCE_SWAP, 33
-  `preferredValues` = канонический список глифов) — не `isExposedInstance`+`Icon base`, как у
-  Button/Avatar/Item/Empty/Alert. Правило `figma:layout` признаёт оба способа валидными.
-- **Select (триггер), Native Select, Checkbox, Select / Item, Spinner — не мигрированы, решение
-  человека**: зашитые по дизайну глифы, не Instance Swap. В списке исключений правила (ниже).
-- **Card (`media`)** — вне трека миграции, не иконочный слот (пустой `FRAME`, без инстанса).
-- **Известный, не закрытый сейчас пробел — Input OTP focus-ring** (2 структурных нарушения,
-  временно в исключениях правила) — `docs/internal/roadmap.md` → п. 3.
+- **PR #9–#14 смёржены в `main`**, порядок 9 → 10 → 11 → 12 → 13 → 14, без конфликтов кроме
+  `handoff.md` между #9/#10 (разрешён версией #10). PR #14 смёржен этой сессией — merge commit
+  `c1c56fd` (`gh pr merge 14 --merge`, проверено: все 3 чек-рана зелёные — Storybook
+  Publish/UI Tests/chromatic, `mergeStateStatus: CLEAN`, `reviewDecision` пустой, `latestReviews: []`
+  — ревью не требовалось и не ожидало человека). Содержание #14 — сетка Button 9 колонок, правило
+  слотов-иконок, пересъёмка `figma/layout.json` (детали — `handoff-archive.md`, предыдущая запись).
+- **`scripts/figma-code-diff.mjs` теперь проверяет Button** — закрыт пробел из
+  `docs/internal/roadmap.md` п. 2 (пункт был отдельным от раскладки, чисто computed-style vs код).
+  Добавлены 3 секции EXPECT: `components-button--sizes` (6 размеров: высота/padding-x/radius или
+  высота+ширина для `icon*`), `components-button--variants` (bg/color всех 10 `variant`),
+  `components-button--states` (подмножество — `primary`/`secondary`/`outline`/`ghost`/`danger`/
+  `link` hover, `primary` pressed/focus, `primary`+`outline` disabled — не все 10 вариантов, разные
+  ветки `cva`: сплошной фон, subtle, outline/ghost без фона, text-only link; `disabled` проверен
+  только там, где поведение одинаковое — у `link`/`link-danger` своё `disabled:bg-transparent`,
+  не входит в проверенное подмножество, не проверялось). Код `src/` не менялся, только скрипт.
+  **Ловушка, на которую напоролись и починили**: исходные пробы на `sel: "button"` (голый тег)
+  ловили посторонние DOM-узлы в iframe (не Button) — высота 0, случайные `rgba`. Поправлено на
+  `[data-slot=button]`, как у всех остальных компонентов пакета. `npm run figma:diff`: **492 среза ·
+  1816 проверок · 0 расхождений** (все 4 комбинации бренд×тема).
 
 ## Факты (ID, имена, пути — не выводятся из кода)
 
-- Figma `fileKey` = `uUb84csG4wOfbUjB38ODiz`. Общие примитивы, не трогать: `Icon` (`115:32`,
-  component set с `Size=16/20/24`), `Icon base` (`115:5`), 33 глифа `li:*` на странице `Icon /
-  Glyphs`.
-- **Слот-иконка compliant**, если кандидат (инстанс, resolved-имя которого через родительский
-  `COMPONENT_SET` — `Icon`/`Icon base`/`li:*`) удовлетворяет (а) ИЛИ (б):
-  - (а) `isExposedInstance === true` И resolved-имя `"Icon base"` (путь к кандидату — через чистые
-    `FRAME`/`GROUP`, без пересечения границы другого топ-уровневого компонента);
-  - (б) `componentPropertyReferences.mainComponent` указывает на `INSTANCE_SWAP`-свойство.
-  Алгоритм детекции — `.claude/skills/design-tokens/assets/figma-layout-export.js` → блок
-  `iconSlots`, подробный комментарий там же.
-- **Исключения — зашитые глифы по дизайну** (`EXEMPT_ICON_SLOTS`): `Checkbox|mark`, `Select|Icon`
-  (шеврон триггера), `Native Select|Icon` (шеврон), `Select / Item|Icon` (чекмарк пункта),
-  `Spinner|li:loader-circle`.
-- **Исключения — известные, не закрытые этой сессией** (`EXEMPT_ABSOLUTE_LAYERS`,
-  `EXEMPT_FOCUS_RING_SHAPE`): `Input OTP|Utility / Focus ring` (абсолютно спозиционированный
-  focus-ring), `Input OTP / Slot|focus-ring` (угол скругления 12 вместо 0 там, где угол
-  родителя-слота 0) — починить и убрать исключения, план в `roadmap.md` п. 3.
-- **Баги миграции иконок (Button) и их механизм** (delete+recreate рвёт даунстрим-оверрайды,
-  `createInstance`+INSTANCE_SWAP не наследует заливку, drill-in может заморозить заливку как
-  персональный оверрайд, скрытые слои требуют `skipInvisibleInstanceChildren=false`) —
-  `docs/internal/figma-icon-audit.md` → «Баги, найденные и исправленные по ходу», не пересказано
-  здесь.
-- `figma.skipInvisibleInstanceChildren = false` теперь стоит в начале `figma-layout-export.js`
-  (было пробелом — скрытые слоты вроде Button `icon-left`/`icon-right` по умолчанию давали пустой
-  `.children`).
-
-## Открытые решения человека
-
-- Порядок значений `Size` в панели Properties у Button (сейчас `sm, md, lg, icon, icon-sm,
-  icon-lg`, хотели `lg, md, sm, icon-lg, icon, icon-sm`) — править вручную в UI, если нужно.
+- Figma `fileKey` = `uUb84csG4wOfbUjB38ODiz`.
+- Токены, через которые проверен Button в `figma:diff` (все существуют в `src/styles/tokens.css`,
+  не заводились новые): `--ds-color-primary(-hover/-pressed/-subtle(-hover))`, `on-primary(-subtle)`,
+  `neutral`, `on-neutral`, `border`, `on-surface(-hover)`, `surface-hover`, `danger(-hover/-subtle)`,
+  `on-danger(-subtle)`, `inverse`, `on-inverse`, `link(-hover)`, `link-danger`, `disabled`,
+  `on-disabled`, `focus-ring`, `--ds-radius-md`.
+- Старое содержимое (Button/Avatar/Item/Empty/Alert icon glyph, план Toggle, раскладка 9 колонок,
+  правило `iconSlots`, баги миграции) — см. `handoff-archive.md`, первая запись сверху.
 
 ## Что дальше
 
-1. **Input OTP**: починить focus-ring (2 нарушения), убрать исключения из
-   `EXEMPT_ABSOLUTE_LAYERS`/`EXEMPT_FOCUS_RING_SHAPE`, пересобрать `figma/layout.json` —
-   `docs/internal/roadmap.md` → п. 3.
-2. **`scripts/figma-code-diff.mjs` не проверяет Button и остальные компоненты этого пакета** —
-   отдельный, не закрытый этой сессией пробел (другой скрипт — computed-style vs код, не раскладка).
-3. Остальные задачи — `docs/internal/roadmap.md`.
+1. **Input OTP focus-ring** (`docs/internal/roadmap.md` п. 3) — следующая задача, предложена
+   человеком как приоритет №1 после Button. Две структурные правки в Figma:
+   - `Input OTP`, `State=active`: слой `Utility / Focus ring` сейчас абсолютно спозиционирован —
+     перевести в поток auto layout, как у остальных компонентов (кольцо живёт в потоке везде, кроме
+     самого себя).
+   - `Input OTP / Slot`: скругление кольца должно повторять угол родителя-слота (0 у родителя → 0 у
+     кольца на той же стороне через `Position=first/middle/last`), сейчас везде захардкожено 12.
+   - После правки — пересобрать `figma/layout.json` (`figma-layout-export.js` →
+     `scripts/figma-layout-save.mjs`), убрать обе записи из `EXEMPT_ABSOLUTE_LAYERS`/
+     `EXEMPT_FOCUS_RING_SHAPE`, прогнать `npm run figma:layout` — должно пройти без исключений.
+   - **Правило сессии**: перед каждой записью в Figma ждать от человека «версия сохранена»;
+     расхождение с ожидаемым снимком — стоп и отчёт, не чинить дальше молча.
+2. Остальной бэклог с оценками — `docs/internal/roadmap.md` (доступность, таблица свойств на Docs,
+   третий бренд, недостающие компоненты Link/Toast/Table/Tabs/Accordion/Pagination).
 
 ## Правила
 
 - Figma: чужие объекты не удалять/не переписывать без вопроса (не нарушалось).
-- Новый глобальный токен — не потребовался ни в одной из задач этой сессии.
-- Перед любой записью в Figma — дождаться подтверждения «версия сохранена» от человека (соблюдалось
-  всю сессию).
+- Новый глобальный токен — не потребовался (задача Button-в-`figma:diff` — чисто скриптовая, без
+  Figma).
+- Перед любой записью в Figma — дождаться подтверждения «версия сохранена» от человека. Эта сессия
+  записей в Figma не делала (PR #14 — только merge готового, Button-в-`figma:diff` — только код
+  скрипта).
 
 ## Проверки для продолжения
 
-`npm run verify` (включает `figma:layout`), `tsc -b`, `npm run build-storybook` — все зелёные на
-`main` после мёржа #9–#13. Эта задача (сетка Button, 9 колонок, правило `iconSlots`) — только
-Figma + `.claude/skills/design-tokens/assets/figma-layout-export.js` +
-`scripts/figma-layout-check.mjs` + `figma/layout.json`, код (`src/`) не менялся.
+`npm run figma:diff` — 492 среза/1816 проверок/0 расхождений (проверено только что). `npm run
+verify` и `tsc -b` не перезапускались в этой сессии после мёржа #14 — стоит прогнать перед началом
+Input OTP, чтобы иметь чистую точку отсчёта.
