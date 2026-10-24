@@ -29,3 +29,12 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          onlyChanged: true
+          externals: |
+            src/styles/tokens.css
+            src/styles/globals.css
+            src/styles/**
+            vite.config.ts
+          # Пропуск — только для pull_request (заголовок PR или метка skip-chromatic), пуши в main
+          # никогда не пропускаются: на них держится база снимков (baseline) для onlyChanged.
+          skip: ${{ github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[skip chromatic]') || contains(github.event.pull_request.labels.*.name, 'skip-chromatic')) }}
