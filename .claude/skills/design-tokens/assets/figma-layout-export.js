@@ -34,12 +34,7 @@ const topLevel = page.findAllWithCriteria({ types: ["COMPONENT", "COMPONENT_SET"
   .filter((n) => !(n.parent && n.parent.type === "COMPONENT_SET"));
 const components = topLevel.map((n) => [n.name, n.type, n.parent.name, n.parent.type]);
 
-// известные, не закрытые этой сессией проблемы Input OTP — зафиксированы как явные исключения
-// 2026-10-22 (решение человека), не чинить здесь. Задача «починить Input OTP в Figma и убрать
-// исключения» — в handoff.md/roadmap.md.
-const EXEMPT_ABSOLUTE_LAYERS = {
-  "Input OTP|Utility / Focus ring": "абсолютно спозиционированный focus-ring у State=active — известная проблема, не вызвана этой сессией (снимок до 2026-10-22 был устаревшим и её не видел), чинится отдельной задачей",
-};
+const EXEMPT_ABSOLUTE_LAYERS = {};
 
 // абсолютно позиционированные слои внутри наборов — разрешён только focus-ring
 const absoluteLayers = [];
@@ -220,13 +215,7 @@ const SCALE_UP = { "radius/sm": "radius/md", "radius/md": "radius/lg", "radius/l
 const CORNERS = ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"];
 const FULL_THRESHOLD = 999;
 const focusRingShape = [];
-// известная, не закрытая этой сессией проблема Input OTP — см. комментарий у EXEMPT_ABSOLUTE_LAYERS.
-// Ключ по (parent, ring) — грубее, чем по kind, но все текущие находки этой пары одного типа
-// (corner-flat); если позже появится другая проблема у того же focus-ring, она тоже временно
-// скроется этим исключением — не страшно, задача на починку всё равно закрывает весь focus-ring.
-const EXEMPT_FOCUS_RING_SHAPE = {
-  "Input OTP / Slot|focus-ring": "скругление угла focus-ring не 0 там, где угол родителя 0 (Position first/middle/last) — известная проблема, не вызвана этой сессией, чинится отдельной задачей",
-};
+const EXEMPT_FOCUS_RING_SHAPE = {};
 function pushRingFinding(row) {
   const exempt = EXEMPT_FOCUS_RING_SHAPE[`${row[1]}|${row[2]}`] || null;
   focusRingShape.push([...row, exempt]);
