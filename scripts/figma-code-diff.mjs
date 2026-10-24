@@ -71,6 +71,42 @@ const EXPECT = [
     { sel: "label", at: 0, name: "default",  height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4 },
     { sel: "label", at: 1, name: "required", height: 20, color: "--ds-color-on-surface", font: [14, 20, 500], gap: 4, markColor: "--ds-color-on-surface-danger" },
   ] },
+  { story: "components-button--sizes", title: "Button sizes", probes: [
+    { sel: "[data-slot=button]", at: 0, name: "sm",      height: 32, padX: 12, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 1, name: "md",      height: 36, padX: 16, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 2, name: "lg",      height: 40, padX: 24, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 3, name: "icon",    height: 36, width: 36, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 4, name: "icon-sm", height: 32, width: 32, radius: "--ds-radius-md" },
+    { sel: "[data-slot=button]", at: 5, name: "icon-lg", height: 40, width: 40, radius: "--ds-radius-md" },
+  ] },
+  { story: "components-button--variants", title: "Button variants", probes: [
+    { sel: "[data-slot=button]", at: 0, name: "primary",      bg: "--ds-color-primary",        color: "--ds-color-on-primary" },
+    { sel: "[data-slot=button]", at: 1, name: "secondary",    bg: "--ds-color-primary-subtle", color: "--ds-color-on-primary-subtle" },
+    { sel: "[data-slot=button]", at: 2, name: "neutral",      bg: "--ds-color-neutral",        color: "--ds-color-on-neutral" },
+    { sel: "[data-slot=button]", at: 3, name: "outline",      border: "--ds-color-border",     color: "--ds-color-on-surface" },
+    { sel: "[data-slot=button]", at: 4, name: "ghost",        color: "--ds-color-on-surface" },
+    { sel: "[data-slot=button]", at: 5, name: "danger",       bg: "--ds-color-danger",         color: "--ds-color-on-danger" },
+    { sel: "[data-slot=button]", at: 6, name: "danger-subtle", bg: "--ds-color-danger-subtle", color: "--ds-color-on-danger-subtle" },
+    { sel: "[data-slot=button]", at: 7, name: "inverse",      bg: "--ds-color-inverse",        color: "--ds-color-on-inverse" },
+    { sel: "[data-slot=button]", at: 8, name: "link",         color: "--ds-color-link" },
+    { sel: "[data-slot=button]", at: 9, name: "link-danger",  color: "--ds-color-link-danger" },
+  ] },
+  // id-пробы читают состояния, зафиксированные storybook-addon-pseudo-states через
+  // parameters.pseudo (hover/active/focusVisible) — тот же механизм, что у Item/Checkbox/Switch
+  // states выше; подмножество вариантов, а не все 10 — проверяем разные ветки cva (сплошной фон,
+  // subtle, outline/ghost без фона, text-only link), не каждую комбинацию.
+  { story: "components-button--states", title: "Button states", probes: [
+    { sel: "#primary-hover",    at: 0, name: "primary hover",    bg: "--ds-color-primary-hover" },
+    { sel: "#primary-pressed",  at: 0, name: "primary pressed",  bg: "--ds-color-primary-pressed" },
+    { sel: "#primary-focus",    at: 0, name: "primary focus",    outline: "--ds-color-focus-ring", outlineWidth: 2, outlineOffset: 2 },
+    { sel: "#secondary-hover",  at: 0, name: "secondary hover",  bg: "--ds-color-primary-subtle-hover" },
+    { sel: "#outline-hover",    at: 0, name: "outline hover",    bg: "--ds-color-surface-hover", color: "--ds-color-on-surface-hover" },
+    { sel: "#ghost-hover",      at: 0, name: "ghost hover",      bg: "--ds-color-surface-hover", color: "--ds-color-on-surface-hover" },
+    { sel: "#danger-hover",     at: 0, name: "danger hover",     bg: "--ds-color-danger-hover" },
+    { sel: "#link-hover",       at: 0, name: "link hover",       color: "--ds-color-link-hover" },
+    { sel: "[data-slot=button][disabled]",  at: 0, name: "primary disabled", bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+    { sel: "[data-slot=button][disabled]",  at: 3, name: "outline disabled", bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+  ] },
   { story: "components-badge--variants", title: "Badge", probes: [
     { sel: "[data-slot=badge]", at: 0, name: "primary",       height: 20, radiusFull: true, padX: 10, padY: 2, font: [12, 16, 500], bg: "--ds-color-primary", color: "--ds-color-on-primary" },
     { sel: "[data-slot=badge]", at: 1, name: "secondary",     bg: "--ds-color-primary-subtle", color: "--ds-color-on-primary-subtle" },
