@@ -15,6 +15,10 @@
 - Новый глобальный токен или новый бренд — только после согласования с человеком.
 - Новую npm-зависимость можно ставить без согласования, но в отчёте по задаче указывать: название, лицензию, зачем нужна.
 - Объекты в Figma, созданные не агентом, не удаляем и не переписываем без вопроса — даже если они мешают пересборке и выглядят как черновик. Перед любой чисткой страницы сверяем её состав и спрашиваем про чужое.
+- **Figma первая, код батчами.** Компонент не переносится в код сразу после Figma: запись ждёт в `docs/internal/port-queue.md`, пока человек не скажет «переносим» (порог напоминания считает `npm run port:check`).
+- **Спек снимается в той же сессии Figma**, где собирали набор, в `docs/internal/specs/<slug>.json` (формат — `docs/internal/specs/README.md`). После сжатия контекста ID узлов и числа уже не восстановить без нового похода в Figma.
+- Начинать код по компоненту без строки в статусе `queued` и без файла спека — нельзя.
+- `docs/internal/port-queue.md` и `handoff-archive.md` правятся только через `Edit`, никогда `Write`. Записи из очереди не удаляются никогда, отказ от переноса — строка `отложено <дата>`, а не удаление.
 
 ## Figma
 
@@ -34,7 +38,8 @@
 | `npm run icons:stroke` | толщина линии иконок lucide-react в настоящем Chrome |
 | `npm run figma:diff` | цифровая сверка Figma ↔ `getComputedStyle` в 4 комбинациях |
 | `npm run figma:layout` | раскладка страницы Components по снимку `figma/layout.json` |
-| `npm run verify` | tokens:check + tokens:contrast + tailwind:check + figma:diff + figma:layout |
+| `npm run port:check` | целостность очереди переноса Figma → код, должен давать 0 ошибок |
+| `npm run verify` | tokens:check + tokens:contrast + tailwind:check + port:check + figma:diff + figma:layout |
 
 ## Бренды
 
@@ -47,7 +52,17 @@ Demo нужен, чтобы проверять white-label: если компо�
 
 ## Порядок работы над компонентом
 
-Figma component set → код (shadcn + токены) → истории (`Default`, `Variants`, `States`, `BrandMatrix`) → `npm run tokens:check` и `npm run tokens:contrast` (оба по нулю ошибок) → сверка скриншота Figma со Storybook. Подробно — в скилле.
+Две половины, разнесённые по сессиям.
+
+**Figma-половина:** component set → скриншоты человеку → явное «утверждаю» → **спек в
+`docs/internal/specs/<slug>.json` в этой же сессии** → строка в `port-queue.md` переходит в
+`queued` → стоп. Код не начинаем.
+
+**Половина переноса** (батчем, по команде человека, 3–4 компонента): спеки из очереди → код
+(shadcn + токены) → истории (`Default`, `Variants`, `States`, `BrandMatrix`) → `.docs.ts`/`.mdx` →
+`npm run verify` и `npx tsc -b` (по нулю ошибок) → статус `ported`. В Figma при этом не ходим.
+
+Подробно — в скилле design-tokens и в `docs/internal/port-queue.md`.
 
 ## Стиль отчёта
 

@@ -9,7 +9,12 @@ const EXCLUDE = []; // names created by the add-only run; excluded so the "after
 const djb2 = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(16); };
 const hex = ({ r, g, b, a }) => { const h = (x) => Math.round(x * 255).toString(16).padStart(2, "0"); return `#${h(r)}${h(g)}${h(b)}${a === undefined || a === 1 ? "" : h(a)}`; };
 
-const nameById = new Map((await figma.variables.getLocalVariablesAsync()).map((v) => [v.id, v.name]));
+// Один getLocalVariablesAsync() вместо getVariableByIdAsync() на каждую переменную — те же данные
+// без 267 последовательных IPC-раундтрипов (gotchas /figma-use → «Sequential awaits»). Набор
+// канонических строк и, значит, хеши от этой правки не меняются: ниже те же объекты.
+const allVars = await figma.variables.getLocalVariablesAsync();
+const byId = new Map(allVars.map((v) => [v.id, v]));
+const nameById = new Map(allVars.map((v) => [v.id, v.name]));
 const collections = await figma.variables.getLocalVariableCollectionsAsync();
 const out = { collections: {}, counts: {} };
 
@@ -17,7 +22,10 @@ for (const c of collections) {
   const modeName = Object.fromEntries(c.modes.map((m) => [m.modeId, m.name]));
   const lines = [];
   for (const id of c.variableIds) {
-    const v = await figma.variables.getVariableByIdAsync(id);
+    const v = byId.get(id);
+    // не «пропустить тихо»: пропуск изменил бы набор канонических строк и, значит, хеш —
+    // а хеш здесь и есть доказательство «ничего не задели».
+    if (!v) throw new Error(`${c.name}: variable ${id} not in getLocalVariablesAsync()`);
     if (EXCLUDE.includes(v.name)) continue;
     const values = Object.entries(v.valuesByMode)
       .map(([modeId, raw]) => [modeName[modeId], raw && typeof raw === "object" && raw.type === "VARIABLE_ALIAS"
