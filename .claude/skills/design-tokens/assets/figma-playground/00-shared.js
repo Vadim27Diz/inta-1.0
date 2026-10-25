@@ -28,9 +28,13 @@
 // 160 между рамками бренда (абсолютные x/y — здесь это нормально, это верхний уровень страницы,
 // не компонент-сет: см. figma.md → «Раскладка страницы Playground»).
 //
+// Файл собирается из этой папки (блок на секцию) скриптом
+// `node scripts/build-figma-script.mjs playground` — редактируй нужный блок точечно, не весь
+// файл; собранный результат идёт в use_figma целиком (страница чистится вся за один прогон).
+//
 // Пересборка после добавления компонента в группу 1 (или следующую группу — тогда структура
-// секций расширяется): допиши вариант в нужный блок ниже и прогони скрипт заново целиком —
-// он идемпотентен, чистит фреймы перед сборкой.
+// секций расширяется): допиши вариант в нужный блок и пересобери скрипт — он идемпотентен,
+// чистит фреймы перед сборкой.
 //
 // Проверка после прогона: npm run figma:layout покрывает ОДНО правило на этой странице —
 // ни один focus-ring нигде не обрезан предком (см. figma.md → «Страница Playground» и
@@ -138,138 +142,3 @@ function sectionFrame(parent, title) {
   cap.layoutSizingHorizontal = "FILL";
   return s;
 }
-
-function buildFrame(frame) {
-  for (const c of [...frame.children]) c.remove();
-
-  const topCap = caption(frame.name.toLowerCase() + " · на surface");
-  frame.appendChild(topCap);
-  topCap.layoutSizingHorizontal = "FILL";
-
-  // ---------- 1. Buttons ----------
-  const buttons = sectionFrame(frame, "Buttons");
-  const variantsRow = row(buttons, { wrap: true });
-  for (const v of ["primary", "secondary", "neutral", "outline", "ghost", "danger", "danger-subtle", "inverse", "link", "link-danger"]) {
-    variantsRow.appendChild(inst(pick(REF.Button, { Variant: v, Size: "md", State: "default" })));
-  }
-  const statesRow = row(buttons, { wrap: true });
-  for (const st of ["default", "hover", "pressed", "focus", "disabled"]) {
-    statesRow.appendChild(inst(pick(REF.Button, { Variant: "primary", Size: "md", State: st })));
-  }
-  const sizesRow = row(buttons, { wrap: true });
-  for (const sz of ["sm", "md", "lg"]) {
-    sizesRow.appendChild(inst(pick(REF.Button, { Variant: "primary", Size: sz, State: "default" })));
-  }
-  sizesRow.appendChild(inst(pick(REF.Button, { Variant: "primary", Size: "icon", State: "default" }), { "Icon left#87:181": true }));
-
-  // ---------- 2. card on surface-raised ----------
-  const card = newFrame();
-  card.name = "surface-raised";
-  card.layoutMode = "VERTICAL";
-  card.itemSpacing = 12;
-  card.primaryAxisSizingMode = "AUTO";
-  card.counterAxisSizingMode = "AUTO";
-  card.paddingLeft = card.paddingRight = card.paddingTop = card.paddingBottom = 16;
-  card.cornerRadius = 8;
-  frame.appendChild(card);
-  card.layoutSizingHorizontal = "FILL";
-  card.fills = [figma.variables.setBoundVariableForPaint({ type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", byName["color/surface-raised"])];
-  card.strokes = [figma.variables.setBoundVariableForPaint({ type: "SOLID", color: { r: 0, g: 0, b: 0 } }, "color", byName["color/border/default"])];
-  card.strokeWeight = 1;
-
-  const cardCap = caption("на surface-raised");
-  card.appendChild(cardCap);
-  cardCap.layoutSizingHorizontal = "FILL";
-
-  const focusRow = row(card, { wrap: true });
-  for (const v of ["outline", "ghost", "link"]) {
-    focusRow.appendChild(inst(pick(REF.Button, { Variant: v, Size: "md", State: "focus" })));
-  }
-  const labelInputRow = row(card);
-  labelInputRow.appendChild(inst(pick(REF.Label, { State: "default" })));
-  labelInputRow.appendChild(inst(pick(REF.Input, { Size: "md", State: "default", Content: "value" })));
-  row(card).appendChild(inst(pick(REF.Input, { Size: "md", State: "invalid", Content: "value" })));
-  row(card).appendChild(inst(pick(REF.Input, { Size: "md", State: "disabled", Content: "value" })));
-  row(card).appendChild(inst(pick(REF.Textarea, { State: "focus", Content: "value" })));
-  // Slider/Progress — трек на color/border/input, та же причина, что у Input/Textarea выше:
-  // проверить его на surface-raised, не только на surface (добавлены по явной просьбе человека
-  // при ревью — вне правила «каждый компонент ровно один раз», см. комментарий выше у функции).
-  row(card).appendChild(inst(pick(REF.Slider, { State: "focus" })));
-  row(card).appendChild(inst(pick(REF.Progress, { Value: "40%" })));
-
-  // ---------- 3. Selection ----------
-  const selection = sectionFrame(frame, "Selection");
-  const cbRow = row(selection);
-  cbRow.appendChild(inst(pick(REF.Checkbox, { State: "default", Checked: "unchecked" })));
-  cbRow.appendChild(inst(pick(REF.Checkbox, { State: "default", Checked: "checked" })));
-  cbRow.appendChild(inst(pick(REF.Checkbox, { State: "disabled", Checked: "unchecked" })));
-  const rgRow = row(selection);
-  rgRow.appendChild(inst(pick(REF.RadioGroup, { State: "default", Checked: "unchecked" })));
-  rgRow.appendChild(inst(pick(REF.RadioGroup, { State: "default", Checked: "checked" })));
-  rgRow.appendChild(inst(pick(REF.RadioGroup, { State: "disabled", Checked: "unchecked" })));
-  const swRow = row(selection);
-  swRow.appendChild(inst(pick(REF.Switch, { State: "default", Checked: "off" })));
-  swRow.appendChild(inst(pick(REF.Switch, { State: "default", Checked: "on" })));
-  swRow.appendChild(inst(pick(REF.Switch, { State: "disabled", Checked: "off" })));
-
-  // ---------- 4. Forms (группа 2, составные контролы) ----------
-  const forms = sectionFrame(frame, "Forms");
-  const formsRow = row(forms, { wrap: true });
-  formsRow.appendChild(inst(pick(REF.Field, { State: "default" })));
-  formsRow.appendChild(inst(pick(REF.Field, { State: "invalid" })));
-  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "start" })));
-  formsRow.appendChild(inst(pick(REF.InputGroup, { Addon: "end" })));
-  formsRow.appendChild(inst(pick(REF.InputOTP, { State: "default" })));
-  formsRow.appendChild(inst(pick(REF.NativeSelect, { Size: "md", State: "default" })));
-  formsRow.appendChild(inst(pick(REF.Select, { State: "open" })));
-  // Toggle…Progress — вторая половина группы 2, добавлены этим прогоном (были в Components,
-  // не были в Playground — см. handoff «Ревью группы 2», находка 2)
-  formsRow.appendChild(inst(pick(REF.Toggle, { Variant: "default", Size: "md", State: "default", Pressed: "on" })));
-  formsRow.appendChild(inst(pick(REF.ToggleGroup, { Variant: "default", Size: "md" })));
-  formsRow.appendChild(inst(pick(REF.ButtonGroup, { Orientation: "horizontal" })));
-  formsRow.appendChild(inst(pick(REF.Slider, { State: "default" })));
-  formsRow.appendChild(inst(pick(REF.Progress, { Value: "40%" })));
-
-  // ---------- 5. Display ----------
-  const display = sectionFrame(frame, "Display");
-  const badgeRow = row(display, { wrap: true });
-  for (const v of ["primary", "secondary", "neutral", "outline", "danger", "danger-subtle", "success", "warning", "info"]) {
-    badgeRow.appendChild(inst(pick(REF.Badge, { Variant: v })));
-  }
-  // разделитель на всю ширину ряда, остальные три — строкой под ним (не рядом: вертикальный
-  // Separator высотой 64 рядом с иконкой 16px давал пустой на вид прямоугольник)
-  const sepInst = inst(pick(REF.Separator, { Orientation: "horizontal" }));
-  display.appendChild(sepInst);
-  sepInst.layoutSizingHorizontal = "FILL";
-  const miscRow = row(display);
-  miscRow.appendChild(inst(REF.Kbd));
-  miscRow.appendChild(inst(REF.Spinner));
-  miscRow.appendChild(inst(REF.Skeleton));
-
-  // ---------- 6. Icons ----------
-  const icons = sectionFrame(frame, "Icons");
-  const iconsRow = row(icons);
-  for (const key of Object.keys(GLYPHS)) {
-    const iconInst = inst(pick(REF.IconSet, { Size: "16" }));
-    const nested = iconInst.findOne((n) => n.type === "INSTANCE");
-    nested.setProperties({ "glyph#115:0": GLYPHS[key] });
-    iconsRow.appendChild(iconInst);
-  }
-
-  return { name: frame.name, sections: frame.children.map((c) => c.name), height: frame.height };
-}
-
-const results = page.children.map((f) => buildFrame(f));
-
-// 4 фрейма верхнего уровня — сетка 2×2, отступ 160, без пересечений
-const order = ["Main / Light", "Main / Dark", "Demo / Light", "Demo / Dark"];
-const frames = order.map((n) => page.children.find((f) => f.name === n));
-const GAP = 160;
-const maxW = Math.max(...frames.map((f) => f.width));
-const maxH = Math.max(...frames.map((f) => f.height));
-frames[0].x = 0; frames[0].y = 0;
-frames[1].x = maxW + GAP; frames[1].y = 0;
-frames[2].x = 0; frames[2].y = maxH + GAP;
-frames[3].x = maxW + GAP; frames[3].y = maxH + GAP;
-
-return results;

@@ -42,8 +42,9 @@
 
 ## Страница Foundations
 
-Собирается генератором `assets/figma-foundations.js`, руками не правится: ручная правка переживёт
-ровно до следующей пересборки. Страница — **восемь самостоятельных фреймов верхнего уровня**,
+Собирается генератором `assets/figma-foundations/` (блок на фрейм, см. `scripts/build-figma-
+script.mjs` в описании пересборки ниже), руками не правится: ручная правка переживёт ровно до
+следующей пересборки. Страница — **восемь самостоятельных фреймов верхнего уровня**,
 разложенных слева направо и сверху вниз с отступом 160:
 
 | Фрейм | Что внутри | Режимы |
@@ -68,10 +69,13 @@
 
 1. `node assets/figma-foundations-data.mjs > /tmp/foundations-data.json` — считает контраст
    (`scripts/check-contrast.mjs --all`) и достаёт из git коммит и дату `tokens/tokens.json`.
-2. Вставь содержимое файла в `const DATA` в начале `assets/figma-foundations.js`.
-3. Прогони весь `figma-foundations.js` через `use_figma` **одним вызовом**: он сам удаляет
+2. Вставь содержимое файла в `const DATA` в начале `assets/figma-foundations/00-shared.js`.
+3. `node scripts/build-figma-script.mjs foundations --out /tmp/foundations.build.js` — склеивает
+   10 блоков (`00-shared.js` … `09-footer.js`) в один скрипт; правишь точечно только тот блок,
+   который меняется (например, только `05-typography.js`), не весь файл целиком.
+4. Прогони весь `/tmp/foundations.build.js` через `use_figma` **одним вызовом**: он сам удаляет
    содержимое страницы `Foundations` и собирает её заново, поэтому перезапуск безопасен.
-4. Прогони `assets/figma-foundations-check.js`: `unboundPaints`, `textWithoutStyle`,
+5. Прогони `assets/figma-foundations-check.js`: `unboundPaints`, `textWithoutStyle`,
    `unboundRadii`, `localEffects`, `textOverflow`, `primitivesInPaints`, `framesWithoutModes` —
    все пустые, `topFrames` — восемь штук, у каждого оба режима.
 

@@ -1,5 +1,6 @@
 // Проверка страницы Foundations: ни одного несвязанного цвета, ни одного ручного размера текста.
-// Read-only, запускать через `use_figma` после каждой пересборки (assets/figma-foundations.js).
+// Read-only, запускать через `use_figma` после каждой пересборки (assets/figma-foundations/,
+// собирается в один скрипт через scripts/build-figma-script.mjs foundations).
 //
 // Ожидаемый результат: unboundPaints: [], textWithoutStyle: [], unboundRadii: [], localEffects: [],
 // textOverflow: [], primitivesInPaints: [], framesWithoutModes: [] и topFrames: 8 — по фрейму на тему,
