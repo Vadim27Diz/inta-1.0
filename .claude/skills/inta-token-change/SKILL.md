@@ -34,7 +34,12 @@ description: Используй при добавлении или измене�
 ## После записи
 
 1. Экспорт → `tokens/tokens.json` → `npm run tokens:build` (+ `tokens:catalog`, если состав
-   токенов изменился).
+   токенов изменился). Поменялось немного токенов (не вся коллекция/бренд) — дешевле дельтой:
+   `node scripts/tokens-manifest.mjs tokens/tokens.json --out /tmp/tokens-manifest.json` →
+   вставить в `MANIFEST` в `assets/figma-export-delta.js` → прогнать через `use_figma` (вернёт
+   только изменившееся, не все ~92 КБ) → `node scripts/tokens-patch.mjs tokens/tokens.json
+   /tmp/tokens-delta.json`. Массовая правка или новая коллекция — обычный `figma-export.js`,
+   дельта не экономит, когда изменилось почти всё.
 2. **Пересобери `Foundations`** (`figma-variables.md` → «Страница Foundations») — её подписи
    статичны, после правки токена они врут, пока страницу не пересобрали.
 3. `npm run tokens:contrast` → 0 ошибок для пар `X`/`on-X` во всех состояниях × 4 комбинации.
