@@ -1,0 +1,227 @@
+{
+  "$schema": "inta port spec v1",
+  "component": "Input",
+  "capturedAt": "2026-10-25",
+  "figma": {
+    "fileKey": "uUb84csG4wOfbUjB38ODiz",
+    "page": "Components",
+    "setId": "121:237",
+    "sectionId": "121:238",
+    "variantCount": 30,
+    "defaultVariant": "Size=md, State=default, Content=value",
+    "layoutSignature": "98b331ad"
+  },
+  "properties": [
+    {
+      "name": "Text",
+      "type": "TEXT",
+      "default": "Text"
+    },
+    {
+      "name": "Size",
+      "type": "VARIANT",
+      "values": [
+        "md",
+        "sm",
+        "lg"
+      ],
+      "default": "md"
+    },
+    {
+      "name": "State",
+      "type": "VARIANT",
+      "values": [
+        "default",
+        "focus",
+        "disabled",
+        "invalid",
+        "invalid-focus"
+      ],
+      "default": "default"
+    },
+    {
+      "name": "Content",
+      "type": "VARIANT",
+      "values": [
+        "value",
+        "placeholder"
+      ],
+      "default": "value"
+    }
+  ],
+  "layers": [
+    {
+      "name": "root",
+      "type": "COMPONENT_SET",
+      "depth": -1
+    },
+    {
+      "name": "field",
+      "type": "FRAME",
+      "depth": 0
+    },
+    {
+      "name": "value",
+      "type": "TEXT",
+      "depth": 1,
+      "property": "Text"
+    }
+  ],
+  "geometry": [
+    {
+      "when": "Size=md, State=default|disabled|invalid",
+      "height": 36,
+      "padding": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "itemSpacing": 8,
+      "icon": null,
+      "typo": "body/sm"
+    },
+    {
+      "when": "Size=sm, State=default|disabled|invalid",
+      "height": 32,
+      "padding": [
+        0,
+        12,
+        0,
+        12
+      ],
+      "itemSpacing": 8,
+      "icon": null,
+      "typo": "body/sm"
+    },
+    {
+      "when": "Size=lg, State=default|disabled|invalid",
+      "height": 40,
+      "padding": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "itemSpacing": 8,
+      "icon": null,
+      "typo": "body/md"
+    },
+    {
+      "when": "Size=md, State=focus|invalid-focus",
+      "height": 36,
+      "padding": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "itemSpacing": 0,
+      "icon": null,
+      "typo": "body/sm"
+    },
+    {
+      "when": "Size=sm, State=focus|invalid-focus",
+      "height": 32,
+      "padding": [
+        0,
+        12,
+        0,
+        12
+      ],
+      "itemSpacing": 0,
+      "icon": null,
+      "typo": "body/sm"
+    },
+    {
+      "when": "Size=lg, State=focus|invalid-focus",
+      "height": 40,
+      "padding": [
+        0,
+        16,
+        0,
+        16
+      ],
+      "itemSpacing": 0,
+      "icon": null,
+      "typo": "body/md"
+    }
+  ],
+  "tokens": [
+    {
+      "when": "State=default, Content=value",
+      "fill": null,
+      "stroke": "color/border/input",
+      "value.fill": "color/on-surface"
+    },
+    {
+      "when": "State=default, Content=placeholder",
+      "fill": null,
+      "stroke": "color/border/input",
+      "value.fill": "color/on-surface-muted"
+    },
+    {
+      "when": "State=focus, Content=value",
+      "fill": null,
+      "stroke": "color/border/input",
+      "value.fill": "color/on-surface",
+      "caret.fill": "color/on-surface"
+    },
+    {
+      "when": "State=focus, Content=placeholder",
+      "fill": null,
+      "stroke": "color/border/input",
+      "caret.fill": "color/on-surface",
+      "value.fill": "color/on-surface-muted"
+    },
+    {
+      "when": "State=disabled",
+      "fill": "color/disabled",
+      "stroke": "color/disabled",
+      "value.fill": "color/on-disabled"
+    },
+    {
+      "when": "State=invalid, Content=value",
+      "fill": null,
+      "stroke": "color/danger/default",
+      "value.fill": "color/on-surface"
+    },
+    {
+      "when": "State=invalid, Content=placeholder",
+      "fill": null,
+      "stroke": "color/danger/default",
+      "value.fill": "color/on-surface-muted"
+    },
+    {
+      "when": "State=invalid-focus, Content=value",
+      "fill": null,
+      "stroke": "color/danger/default",
+      "value.fill": "color/on-surface",
+      "caret.fill": "color/on-surface"
+    },
+    {
+      "when": "State=invalid-focus, Content=placeholder",
+      "fill": null,
+      "stroke": "color/danger/default",
+      "caret.fill": "color/on-surface",
+      "value.fill": "color/on-surface-muted"
+    }
+  ],
+  "radius": [
+    {
+      "when": "*",
+      "corners": [
+        "radius/md",
+        "radius/md",
+        "radius/md",
+        "radius/md"
+      ]
+    }
+  ],
+  "focusRing": {
+    "kind": "field",
+    "scale": "md",
+    "strokeWeight": 3,
+    "of": "Utility / Focus ring"
+  }
+}

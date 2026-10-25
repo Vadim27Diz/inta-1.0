@@ -34,7 +34,7 @@ N, переносим?», а не повторять это каждую сес�
 | --- | --- | --- | --- | --- | --- |
 | Button | button | ported | 2026-10-25 | button.tsx | занесено задним числом; icon-sm/icon-lg и геометрия закрыты PR #13/#16 |
 | Label | label | ported | 2026-10-25 | label.tsx | Size lg/md/sm — в составе PR #17, не в main |
-| Input | input | ported | 2026-10-25 | input.tsx | ручная задача: порядок Size в Figma привести к lg/md/sm |
+| Input | input | ported | 2026-10-25 | input.tsx | ручная задача: порядок Size в Figma привести к lg/md/sm; спек снят задним числом 2026-10-25 для пакета D1 (`specs/input.json`), `figma-code-diff.mjs` берёт ожидания из него |
 | Textarea | textarea | ported | 2026-10-25 | textarea.tsx | в Figma нет свойства Size — расхождение в бэклоге |
 | Checkbox | checkbox | ported | 2026-10-25 | checkbox.tsx | занесено задним числом |
 | Radio Group | radio-group | ported | 2026-10-25 | radio-group.tsx | занесено задним числом |

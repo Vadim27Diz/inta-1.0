@@ -55,7 +55,6 @@ const propsOf = (v) => Object.fromEntries(
 
 // ---- слои первого варианта: структура одинакова у всех
 const first = variants[0];
-const textStyleIds = [];
 const walk = (n, depth, out) => {
   for (const c of n.children || []) {
     const row = { name: c.name, type: c.type, depth };
@@ -70,13 +69,19 @@ const walk = (n, depth, out) => {
     if (ref && (ref.characters || ref.visible || ref.mainComponent)) {
       row.property = (ref.characters || ref.visible || ref.mainComponent).replace(/#\d+:\d+$/, "");
     }
-    if (c.type === "TEXT" && c.textStyleId) textStyleIds.push(c.textStyleId);
     out.push(row);
     walk(c, depth + 1, out);
   }
   return out;
 };
 const layers = walk(first, 0, [{ name: first.name.includes("=") ? "root" : first.name, type: root.type, depth: -1 }]);
+
+// Имена текстовых стилей — собираем ПО ВСЕМ вариантам, не только по first: у составных полей
+// подпись может использовать разный стиль в зависимости от Size (например, Input Size=lg —
+// body/md, а sm/md — body/sm). Собирать id только из first молча давало typo: null там, где
+// стиль отличался от первого варианта — реальная находка на Input, не гипотетическая.
+const textStyleIds = [];
+for (const v of variants) for (const n of v.findAll((c) => c.type === "TEXT")) if (n.textStyleId) textStyleIds.push(n.textStyleId);
 
 // имена текстовых стилей — батчем, а не await в цикле (gotchas /figma-use → Sequential awaits)
 const styleNames = {};
@@ -96,10 +101,15 @@ const perVariant = variants.map((v) => {
     const mn = m ? (m.parent && m.parent.type === "COMPONENT_SET" ? m.parent.name : m.name) : "";
     return ICON(mn);
   });
+  // Паддинг и gap читаем с прямого родителя текста, не с корня варианта: у простых компонентов
+  // (Tab, Button) родитель текста — сам корень, но у составных полей (Input и похожие) контент
+  // паддится внутренним auto-layout фреймом ("field"), а у корня своя геометрия (рамка/бордер) с
+  // паддингом 0 — читать с корня дало бы ложные [0,0,0,0] вместо реального отступа текста.
+  const padBox = (label && label.parent && label.parent.paddingTop !== undefined) ? label.parent : v;
   const geometry = {
     height: Math.round(v.height),
-    padding: [v.paddingTop, v.paddingRight, v.paddingBottom, v.paddingLeft],
-    itemSpacing: v.itemSpacing,
+    padding: [padBox.paddingTop, padBox.paddingRight, padBox.paddingBottom, padBox.paddingLeft],
+    itemSpacing: padBox.itemSpacing,
     icon: iconInst ? Math.round(iconInst.width) : null,
     typo: label && label.textStyleId ? styleNames[label.textStyleId] || null : null,
   };

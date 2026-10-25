@@ -20,19 +20,68 @@ const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STATIC = path.join(repo, "storybook-static");
 const PORT = 6009;
 
+// ---- D1 (pipeline-plan.md, пакет D): спек как источник ожиданий, не хардкод в EXPECT.
+// Пока только Input — остальные компоненты ждут своей очереди на миграцию (их спеков ещё
+// нет, см. docs/internal/specs/). sel/at (какой DOM-элемент story рендерит на каком месте)
+// остаётся ручным соответствием — спеки ничего не знают про Storybook; числа и имена токенов
+// от этого места больше не хардкодятся.
+const SPEC_CSS = (n) => `--ds-${n.replace(/\/default$/, "").replace(/\//g, "-")}`;
+function loadTypoPxTable() {
+  const css = fs.readFileSync(path.join(repo, "src/styles/tokens.css"), "utf8");
+  const table = {};
+  for (const m of css.matchAll(/@utility typo-([a-z0-9-]+)\s*\{([^}]*)\}/g)) {
+    const body = m[2];
+    const size = parseFloat(body.match(/font-size:\s*([\d.]+)rem/)?.[1] ?? "0") * 16;
+    const lh = parseFloat(body.match(/line-height:\s*([\d.]+)rem/)?.[1] ?? "0") * 16;
+    const weight = parseInt(body.match(/font-weight:\s*(\d+)/)?.[1] ?? "0", 10);
+    table[m[1]] = [size, lh, weight];
+  }
+  return table;
+}
+const TYPO_PX = loadTypoPxTable();
+const typoFont = (specTypoName) => (specTypoName ? TYPO_PX[specTypoName.replace(/\//g, "-")] ?? null : null);
+function matchesWhen(when, vals) {
+  if (when === "*") return true;
+  return when.split(", ").every((clause) => {
+    const [axis, opts] = clause.split("=");
+    return opts.split("|").includes(vals[axis]);
+  });
+}
+function pickRow(rows, vals) {
+  const row = rows.find((r) => matchesWhen(r.when, vals));
+  if (!row) throw new Error(`спек: нет строки под ${JSON.stringify(vals)}`);
+  return row;
+}
+const inputSpec = JSON.parse(fs.readFileSync(path.join(repo, "docs/internal/specs/input.json"), "utf8"));
+function inputProbe(vals, overrides = {}) {
+  const geo = pickRow(inputSpec.geometry, vals);
+  const tok = pickRow(inputSpec.tokens, vals);
+  const rad = pickRow(inputSpec.radius, vals);
+  const probe = { height: geo.height, padX: geo.padding[1], radius: SPEC_CSS(rad.corners[0]) };
+  if (tok.fill) probe.bg = SPEC_CSS(tok.fill);
+  // disabled: код красит border-transparent (Tailwind), а не токеном border/stroke — Figma
+  // красит border тем же токеном, что фон (визуально то же «нет рамки», но не то же CSS-значение).
+  // overrides.borderTransparent перекрывает автовывод, а не складывается с ним.
+  if (tok.stroke && !overrides.borderTransparent) probe.border = SPEC_CSS(tok.stroke);
+  if (tok["value.fill"]) probe.color = SPEC_CSS(tok["value.fill"]);
+  const font = typoFont(geo.typo);
+  if (font) probe.font = font;
+  return { ...probe, ...overrides };
+}
+
 // px — число из Figma; token — имя CSS-переменной, значение которой должно совпасть
 const EXPECT = [
   { story: "components-input--variants", title: "Input", probes: [
-    { sel: "input:nth-of-type(1)", at: 0, name: "sm value",      height: 32, padX: 12, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [14, 20, 400] },
-    { sel: "input", at: 2, name: "md value",                     height: 36, padX: 16, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [14, 20, 400] },
-    { sel: "input", at: 4, name: "lg value",                     height: 40, padX: 16, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [16, 24, 400] },
+    { sel: "input:nth-of-type(1)", at: 0, name: "sm value", ...inputProbe({ Size: "sm", State: "default", Content: "value" }) },
+    { sel: "input", at: 2, name: "md value", ...inputProbe({ Size: "md", State: "default", Content: "value" }) },
+    { sel: "input", at: 4, name: "lg value", ...inputProbe({ Size: "lg", State: "default", Content: "value" }) },
   ] },
   { story: "components-input--states", title: "Input states", probes: [
-    { sel: "input", at: 0, name: "default",       height: 36, padX: 16, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface" },
-    { sel: "input", at: 1, name: "focus",         height: 36, border: "--ds-color-border-input", ring: "--ds-color-focus-ring", ringWidth: 3 },
-    { sel: "input", at: 2, name: "invalid",       height: 36, border: "--ds-color-danger" },
-    { sel: "input", at: 3, name: "invalid+focus", height: 36, border: "--ds-color-danger", ring: "--ds-color-focus-ring", ringWidth: 3 },
-    { sel: "input", at: 4, name: "disabled",      height: 36, bg: "--ds-color-disabled", color: "--ds-color-on-disabled", borderTransparent: true },
+    { sel: "input", at: 0, name: "default", ...inputProbe({ Size: "md", State: "default", Content: "value" }) },
+    { sel: "input", at: 1, name: "focus", ...inputProbe({ Size: "md", State: "focus", Content: "value" }, { ring: "--ds-color-focus-ring", ringWidth: 3 }) },
+    { sel: "input", at: 2, name: "invalid", ...inputProbe({ Size: "md", State: "invalid", Content: "value" }) },
+    { sel: "input", at: 3, name: "invalid+focus", ...inputProbe({ Size: "md", State: "invalid-focus", Content: "value" }, { ring: "--ds-color-focus-ring", ringWidth: 3 }) },
+    { sel: "input", at: 4, name: "disabled", ...inputProbe({ Size: "md", State: "disabled", Content: "value" }, { borderTransparent: true }) },
   ] },
   { story: "components-textarea--states", title: "Textarea", probes: [
     { sel: "textarea", at: 0, name: "default",       minHeight: 64, padX: 12, padY: 8, radius: "--ds-radius-md", border: "--ds-color-border-input", color: "--ds-color-on-surface", font: [14, 20, 400] },
