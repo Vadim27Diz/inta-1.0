@@ -21,6 +21,7 @@
     "icons:stroke": "node scripts/icon-stroke-check.mjs",
     "figma:diff": "node scripts/figma-code-diff.mjs",
     "figma:layout": "node scripts/figma-layout-check.mjs",
+    "figma:pull": "node scripts/figma-layout-pull.mjs",
     "figma:probe": "node scripts/figma-rest-probe.mjs",
     "tailwind:check": "node scripts/check-tailwind-classes.mjs",
     "port:check": "node scripts/port-queue-check.mjs",

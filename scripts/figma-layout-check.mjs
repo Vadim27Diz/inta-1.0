@@ -3,11 +3,16 @@
 //
 //   node scripts/figma-layout-check.mjs [figma/layout.json]
 //
-// Снимок снимается из Figma скриптом .claude/skills/design-tokens/assets/figma-layout-export.js
-// через `use_figma`, сохраняется через scripts/figma-layout-save.mjs (не руками — он же проставляет
-// exporterHash, см. ниже). Тот же use_figma-вызов печатает djb2-хеш данных — он должен совпасть с
-// хешем сохранённого файла (`node scripts/figma-layout-check.mjs --hash`), иначе снимок устарел
-// относительно Figma и проверка валидирует прошлое — это сверяется руками (CI не ходит в Figma).
+// Снимок снимается ОДНИМ из двух производителей, у каждого свой способ устареть:
+//   - Plugin API: .claude/skills/design-tokens/assets/figma-layout-export.js через `use_figma`,
+//     сохраняется через scripts/figma-layout-save.mjs. Тот же use_figma-вызов печатает djb2-хеш
+//     данных — он должен совпасть с хешем сохранённого файла (--hash), иначе снимок устарел
+//     относительно Figma и проверка валидирует прошлое — сверяется руками (CI не ходит в Figma).
+//   - REST: scripts/figma-layout-pull.mjs — сам читает Figma и сохраняет, пометка data.source:
+//     "rest" отличает его снимки от Plugin API (без source — это старый/Plugin API снимок).
+// exporterHash сверяется с ПРОИЗВОДИТЕЛЕМ, указанным в data.source (см. EXPORTER_PATH ниже) —
+// не с зашитым путём: иначе смена производителя делает проверку ложно-зелёной (сравнение идёт с
+// чужим файлом, который никто не трогал).
 // Правило раскладки — references/figma.md → «Раскладка страницы Components».
 import fs from "node:fs";
 
@@ -30,16 +35,18 @@ if (args.includes("--hash")) { console.log(djb2(JSON.stringify(dataWithoutExport
 // figma-layout-export.js поправили (например, как ownerName() ловушка 8 в SKILL.md), а снимок не
 // пересняли, старые данные это молча не ловят. exporterHash — хеш файла экспортёра на момент
 // сохранения (проставляет figma-layout-save.mjs) — здесь сверяется с текущим файлом на диске.
-const EXPORTER_PATH = ".claude/skills/design-tokens/assets/figma-layout-export.js";
+const EXPORTER_PATH = data.source === "rest"
+  ? "scripts/figma-layout-pull.mjs"
+  : ".claude/skills/design-tokens/assets/figma-layout-export.js";
+const REGEN_HINT = data.source === "rest" ? "npm run figma:pull" : "use_figma + scripts/figma-layout-save.mjs";
 if (fs.existsSync(EXPORTER_PATH)) {
   const currentExporterHash = djb2(fs.readFileSync(EXPORTER_PATH, "utf8"));
   if (data.exporterHash !== currentExporterHash) {
     console.error(
       data.exporterHash
         ? `снимок устарел: exporterHash снимка ${data.exporterHash} ≠ текущий ${currentExporterHash} — ` +
-          `figma-layout-export.js менялся после последнего снимка. Пересними через use_figma и сохрани ` +
-          `через scripts/figma-layout-save.mjs.`
-        : `в снимке нет exporterHash (сохранён не через scripts/figma-layout-save.mjs) — пересними и сохрани через него.`
+          `${EXPORTER_PATH} менялся после последнего снимка. Пересними через ${REGEN_HINT}.`
+        : `в снимке нет exporterHash (сохранён не через scripts/figma-layout-save.mjs или figma-layout-pull.mjs) — пересними через ${REGEN_HINT}.`
     );
     process.exit(2);
   }
