@@ -57,7 +57,7 @@
 | `link` | `link` | `text-link hover:text-link-hover` |
 | — | `link-danger` | `text-link-danger hover:text-link-danger-hover` |
 
-Подчёркивания у `link` нет ни в одном состоянии — почему, в `figma.md` → «Ловушки Figma», п. 5.
+Подчёркивания у `link` нет ни в одном состоянии — почему, в `figma-pitfalls.md`, п. 5.
 Когда брать `danger`, `danger-subtle` или `link-danger` — таблица в `examples/button.md`.
 
 Размеры: `default` → `md`; `sm`, `lg`, `icon`, `icon-sm`, `icon-lg` без изменений. Те же имена вариантов используются в Badge, Toggle, Alert и т.д., где они есть.

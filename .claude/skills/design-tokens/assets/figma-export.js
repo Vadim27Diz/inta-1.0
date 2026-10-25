@@ -17,7 +17,13 @@ const cssName = (n) => `--${PREFIX}-${n.replace(/\/default$/, "").replace(/\//g,
 const collections = (await figma.variables.getLocalVariableCollectionsAsync())
   .filter((c) => !ONLY || ONLY.includes(c.name))
   .sort((a, b) => ORDER.indexOf(a.name) - ORDER.indexOf(b.name));
-const nameById = new Map((await figma.variables.getLocalVariablesAsync()).map((v) => [v.id, v.name]));
+// Один getLocalVariablesAsync() вместо getVariableByIdAsync() на каждую переменную: второй путь
+// давал 267 ПОСЛЕДОВАТЕЛЬНЫХ IPC-раундтрипов, хотя полные объекты и так приходят этим вызовом
+// (ниже из них брали только name). Независимые await в цикле сериализуются по одному на вызов —
+// см. gotchas скилла /figma-use, пункт «Sequential awaits».
+const allVars = await figma.variables.getLocalVariablesAsync();
+const byId = new Map(allVars.map((v) => [v.id, v]));
+const nameById = new Map(allVars.map((v) => [v.id, v.name]));
 
 const out = { $schema: "ds-kit tokens v1 (Figma-shaped: collections → modes → variables)", prefix: PREFIX, collections: [], textStyles: [], effectStyles: [] };
 const problems = [];
@@ -26,7 +32,8 @@ for (const c of collections) {
   const modeName = Object.fromEntries(c.modes.map((m) => [m.modeId, m.name]));
   const vars = [];
   for (const id of c.variableIds) {
-    const v = await figma.variables.getVariableByIdAsync(id);
+    const v = byId.get(id);
+    if (!v) { problems.push(`${c.name}: variable ${id} not in getLocalVariablesAsync() — remote or deleted`); continue; }
     const valuesByMode = {};
     for (const [modeId, raw] of Object.entries(v.valuesByMode)) {
       if (raw && typeof raw === "object" && raw.type === "VARIABLE_ALIAS") {

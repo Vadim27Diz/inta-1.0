@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Готовит DATA для assets/figma-foundations.js — то, что генератор страницы не может
+// Готовит DATA для assets/figma-foundations/00-shared.js — то, что генератор страницы не может
 // прочитать из Figma сам: контраст (его считает check-contrast.mjs) и происхождение сборки.
 //
 //   node .claude/skills/design-tokens/assets/figma-foundations-data.mjs > /tmp/foundations-data.json

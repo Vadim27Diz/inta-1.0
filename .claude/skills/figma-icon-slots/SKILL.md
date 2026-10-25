@@ -28,7 +28,7 @@ description: Используй при создании или изменени�
 
 ## Исключения (фиксированный глиф, swap не нужен)
 
-Чекмарк `Checkbox` (mark), чекмарк `Select / Item`, шевроны в `Select` (триггер) и `Native Select`. `Progress → indicator` не иконка (заливка полосы). Новые исключения согласуй с пользователем и запиши в handoff (`docs/internal/handoff.md`, проверь актуальный путь).
+Чекмарк `Checkbox` (mark), чекмарк `Select / Item`, шевроны в `Select` (триггер) и `Native Select`. `Progress → indicator` не иконка (заливка полосы). Новые исключения согласуй с пользователем и запиши в `docs/internal/decisions.md`.
 
 `Toggle` отличается: там прямой инстанс `li:*` без `Icon base`. Не переделывай без решения пользователя (варианты: перевести на `Icon base` или привязать Instance swap прямо к глифу).
 

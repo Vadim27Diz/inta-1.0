@@ -3,12 +3,26 @@
 //
 //   node scripts/figma-layout-check.mjs [figma/layout.json]
 //
-// Снимок снимается из Figma скриптом .claude/skills/design-tokens/assets/figma-layout-export.js
-// через `use_figma`, сохраняется через scripts/figma-layout-save.mjs (не руками — он же проставляет
-// exporterHash, см. ниже). Тот же use_figma-вызов печатает djb2-хеш данных — он должен совпасть с
-// хешем сохранённого файла (`node scripts/figma-layout-check.mjs --hash`), иначе снимок устарел
-// относительно Figma и проверка валидирует прошлое — это сверяется руками (CI не ходит в Figma).
-// Правило раскладки — references/figma.md → «Раскладка страницы Components».
+// Снимок снимается ОДНИМ из двух производителей, у каждого свой способ устареть:
+//   - Plugin API: .claude/skills/design-tokens/assets/figma-layout-export.js через `use_figma`,
+//     сохраняется через scripts/figma-layout-save.mjs. Тот же use_figma-вызов печатает djb2-хеш
+//     данных — он должен совпасть с хешем сохранённого файла (--hash), иначе снимок устарел
+//     относительно Figma и проверка валидирует прошлое — сверяется руками (CI не ходит в Figma).
+//   - REST: scripts/figma-layout-pull.mjs — сам читает Figma и сохраняет, пометка data.source:
+//     "rest" отличает его снимки от Plugin API (без source — это старый/Plugin API снимок).
+// exporterHash сверяется с ПРОИЗВОДИТЕЛЕМ, указанным в data.source (см. EXPORTER_PATH ниже) —
+// не с зашитым путём: иначе смена производителя делает проверку ложно-зелёной (сравнение идёт с
+// чужим файлом, который никто не трогал).
+//
+// exporterHash доказывает только «файл экспортёра на диске не менялся с момента сохранения» —
+// он НЕ доказывает, что СОХРАНЁННЫЕ ДАННЫЕ реально произведены этим файлом. Реальный случай
+// (2026-10-24, коммит 4ade50a → 14d510c): код sizeConsistency добавили в экспортёр, автор сам
+// написал «figma/layout.json не пересобирался», но следующее сохранение проштамповало ТЕКУЩИЙ
+// хеш файла на СТАРЫЕ данные (видимо, пересохранили закэшированный ответ use_figma, не прогнав
+// скрипт заново) — снимок молча остался без ключа sizeConsistency при совпадающем exporterHash.
+// Поэтому ниже — безусловная проверка полноты: ключи верхнего уровня `data` должны совпадать с
+// тем, что объявляет `const data = {...}` в ТЕКУЩЕМ файле производителя. Пропущенный ключ —
+// жёсткая ошибка, а не предупреждение: других экспортёров, которые его добавили бы молча, нет.
 import fs from "node:fs";
 
 const args = process.argv.slice(2);
@@ -30,18 +44,71 @@ if (args.includes("--hash")) { console.log(djb2(JSON.stringify(dataWithoutExport
 // figma-layout-export.js поправили (например, как ownerName() ловушка 8 в SKILL.md), а снимок не
 // пересняли, старые данные это молча не ловят. exporterHash — хеш файла экспортёра на момент
 // сохранения (проставляет figma-layout-save.mjs) — здесь сверяется с текущим файлом на диске.
-const EXPORTER_PATH = ".claude/skills/design-tokens/assets/figma-layout-export.js";
+const EXPORTER_PATH = data.source === "rest"
+  ? "scripts/figma-layout-pull.mjs"
+  : ".claude/skills/design-tokens/assets/figma-layout-export.js";
+const REGEN_HINT = data.source === "rest" ? "npm run figma:pull" : "use_figma + scripts/figma-layout-save.mjs";
 if (fs.existsSync(EXPORTER_PATH)) {
   const currentExporterHash = djb2(fs.readFileSync(EXPORTER_PATH, "utf8"));
   if (data.exporterHash !== currentExporterHash) {
     console.error(
       data.exporterHash
         ? `снимок устарел: exporterHash снимка ${data.exporterHash} ≠ текущий ${currentExporterHash} — ` +
-          `figma-layout-export.js менялся после последнего снимка. Пересними через use_figma и сохрани ` +
-          `через scripts/figma-layout-save.mjs.`
-        : `в снимке нет exporterHash (сохранён не через scripts/figma-layout-save.mjs) — пересними и сохрани через него.`
+          `${EXPORTER_PATH} менялся после последнего снимка. Пересними через ${REGEN_HINT}.`
+        : `в снимке нет exporterHash (сохранён не через scripts/figma-layout-save.mjs или figma-layout-pull.mjs) — пересними через ${REGEN_HINT}.`
     );
     process.exit(2);
+  }
+
+  // Полнота: ключи снимка == ключи, которые ОБЪЯВЛЯЕТ (не обязательно заполняет — пустой массив
+  // тоже ключ) `const data = {...}` в текущем производителе. Статический разбор, не запуск.
+  function topLevelObjectKeys(body) {
+    const keys = []; let depth = 0, inStr = null, buf = "";
+    const flush = () => {
+      const entry = buf.trim(); buf = "";
+      if (!entry || entry.startsWith("...")) return;
+      const m = entry.match(/^([A-Za-z_$][\w$]*)\s*:/) || entry.match(/^([A-Za-z_$][\w$]*)$/);
+      if (m) keys.push(m[1]);
+    };
+    for (let i = 0; i < body.length; i++) {
+      const c = body[i];
+      if (inStr) { if (c === "\\") { buf += c + (body[++i] ?? ""); continue; } if (c === inStr) inStr = null; buf += c; continue; }
+      if (c === '"' || c === "'" || c === "`") { inStr = c; buf += c; continue; }
+      if ("([{".includes(c)) { depth++; buf += c; continue; }
+      if (")]}".includes(c)) { depth--; buf += c; continue; }
+      if (c === "," && depth === 0) { flush(); continue; }
+      buf += c;
+    }
+    flush();
+    return keys;
+  }
+  function expectedKeys(source) {
+    const marker = "const data = {";
+    const idx = source.indexOf(marker);
+    if (idx === -1) return null; // производитель не следует этому паттерну — пропускаем проверку
+    let depth = 1, i = idx + marker.length, inStr = null;
+    while (i < source.length && depth > 0) {
+      const c = source[i];
+      if (inStr) { if (c === "\\") { i += 2; continue; } if (c === inStr) inStr = null; i++; continue; }
+      if (c === '"' || c === "'" || c === "`") { inStr = c; i++; continue; }
+      if (c === "{") depth++;
+      if (c === "}") depth--;
+      i++;
+    }
+    return topLevelObjectKeys(source.slice(idx + marker.length, i - 1));
+  }
+  const expected = expectedKeys(fs.readFileSync(EXPORTER_PATH, "utf8"));
+  if (expected) {
+    const have = new Set(Object.keys(data));
+    const missing = expected.filter((k) => !have.has(k));
+    if (missing.length) {
+      console.error(
+        `снимок неполный: в данных нет ключей ${missing.join(", ")}, хотя ${EXPORTER_PATH} их объявляет — ` +
+        `это резейв старых данных при совпадающем exporterHash (см. комментарий в начале файла), а не свежий прогон. ` +
+        `Пересними через ${REGEN_HINT}.`,
+      );
+      process.exit(2);
+    }
   }
 }
 
