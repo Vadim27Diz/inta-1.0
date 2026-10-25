@@ -165,7 +165,7 @@ playwright менять без нужды не стоит — другая ве�
 | `npm run icons:stroke` | толщина линии `lucide-react` в настоящем Chrome: `isPointInStroke` + интеграл чернил по столбцу на скриншоте. Должна совпасть с `2 × size / 24` и с высотой слоя `Vector` у `li:minus` в Figma |
 | `npm run verify` | `tokens:check` + `tokens:contrast` + `tailwind:check` + `figma:diff` + `figma:layout`. `visual` сюда не входит: снимки — для глаз, не для CI |
 | `npm run tailwind:check` | каждый класс из `cn()`/`cva()`/`className` в `src/components` реально порождает правило в собранном Tailwind CSS (через `@tailwindcss/node` `candidatesToCss`, парсинг файлов — TS Compiler API). Ловит опечатку в имени класса и класс токена, который удалили из `tokens.css`: Tailwind v4 на такое не падает, он просто ничего не генерирует |
-| `npm run figma:layout` | правило раскладки страницы Components по снимку `figma/layout.json` (см. figma.md → «Раскладка страницы Components») |
+| `npm run figma:layout` | правило раскладки страницы Components по снимку `figma/layout.json` (см. `figma-components.md` → «Раскладка страницы Components») |
 | `npm run figma:diff` | цифровая сверка Figma ↔ код: геометрия вариантов и имена привязанных переменных против `getComputedStyle` в 4 комбинациях. Цвета сравниваются со значением CSS-переменной в том же документе, размеры токенов переводятся из rem в px браузером |
 
 Три ловушки снимков:

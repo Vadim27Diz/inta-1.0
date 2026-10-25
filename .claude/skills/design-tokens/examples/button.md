@@ -24,7 +24,7 @@
 Вертикальный паддинг есть только у `md`: у `sm` 8+8 не помещаются в высоту 32.
 
 Подпись однострочная: `textTruncation = ENDING`, `maxLines = 1`, `textAlignHorizontal = CENTER`.
-Все ловушки сборки — в `references/figma.md` → «Ловушки Figma»; без них тени не рисуются, а правки растекаются по вариантам.
+Все ловушки сборки — в `references/figma-pitfalls.md`; без них тени не рисуются, а правки растекаются по вариантам.
 
 ## 2. Код: `src/components/ui/button.tsx`
 
