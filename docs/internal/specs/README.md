@@ -88,8 +88,15 @@
 
 ## Чем снимается
 
-- Сейчас: read-only скрипт через `use_figma` (`.claude/skills/design-tokens/assets/figma-spec-export.js`).
-- После перехода на REST: `node scripts/figma-spec-pull.mjs <Component>` — локально, без контекста,
-  тем же обходом, что и снимок раскладки.
+1. `COMPONENT = "<имя набора>"` в `.claude/skills/design-tokens/assets/figma-spec-export.js`,
+   прогнать через `use_figma` (read-only).
+2. Ответ сохранить **через скрипт, не руками**: `node scripts/port-spec-save.mjs <slug> spec.json`
+   — он добавляет `layoutSignature` из `figma/layout.json` и печатает сводку (сколько вариантов
+   свернулось в сколько строк). Тот же принцип, что у `figma-layout-save.mjs` с `exporterHash`.
+3. Строку компонента в `../port-queue.md` перевести в `spec-captured` → `queued` (только `Edit`).
+
+После перехода на REST шаги 1–2 заменяются одной локальной командой
+`node scripts/figma-spec-pull.mjs <Component>` — тем же обходом, что и снимок раскладки, без
+контекста (шаг 3 плана, нужен personal access token Figma).
 
 Пример выше — **шаблон формата, а не снятый спек**: у `Tab` цвета ещё не утверждены.
