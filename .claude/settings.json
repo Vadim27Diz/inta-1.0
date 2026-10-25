@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "autoCompactWindow": 400000,
+  "permissions": {
+    "allow": [
+      "Bash(npm run tokens:build)", "Bash(npm run tokens:catalog)",
+      "Bash(npm run tokens:check)", "Bash(npm run tokens:contrast)",
+      "Bash(npm run tailwind:check)", "Bash(npm run port:check)",
+      "Bash(npm run figma:layout)", "Bash(npm run figma:diff)",
+      "Bash(npm run verify)", "Bash(npm run lint)",
+      "Bash(npm run storybook:theme)", "Bash(npm run build-storybook)",
+      "Bash(npx tsc -b)", "Bash(node scripts/*)",
+      "Bash(git status)", "Bash(git status *)", "Bash(git diff *)",
+      "Bash(git log *)", "Bash(git show *)",
+      "Bash(gh pr view *)", "Bash(gh pr list *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command",
+          "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/tokens-check-on-component-edit.sh" }] }
+    ]
+  }
+}
